@@ -33,9 +33,11 @@ else {
 
 	$firstName = $user["profile"]["firstName"];
 
-	$topMenu = "\n<li><a href='https://tomco.okta.com/home/salesforce/0oapq5e1G3yk5Syeg1t5/46'>Chatter</a></li>";
+	$topMenu = "\n<li><a href='https://tomco.okta.com/home/salesforce/0oapq5e1G3yk5Syeg1t5/46' target = '_blank'>Chatter</a></li>";
 
-	$topMenu .= "\n<li><a href = 'logout.php'>Log out</a></li>";
+	$logoutLink = "logout.php?oktaCookieSessionID=" . $_GET["oktaCookieSessionID"];
+
+	$topMenu .= "\n<li><a href = '" . $logoutLink . "'>Log out</a></li>";
 
 	$topMenu .= "\n<li><a href = '#'>Welcome, " .  $firstName . "!</a></li>";
 
