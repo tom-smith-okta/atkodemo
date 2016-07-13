@@ -22,7 +22,7 @@ $thisPage->addElement("css", "https://ok1static.oktacdn.com/assets/js/sdk/okta-s
 // okta sign-in widget css - customizable
 $thisPage->addElement("css", "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/css/okta-theme-1.3.3.css");
 
-$thisPage->addElement("javascript", "/" . HOME . "/javascript/optional/oktaSignin.js");
+$thisPage->addElement("javascript", "/" . HOME . "/javascript/optional/oktaSigninOIDC.js");
 
 $body = file_get_contents("login.html");
 
