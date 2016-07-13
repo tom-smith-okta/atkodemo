@@ -1,0 +1,60 @@
+<html>
+
+<head>
+
+<script src = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/js/okta-sign-in-1.3.3.min.js"></script>
+
+<script>
+function checkForSession() {
+	var baseUrl = 'https://tomco.okta.com';
+
+	var oktaSignIn = new OktaSignIn({baseUrl: baseUrl});
+
+	oktaSignIn.session.exists(function (exists) {
+
+		if (exists) {
+	  		// There is an active session, at least according to session.exists
+	  		console.log("there is an active session - according to session.exists()");
+
+	  		oktaSignIn.session.get(function (res) {
+	  			
+				if (res.status !== 'INACTIVE') {
+
+					console.log("there is an active session - according to session.get()");
+
+					console.log("this is the session object:");
+
+					console.dir(res);
+
+					console.log("this is the okta session ID: " + res.id);
+					console.log("this is the user ID: " + res.userId);
+
+					// put the okta session ID in a local cookie in case
+					// userId too, for UI purposes
+					document.cookie = "oktaCookieSessionID=" + res.id;
+					document.cookie = "oktaUserID=" + res.userId;
+
+		  		} else {
+		    		console.log("there is *no* active session - according to session.get()");
+		  		}
+			});
+	  	} else {
+	    	// No active session found
+	    	console.log("there is *no* active session - according to session.exists()");
+	  	}
+	});
+}
+
+window.onload = checkForSession;
+
+window.location = "http://localhost:8888/atkotravel/home.php";
+
+</script>
+
+</head>
+
+<body>
+
+</body>
+
+</html>
