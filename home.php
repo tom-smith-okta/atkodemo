@@ -6,14 +6,19 @@ include $_SERVER['DOCUMENT_ROOT'] . "/" . HOME . "/includes/includes.php";
 
 $thisPage = new htmlPage();
 
-if (empty($_COOKIE["oktaCookieSessionID"])) {
+if (empty($_GET["oktaCookieSessionID"])) {
 	$topMenu = "\n<li><a href='login.php'>Log in</a></li>";
 	$topMenu .= "\n<li><a href = 'register.php'>Register</a></li>";
 }
 else {
-	$oktaUserID = $_COOKIE["oktaUserID"];
 
+	// pull my api key from a file not exposed to the web
 	$apiKey = file_get_contents("/usr/local/keys/oktaAPI.txt");
+
+	// in a production system I would check the oktaCookieSessionID here
+	// again to make sure that someone has not messed with the GET call
+
+	$oktaUserID = $_GET["oktaUserID"];
 
 	$curl = curl_init();
 	curl_setopt_array($curl, array(
@@ -29,7 +34,10 @@ else {
 	$firstName = $user["profile"]["firstName"];
 
 	$topMenu = "\n<li><a href='https://tomco.okta.com/home/salesforce/0oapq5e1G3yk5Syeg1t5/46'>Chatter</a></li>";
-	$topMenu .= "\n<li><a href = 'register.php'>Welcome, " .  $firstName . "!</a></li>";
+
+	$topMenu .= "\n<li><a href = 'logout.php'>Log out</a></li>";
+
+	$topMenu .= "\n<li><a href = '#'>Welcome, " .  $firstName . "!</a></li>";
 
 }
 
@@ -56,4 +64,3 @@ $body = str_replace("%TOPMENU%", $topMenu, $body);
 $thisPage->addToBody($body);
 
 $thisPage->display();
-

@@ -31,23 +31,34 @@ function checkForSession() {
 
 					// put the okta session ID in a local cookie in case
 					// userId too, for UI purposes
-					document.cookie = "oktaCookieSessionID=" + res.id;
-					document.cookie = "oktaUserID=" + res.userId;
+					// document.cookie = "oktaCookieSessionID=" + res.id;
+					// document.cookie = "oktaUserID=" + res.userId;
+
+					window.location = "http://localhost:8888/atkotravel/home.php?oktaCookieSessionID=" + res.id + "&oktaUserID=" + res.userId;
+
 
 		  		} else {
 		    		console.log("there is *no* active session - according to session.get()");
+
+		    		window.location = "http://localhost:8888/atkotravel/home.php";
+
+		    		// document.cookie = "oktaCookieSessionID=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+	    			// document.cookie = "oktaUserID=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 		  		}
 			});
 	  	} else {
 	    	// No active session found
 	    	console.log("there is *no* active session - according to session.exists()");
+
+	    	window.location = "http://localhost:8888/atkotravel/home.php";
+
+	    	// document.cookie = "oktaCookieSessionID=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+	    	// document.cookie = "oktaUserID=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 	  	}
 	});
 }
 
 window.onload = checkForSession;
-
-window.location = "http://localhost:8888/atkotravel/home.php";
 
 </script>
 
