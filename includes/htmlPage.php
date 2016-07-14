@@ -11,6 +11,8 @@ class htmlPage {
 		$this->elements["css"]["tag"] = "<link rel = 'stylesheet' href = '%PATH%'/>";
 		$this->elements["css"]["block"] = "";
 
+		$this->elements["body"]["class"] = "";
+
 		$this->findFiles();
 	}
 
@@ -50,9 +52,10 @@ class htmlPage {
 	}
 
 	function getBody() {
-		if (empty($this->body)) { $this->body = ""; }
+		if (empty($this->elements["body"]["class"])) { $bodyTag = "<body>"; }
+		else { $bodyTag = "<body class = '" . $this->elements["body"]["class"] . "'>"; }
 
-		return "\n\t<body>" . $this->body . "\n\t</body>"; 
+		return "\n\t" . $bodyTag . $this->body . "\n\t</body>"; 
 	}
 
 	function getElements($element, $ext) {
@@ -91,6 +94,11 @@ class htmlPage {
 
 		return "<!DOCTYPE HTML>\n<html>" . $this->getHead() . "\n" . $this->getBody() . "\n</html>";
 	}
+
+	function setBodyParam($paramType, $param) {
+		$this->elements["body"][$paramType] = $param;
+
+	} 
 
 	function setTitle($title) {
 
