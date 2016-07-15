@@ -13,7 +13,7 @@ function checkForSession() {
 	oktaSignIn.session.exists(function (exists) {
 
 		if (exists) {
-	  		// There is an active session, at least according to session.exists
+	  		// There is an active session, according to session.exists
 	  		console.log("there is an active session - according to session.exists()");
 
 	  		oktaSignIn.session.get(function (res) {

@@ -63,10 +63,14 @@ $password = $_POST['password'];
 
 $userData = '{
 	"username": "' . $userName . '",
-	"password": "' . $password . '"
+	"password": "' . $password . '",
+	"options": {
+    	"multiOptionalFactorEnroll": false,
+    	"warnBeforePasswordExpired": false
+  	}  
 }';
 
-$url = $oktaHome . "/api/v1/sessions?additionalFields=cookieToken";
+$url = $oktaHome . "/api/v1/authn";
 
 curl_setopt_array($curl, array(
 	CURLOPT_CUSTOMREQUEST => "POST",
@@ -79,28 +83,11 @@ $result = curl_exec($curl);
 
 $decodedResult = json_decode($result, TRUE);
 
-if ($decodedResult["cookieToken"]) {
+$sessionToken = $result->sessionToken;
 
-	$cookieToken = $decodedResult["cookieToken"];
+$url = "https://tomco.okta.com/login/sessionCookieRedirect?token=" . $sessionToken . "&redirectUrl=http://localhost:8888/atkotravel"; 
 
-	// echo "i have a cookieToken";
-	// echo "the cookie token is: " . $decodedResult["cookieToken"];
-}
-else {
-	// echo curl_error($curl);
-}
-
-// $cookieToken = $result->cookieToken;
-
-// echo "the cookie token is: " . $cookieToken;
-
-$url = "https://tomco.okta.com/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=http://localhost:8888/atkotravel";
-
-$headerString = "Location: " . $url; 
-
-header($headerString);
-
-exit;
+header('Location: ' . $url);
 
 // error-checking code
 // if ($decodedResult["status"] == "SUCCESS") {
