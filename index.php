@@ -11,13 +11,8 @@ $thisPage = new htmlPage($config);
 $thisPage->setTitle("Atko Travel Agency - Session manager");
 
 // okta sign-in widget js
-// $thisPage->addElement("javascript", $config["okta-signin-widget"]);
+$thisPage->addExternalElement("okta-signin-widget");
 
 $thisPage->addInlineElement("checkForSession");
-
-
-// $thisPage->addInLineElement("checkForSession");
-
-// $thisPage->addElement("javascript", "/" . $home . "/javascript/checkForSession.js");
 
 $thisPage->display();

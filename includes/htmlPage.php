@@ -40,9 +40,23 @@ class htmlPage {
 
 	// }
 
-	function addExternalElement($type, $path) {
+	// function addExternalElement($type, $path) {
 
-		$tag = str_replace("%PATH%", $path, $this->elements[$type]["tag"]);
+	// 	$tag = str_replace("%PATH%", $path, $this->elements[$type]["tag"]);
+
+	// 	if (!empty($this->elements[$type]["block"])) { 
+	// 		$this->elements[$type]["block"] .= "\n\t\t";
+	// 	}
+
+	// 	$this->elements[$type]["block"] .= $tag;
+
+	// }
+
+	function addExternalElement($elementName) {
+
+		$type = $this->config[$elementName]["type"]; // either "javascript" or "css"
+
+		$tag = str_replace("%PATH%", $this->config[$elementName]["url"], $this->elements[$type]["tag"]);
 
 		if (!empty($this->elements[$type]["block"])) { 
 			$this->elements[$type]["block"] .= "\n\t\t";
@@ -56,13 +70,11 @@ class htmlPage {
 
 		$type = $this->config[$elementName]["type"]; // either "javascript" or "css"
 
-		$ext = $this->config[$type]["ext"]; // either ".js" or ".css"
+		$ext = $this->elements[$type]["ext"]; // either ".js" or ".css"
 
-		$filePath = $this->config["fsHome"] . "/" . $type . "/" . $elementName . $this->config[$type]["ext"];
+		$filePath = $this->config["fsHome"] . "/" . $type . "/" . $elementName . $ext;
 
 		$content = $this->replaceVars($filePath, $elementName);
-
-		// $updatedContent = $this->replaceVars($content, $elementName);
 
 		$this->elements[$type]["block"] .= "\n" . $content . "\n";
 

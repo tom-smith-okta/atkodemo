@@ -8,7 +8,7 @@ $config["fsHome"] = $_SERVER['DOCUMENT_ROOT'] . "/" . $config["homeDir"];
 
 // $config["host"] = $_SERVER["SERVER_NAME"];
 
-$config["okta-signin-widget"] = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/js/okta-sign-in-1.3.3.min.js";
+// $config["okta-signin-widget"] = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/js/okta-sign-in-1.3.3.min.js";
 
 $config["oktaOrg"] = "tomco";
 
@@ -22,9 +22,5 @@ $config["homePageWithSession"] .= "\" + res.id + \"&oktaUserID=\" + res.userId";
 $config["checkForSession"]["type"] = "javascript";
 $config["checkForSession"]["vars"] = array("oktaBaseURL", "homePage", "homePageWithSession");
 
-$config["javascript"]["ext"] = ".js";
-$config["css"]["ext"] = ".css";
-
-
-$checkForSession = str_replace("//homePage", $config["homePage"], $checkForSession);
-$checkForSession = str_replace("//homePageWithSession", $config["homePageWithSession"], $checkForSession);
+$config["okta-signin-widget"]["type"] = "javascript";
+$config["okta-signin-widget"]["url"] = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/js/okta-sign-in-1.3.3.min.js";
