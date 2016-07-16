@@ -26,7 +26,7 @@ function checkForSession() {
 					console.log("this is the user ID: " + res.userId);
 
 					// window.location = "/atkotravel/home.php?oktaCookieSessionID=" + res.id + "&oktaUserID=" + res.userId;
-					window.location = "%homePageWithSession%";
+					window.location = "%homePageWithSession%" + res.id + "&oktaUserID=" + res.userId;
 
 		  		} else {
 		    		console.log("there is *no* active session - according to session.get()");

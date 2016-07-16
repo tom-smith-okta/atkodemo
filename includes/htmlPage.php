@@ -19,65 +19,33 @@ class htmlPage {
 	}
 
 	// add a javascript or a css to the page.
-	// $location = "inline" || "external" || "default"
-	// function addElement($elementName, $location = "default") {
-
-	// function addElement($elementName, $location = "default") {
-
-	// 	if ($location == "default") { $location = $this->config[$elementName]["location"]; }
-
-	// 	if ($location == "inline") {
-	// 		$this->addInlineElement($elementName);
-	// 	}
-	// 	else 
-
-	// 	echo "the element name is: " . $elementName;
-
-	// 	echo "<p>the location of the element is: " . $this->config[$elementName]["location"];
-
-	// 	echo "<p>the type of the element is: " . $this->config[$elementName]["type"];
-
-
-	// }
-
-	// function addExternalElement($type, $path) {
-
-	// 	$tag = str_replace("%PATH%", $path, $this->elements[$type]["tag"]);
-
-	// 	if (!empty($this->elements[$type]["block"])) { 
-	// 		$this->elements[$type]["block"] .= "\n\t\t";
-	// 	}
-
-	// 	$this->elements[$type]["block"] .= $tag;
-
-	// }
-
-	function addExternalElement($elementName) {
+	function addElement($elementName) {
 
 		$type = $this->config[$elementName]["type"]; // either "javascript" or "css"
 
-		$tag = str_replace("%PATH%", $this->config[$elementName]["url"], $this->elements[$type]["tag"]);
+		if ($this->config[$elementName]["isInline"]) {
+			$ext = $this->elements[$type]["ext"]; // either ".js" or ".css"
+
+			$filePath = $this->config["fsHome"] . "/" . $type . "/" . $elementName . $ext;
+
+			$content = $this->replaceVars($filePath, $elementName);
+
+		}
+		else {
+			$content = str_replace("%PATH%", $this->config[$elementName]["url"], $this->elements[$type]["tag"]);
+		}
+
+		$this->addToBlock($content, $type);
+
+	}
+
+	function addToBlock($content, $type) {
 
 		if (!empty($this->elements[$type]["block"])) { 
 			$this->elements[$type]["block"] .= "\n\t\t";
 		}
 
-		$this->elements[$type]["block"] .= $tag;
-
-	}
-
-	function addInlineElement($elementName) {
-
-		$type = $this->config[$elementName]["type"]; // either "javascript" or "css"
-
-		$ext = $this->elements[$type]["ext"]; // either ".js" or ".css"
-
-		$filePath = $this->config["fsHome"] . "/" . $type . "/" . $elementName . $ext;
-
-		$content = $this->replaceVars($filePath, $elementName);
-
 		$this->elements[$type]["block"] .= "\n" . $content . "\n";
-
 	}
 
 	function replaceVars($filePath, $elementName) {
