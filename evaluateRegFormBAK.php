@@ -55,10 +55,6 @@ curl_setopt_array($curl, array(
 
 $result = curl_exec($curl);
 
-// header( 'Location: http://localhost:8888/atkotravel/login.php?userID=' . $userID ) ;
-
-// header( 'Location: http://localhost:8888/atkotravel/login.php') ;
-
 $password = $_POST['password'];
 
 $userData = '{

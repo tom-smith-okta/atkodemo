@@ -2,7 +2,7 @@
 
 class htmlPage {
 
-	function __construct() {
+	function __construct($config) {
 		$this->elements["javascript"]["ext"] = ".js";
 		$this->elements["javascript"]["tag"] = "<script src = '%PATH%'></script>";
 		$this->elements["javascript"]["block"] = "";
@@ -14,9 +14,33 @@ class htmlPage {
 		$this->elements["body"]["class"] = "";
 
 		$this->findFiles();
+
+		$this->config = $config;
 	}
 
-	function addElement($type, $path) {
+	// add a javascript or a css to the page.
+	// $location = "inline" || "external" || "default"
+	// function addElement($elementName, $location = "default") {
+
+	// function addElement($elementName, $location = "default") {
+
+	// 	if ($location == "default") { $location = $this->config[$elementName]["location"]; }
+
+	// 	if ($location == "inline") {
+	// 		$this->addInlineElement($elementName);
+	// 	}
+	// 	else 
+
+	// 	echo "the element name is: " . $elementName;
+
+	// 	echo "<p>the location of the element is: " . $this->config[$elementName]["location"];
+
+	// 	echo "<p>the type of the element is: " . $this->config[$elementName]["type"];
+
+
+	// }
+
+	function addExternalElement($type, $path) {
 
 		$tag = str_replace("%PATH%", $path, $this->elements[$type]["tag"]);
 
@@ -26,6 +50,38 @@ class htmlPage {
 
 		$this->elements[$type]["block"] .= $tag;
 
+	}
+
+	function addInlineElement($elementName) {
+
+		$type = $this->config[$elementName]["type"]; // either "javascript" or "css"
+
+		$ext = $this->config[$type]["ext"]; // either ".js" or ".css"
+
+		$filePath = $this->config["fsHome"] . "/" . $type . "/" . $elementName . $this->config[$type]["ext"];
+
+		$content = $this->replaceVars($filePath, $elementName);
+
+		// $updatedContent = $this->replaceVars($content, $elementName);
+
+		$this->elements[$type]["block"] .= "\n" . $content . "\n";
+
+	}
+
+	function replaceVars($filePath, $elementName) {
+
+		$content = file_get_contents($filePath);
+
+		foreach ($this->config[$elementName]["vars"] as $var) {
+
+			$bullseye = "%" . $var . "%";
+			$arrow = $this->config[$var];
+
+			$content = str_replace($bullseye, $arrow, $content);
+
+		}
+
+		return $content;
 	}
 
 	function display() {
@@ -60,7 +116,7 @@ class htmlPage {
 
 	function getElements($element, $ext) {
 
-		$dir = $_SERVER['DOCUMENT_ROOT'] . "/" . HOME . "/" . $element . "/";
+		$dir = $_SERVER['DOCUMENT_ROOT'] . "/" . HOME . "/" . $element . "/autoInclude/";
 
 		$files = scandir($dir);
 
