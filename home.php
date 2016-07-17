@@ -1,6 +1,6 @@
 <?php
 
-$home = "atkoTravel"; // establishes homedir in webdir
+$home = "atkotravel"; // establishes homedir in webdir
 
 include $_SERVER['DOCUMENT_ROOT'] . "/" . $home . "/includes/includes.php";
 

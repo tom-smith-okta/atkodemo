@@ -6,21 +6,28 @@ $config["homeDir"] = $home; // e.g.: "atkotravel"
 // e.g.: "/Applications/MAMP/htdocs"
 $config["fsHome"] = $_SERVER['DOCUMENT_ROOT'] . "/" . $config["homeDir"];
 
-// $config["host"] = $_SERVER["SERVER_NAME"];
-
-
 // Settings that would need to change for this app to run
 // with a different okta tenant
 // or on someone else's localhost
 $config["oktaOrg"] = "tomco";
+
+$config["localhost"] = "localhost:8888";
 
 // store the apiKey in a file not exposed to the web
 $apiKeyPath = "/usr/local/keys/oktaAPI.txt";
 
 $config["salesforce"] = "https://tomco.okta.com/home/salesforce/0oapq5e1G3yk5Syeg1t5/46";
 
-
 /****************************************/
+
+$config["host"] = $_SERVER["SERVER_NAME"];
+
+if (($config["host"]) == "localhost") {
+	$config["host"] = $config["localhost"];
+}
+
+// Need to update this to accommodate https
+$config["host"] = "http://" . $config["host"];
 
 $config["oktaBaseURL"] = "https://" . $config["oktaOrg"] . ".okta.com";
 $config["apiHome"] = $config["oktaBaseURL"] . "/api/v1";
@@ -31,7 +38,12 @@ $config["homePage"] = $config["webHome"] . "/" . "home.php";
 
 $config["apiKey"] = file_get_contents($apiKeyPath);
 
-$config["sessionManager"] = $config["webHome"];
+// Danger Will Robinson
+// This value needs to match a value in the Redirect URIs list
+// in your Okta tenant
+// probably needs to be an absolute URL
+// ports could be problematic
+$config["sessionManager"] = $config["host"] . $config["webHome"] . "/index.php";
 
 /************** Custom files *******************/
 

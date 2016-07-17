@@ -1,5 +1,8 @@
 <script>
 
+	console.log("the window location is: " + window.location.href);
+	console.log("the hostname is: " + window.location.hostname);
+
 	function displayWidget() {
 
 		var oktaSignIn = new OktaSignIn({
@@ -10,7 +13,8 @@
 		  
 		// OIDC options
 		clientId: 'YYUAPHIAj3JPPO6yJans',
-		redirectUri: '', // need to investigate further
+		redirectUri: '%sessionManager%', // need to investigate further
+
 		authScheme: 'OAUTH2',
 		authParams: {
 			responseType: 'id_token',
@@ -39,7 +43,7 @@
 
 					console.dir(res);
 
-					// window.location = "http://localhost:8888/atkotravel/index.html";
+					// window.location = "http://localhost:8888/atkotravel/";
 
 					window.location = "%sessionManager%";
 
