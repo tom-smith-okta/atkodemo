@@ -1,10 +1,12 @@
 <?php
 
-define("HOME", "atkoTravel"); // home dir on webserver
+$home = "atkoTravel"; // establishes homedir in webdir
 
-include $_SERVER['DOCUMENT_ROOT'] . "/" . HOME . "/includes/includes.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/" . $home . "/includes/includes.php";
 
-$thisPage = new htmlPage();
+$thisPage = new htmlPage($config);
+
+/*************************************/
 
 if (empty($_GET["oktaCookieSessionID"])) {
 	$topMenu = "\n<li><a href='login.php'>Log in</a></li>";
@@ -12,18 +14,19 @@ if (empty($_GET["oktaCookieSessionID"])) {
 }
 else {
 
-	// pull my api key from a file not exposed to the web
-	$apiKey = file_get_contents("/usr/local/keys/oktaAPI.txt");
+	$apiKey = $config["apiKey"];
 
 	// in a production system I would check the oktaCookieSessionID here
 	// again to make sure that someone has not messed with the GET call
 
 	$oktaUserID = $_GET["oktaUserID"];
 
+	$url = $config["apiHome"] . "/users/" . $oktaUserID;
+
 	$curl = curl_init();
 	curl_setopt_array($curl, array(
 		CURLOPT_RETURNTRANSFER => 1,
-		CURLOPT_URL => "https://tomco.okta.com/api/v1/users/" . $oktaUserID,
+		CURLOPT_URL => $url,
 		CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
 	));
 
@@ -33,7 +36,7 @@ else {
 
 	$firstName = $user["profile"]["firstName"];
 
-	$topMenu = "\n<li><a href='https://tomco.okta.com/home/salesforce/0oapq5e1G3yk5Syeg1t5/46' target = '_blank'>Chatter</a></li>";
+	$topMenu = "\n<li><a href='" . $config["salesforce"] . "' target = '_blank'>Chatter</a></li>";
 
 	$logoutLink = "logout.php?oktaCookieSessionID=" . $_GET["oktaCookieSessionID"];
 
@@ -45,19 +48,20 @@ else {
 
 /*** Manually add elements here ******/
 
-$thisPage->setTitle("Atko Travel Agency");
+$thisPage->setTitle("Atko Travel Agency Home");
 
 // jquery
-$thisPage->addElement("javascript", "https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js");
+$thisPage->addElement("jquery");
 
-// okta sign-in widget js
-$thisPage->addElement("javascript", "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/js/okta-sign-in-1.3.3.min.js");
+// $thisPage->addElement("okta-signin-widget");
 
-// okta sign-in widget css
-$thisPage->addElement("css", "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/css/okta-sign-in-1.3.3.min.css");
+// $thisPage->addElement("oktaCSScore");
 
-// okta sign-in widget css - customizable
-$thisPage->addElement("css", "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/css/okta-theme-1.3.3.css");
+// $thisPage->addElement("oktaCSStheme");
+
+$thisPage->addElement("mainCSS");
+
+$thisPage->addElement("dates");
 
 $body = file_get_contents("home.html");
 
