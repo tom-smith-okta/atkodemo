@@ -1,28 +1,26 @@
 <?php
 
-define("HOME", "atkoTravel"); // home dir on webserver
+$home = "atkoTravel"; // establishes homedir in webdir
 
-include $_SERVER['DOCUMENT_ROOT'] . "/" . HOME . "/includes/includes.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/" . $home . "/includes/includes.php";
 
-$thisPage = new htmlPage();
+$thisPage = new htmlPage($config);
 
-/*** Manually add elements here ******/
+/*************************************/
 
 $thisPage->setTitle("Atko Travel Agency - Log In");
 
-// jquery
-$thisPage->addElement("javascript", "https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js");
+$thisPage->addElement("jquery");
 
-// okta sign-in widget js
-$thisPage->addElement("javascript", "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/js/okta-sign-in-1.3.3.min.js");
+$thisPage->addElement("mainCSS");
 
-// okta sign-in widget css
-$thisPage->addElement("css", "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/css/okta-sign-in-1.3.3.min.css");
+$thisPage->addElement("okta-signin-widget");
 
-// okta sign-in widget css - customizable
-$thisPage->addElement("css", "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/css/okta-theme-1.3.3.css");
+$thisPage->addElement("oktaWidgetCSScore");
 
-$thisPage->addElement("javascript", "/" . HOME . "/javascript/optional/oktaSigninOIDC.js");
+$thisPage->addElement("oktaWidgetCSStheme");
+
+$thisPage->addElement("oktaSignInOIDC");
 
 $body = file_get_contents("login.html");
 

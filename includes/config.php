@@ -4,7 +4,7 @@
 $config["homeDir"] = $home; // e.g.: "atkotravel"
 
 // e.g.: "/Applications/MAMP/htdocs"
-// $config["fsHome"] = $_SERVER['DOCUMENT_ROOT'] . "/" . $config["homeDir"];
+$config["fsHome"] = $_SERVER['DOCUMENT_ROOT'] . "/" . $config["homeDir"];
 
 // $config["host"] = $_SERVER["SERVER_NAME"];
 
@@ -31,6 +31,8 @@ $config["homePage"] = $config["webHome"] . "/" . "home.php";
 
 $config["apiKey"] = file_get_contents($apiKeyPath);
 
+$config["sessionManager"] = $config["webHome"];
+
 /************** Custom files *******************/
 
 // Custom js to check for Okta session
@@ -40,10 +42,13 @@ $config["checkForSession"]["isInline"] = TRUE;
 
 // A little hack to keep the dates current on the
 // home page articles
-
 $config["dates"]["type"] = "javascript";
 $config["dates"]["url"] = $config["webHome"] . "/javascript/dates.js";
 $config["dates"]["isInline"] = FALSE;
+
+$config["oktaSignInOIDC"]["type"] = "javascript";
+$config["oktaSignInOIDC"]["vars"] = array("oktaBaseURL", "sessionManager");
+$config["oktaSignInOIDC"]["isInline"] = TRUE;
 
 /************** Okta files *********************/
 
@@ -54,7 +59,7 @@ $config["okta-signin-widget"]["isInline"] = FALSE;
 
 // Okta core CSS
 $config["oktaWidgetCSScore"]["type"] = "css";
-$config["oktaWidgetSScore"]["url"] = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/css/okta-sign-in-1.3.3.min.css";
+$config["oktaWidgetCSScore"]["url"] = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/css/okta-sign-in-1.3.3.min.css";
 $config["oktaWidgetCSScore"]["isInline"] = FALSE;
 
 // Okta customizable CSS
@@ -66,8 +71,6 @@ $config["oktaWidgetCSStheme"]["isInline"] = FALSE;
 $config["mainCSS"]["type"] = "css";
 $config["mainCSS"]["url"] = $config["webHome"] . "/css/main.css";
 $config["mainCSS"]["isInline"] = FALSE;
-
-
 
 /***************** Utilities *********************/
 

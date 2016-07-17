@@ -53,12 +53,6 @@ $thisPage->setTitle("Atko Travel Agency Home");
 // jquery
 $thisPage->addElement("jquery");
 
-// $thisPage->addElement("okta-signin-widget");
-
-// $thisPage->addElement("oktaCSScore");
-
-// $thisPage->addElement("oktaCSStheme");
-
 $thisPage->addElement("mainCSS");
 
 $thisPage->addElement("dates");

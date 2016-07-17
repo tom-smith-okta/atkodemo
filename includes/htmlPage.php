@@ -11,9 +11,11 @@ class htmlPage {
 		$this->elements["css"]["tag"] = "<link rel = 'stylesheet' href = '%PATH%'/>";
 		$this->elements["css"]["block"] = "";
 
+		$this->body = "";
+		
 		$this->elements["body"]["class"] = "";
 
-		$this->findFiles();
+		// $this->findFiles();
 
 		$this->config = $config;
 	}
