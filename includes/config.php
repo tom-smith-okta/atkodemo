@@ -10,6 +10,8 @@ $config["fsHome"] = $_SERVER['DOCUMENT_ROOT'] . "/" . $config["homeDir"];
 // or on someone else's localhost
 $config["oktaOrg"] = "tomco";
 
+$config["name"] = "Atko Travel Agency";
+
 $config["localhost"] = "localhost:8888";
 
 // store the apiKey in a file not exposed to the web
@@ -31,7 +33,11 @@ $config["host"] = "http://" . $config["host"];
 $config["oktaBaseURL"] = "https://" . $config["oktaOrg"] . ".okta.com";
 $config["apiHome"] = $config["oktaBaseURL"] . "/api/v1";
 
+// e.g.: /atkotravel
 $config["webHome"] = "/" . $config["homeDir"];
+
+// http://localhost:8888/atkotravel
+$config["webHomeURL"] = $config["host"] . $config["webHome"];
 
 $config["homePage"] = $config["webHome"] . "/" . "home.php";
 
@@ -40,8 +46,6 @@ $config["apiKey"] = file_get_contents($apiKeyPath);
 // Danger Will Robinson
 // This value needs to match a value in the Redirect URIs list
 // in your Okta tenant
-// probably needs to be an absolute URL
-// ports could be problematic
 $config["sessionManager"] = $config["host"] . $config["webHome"] . "/index.php";
 
 /************** Custom files *******************/

@@ -8,15 +8,7 @@ $thisPage = new htmlPage($config);
 
 /*************************************/
 
-if (empty($_GET["oktaCookieSessionID"])) {
-
-	$state = "unAuth";
-
-	$header = getHeader();
-
-	// $topMenu = "\n<li><a href='login.php'>Log in</a></li>";
-	// $topMenu .= "\n<li><a href = 'register.php'>Register</a></li>";
-}
+if (empty($_GET["oktaCookieSessionID"])) { $header = getHeader("unAuth"); }
 else {
 
 	$apiKey = $config["apiKey"];
@@ -41,15 +33,9 @@ else {
 
 	$firstName = $user["profile"]["firstName"];
 
-	$header = getAuthHeader($_GET["oktaCookieSessionID"], $firstName);
+	// $header = getAuthHeader($_GET["oktaCookieSessionID"], $firstName);
 
-	// $topMenu = "\n<li><a href='" . $config["salesforce"] . "' target = '_blank'>Chatter</a></li>";
-
-	// $logoutLink = "logout.php?oktaCookieSessionID=" . $_GET["oktaCookieSessionID"];
-
-	// $topMenu .= "\n<li><a href = '" . $logoutLink . "'>Log out</a></li>";
-
-	// $topMenu .= "\n<li><a href = '#'>Welcome, " .  $firstName . "!</a></li>";
+	$header = getHeader("auth", $_GET["oktaCookieSessionID"], $firstName);
 
 }
 
