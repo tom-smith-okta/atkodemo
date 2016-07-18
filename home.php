@@ -41,7 +41,7 @@ else {
 
 /*** Manually add elements here ******/
 
-$thisPage->setTitle("Atko Travel Agency Home");
+$thisPage->setTitle($config["name"] . " Home");
 
 // jquery
 $thisPage->addElement("jquery");
@@ -53,6 +53,8 @@ $thisPage->addElement("dates");
 $body = file_get_contents("home.html");
 
 $body = str_replace("%HEADER%", $header, $body);
+
+$body = str_replace("%NAME%", $config["name"], $body);
 
 $thisPage->addToBody($body);
 

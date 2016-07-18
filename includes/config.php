@@ -10,7 +10,7 @@ $config["fsHome"] = $_SERVER['DOCUMENT_ROOT'] . "/" . $config["homeDir"];
 // or on someone else's localhost
 $config["oktaOrg"] = "tomco";
 
-$config["name"] = "Atko Travel Agency";
+$config["name"] = "Atko Corp";
 
 $config["localhost"] = "localhost:8888";
 

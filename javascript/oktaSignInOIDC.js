@@ -6,6 +6,8 @@
 			baseUrl: '%oktaBaseURL%',
 			features: {
 				rememberDevice: false,
+				multiOptionalFactorEnroll: true,
+				smsRecovery: true
 			},
 		  
 		// OIDC options

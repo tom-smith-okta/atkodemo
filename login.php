@@ -8,7 +8,7 @@ $thisPage = new htmlPage($config);
 
 /*************************************/
 
-$thisPage->setTitle("Atko Travel Agency - Log In");
+$thisPage->setTitle($config["name"] . " - Log In");
 
 $thisPage->addElement("jquery");
 

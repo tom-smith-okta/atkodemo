@@ -10,7 +10,7 @@ $thisPage = new htmlPage($config);
 
 /*** Manually add elements here ******/
 
-$thisPage->setTitle("Atko Travel Agency - Register");
+$thisPage->setTitle($config["name"] . " - Register");
 
 // jquery
 $thisPage->addElement("jquery");
