@@ -1,8 +1,5 @@
 <script>
 
-	console.log("the window location is: " + window.location.href);
-	console.log("the hostname is: " + window.location.hostname);
-
 	function displayWidget() {
 
 		var oktaSignIn = new OktaSignIn({

@@ -22,9 +22,14 @@ $thisPage->addElement("oktaWidgetCSStheme");
 
 $thisPage->addElement("oktaSignInOIDC");
 
+$thisPage->setBodyParam("class", "single");
+
 $body = file_get_contents("login.html");
+
+$header = getHeader("blank");
+
+$body = str_replace("%HEADER%", $header, $body);
 
 $thisPage->addToBody($body);
 
 $thisPage->display();
-

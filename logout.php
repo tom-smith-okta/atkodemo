@@ -2,11 +2,7 @@
 
 $oktaCookieSessionID = $_GET["oktaCookieSessionID"];
 
-// pull my api key from a file not exposed to the web
-$apiKey = file_get_contents("/usr/local/keys/oktaAPI.txt");
-
-// in a production system I would check the oktaCookieSessionID here
-// again to make sure that someone has not messed with the GET call
+$apiKey = $config["apiKey"];
 
 $curl = curl_init();
 curl_setopt_array($curl, array(

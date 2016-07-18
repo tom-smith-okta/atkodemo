@@ -9,8 +9,13 @@ $thisPage = new htmlPage($config);
 /*************************************/
 
 if (empty($_GET["oktaCookieSessionID"])) {
-	$topMenu = "\n<li><a href='login.php'>Log in</a></li>";
-	$topMenu .= "\n<li><a href = 'register.php'>Register</a></li>";
+
+	$state = "unAuth";
+
+	$header = getHeader();
+
+	// $topMenu = "\n<li><a href='login.php'>Log in</a></li>";
+	// $topMenu .= "\n<li><a href = 'register.php'>Register</a></li>";
 }
 else {
 
@@ -36,13 +41,15 @@ else {
 
 	$firstName = $user["profile"]["firstName"];
 
-	$topMenu = "\n<li><a href='" . $config["salesforce"] . "' target = '_blank'>Chatter</a></li>";
+	$header = getAuthHeader($_GET["oktaCookieSessionID"], $firstName);
 
-	$logoutLink = "logout.php?oktaCookieSessionID=" . $_GET["oktaCookieSessionID"];
+	// $topMenu = "\n<li><a href='" . $config["salesforce"] . "' target = '_blank'>Chatter</a></li>";
 
-	$topMenu .= "\n<li><a href = '" . $logoutLink . "'>Log out</a></li>";
+	// $logoutLink = "logout.php?oktaCookieSessionID=" . $_GET["oktaCookieSessionID"];
 
-	$topMenu .= "\n<li><a href = '#'>Welcome, " .  $firstName . "!</a></li>";
+	// $topMenu .= "\n<li><a href = '" . $logoutLink . "'>Log out</a></li>";
+
+	// $topMenu .= "\n<li><a href = '#'>Welcome, " .  $firstName . "!</a></li>";
 
 }
 
@@ -59,7 +66,7 @@ $thisPage->addElement("dates");
 
 $body = file_get_contents("home.html");
 
-$body = str_replace("%TOPMENU%", $topMenu, $body);
+$body = str_replace("%HEADER%", $header, $body);
 
 $thisPage->addToBody($body);
 

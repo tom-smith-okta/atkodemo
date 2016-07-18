@@ -1,6 +1,5 @@
 <?php
 
-
 $config["homeDir"] = $home; // e.g.: "atkotravel"
 
 // e.g.: "/Applications/MAMP/htdocs"
@@ -90,5 +89,3 @@ $config["mainCSS"]["isInline"] = FALSE;
 $config["jquery"]["type"] = "javascript";
 $config["jquery"]["url"] = "https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js";
 $config["jquery"]["isInline"] = FALSE;
-
-

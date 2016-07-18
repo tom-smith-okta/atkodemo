@@ -1,23 +1,30 @@
 <?php
 
-define("HOME", "atkoTravel"); // home dir on webserver
+$home = "atkotravel"; // establishes homedir in webdir
 
-include $_SERVER['DOCUMENT_ROOT'] . "/" . HOME . "/includes/includes.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/" . $home . "/includes/includes.php";
 
-$thisPage = new htmlPage();
+$thisPage = new htmlPage($config);
+
+/*************************************/
 
 /*** Manually add elements here ******/
 
 $thisPage->setTitle("Atko Travel Agency - Register");
 
 // jquery
-$thisPage->addElement("javascript", "https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js");
+$thisPage->addElement("jquery");
+
+$thisPage->addElement("mainCSS");
 
 $body = file_get_contents("register.html");
 
 $thisPage->setBodyParam("class", "single");
 
+$header = getHeader("blank");
+
+$body = str_replace("%HEADER%", $header, $body);
+
 $thisPage->addToBody($body);
 
 $thisPage->display();
-
