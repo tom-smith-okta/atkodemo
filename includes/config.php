@@ -1,6 +1,6 @@
 <?php
 
-$config["homeDir"] = $home; // e.g.: "atkotravel"
+$config["homeDir"] = $home; // e.g.: "atkodemo"
 
 // e.g.: "/Applications/MAMP/htdocs"
 $config["fsHome"] = $_SERVER['DOCUMENT_ROOT'] . "/" . $config["homeDir"];
@@ -22,7 +22,7 @@ $apiKeyPath = "/usr/local/keys/oktaAPI.txt";
 // if fopen() fails the value will be prepended with $config["webHome"]
 $logoPath = "images/logo.png"; 
 
-// $config["bgImage"] = 
+$bgImagePath = "images/bgImage.jpg";
 
 // The path to salesforce on your Okta instance
 // future dev efforts might retrieve an end-user's list of apps automatically
@@ -76,7 +76,7 @@ $config["dates"]["url"] = $config["webHome"] . "/javascript/dates.js";
 $config["dates"]["isInline"] = FALSE;
 
 $config["oktaSignInOIDC"]["type"] = "javascript";
-$config["oktaSignInOIDC"]["vars"] = array("oktaBaseURL", "sessionManager");
+$config["oktaSignInOIDC"]["vars"] = array("oktaBaseURL", "sessionManager", "logo");
 $config["oktaSignInOIDC"]["isInline"] = TRUE;
 
 /************** Okta files *********************/

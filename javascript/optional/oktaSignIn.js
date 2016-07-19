@@ -1,3 +1,8 @@
+
+// This code is not live in the demo.
+// Keeping it around for reference.
+// it is the non-OIDC version of the okta sign-in widget
+
 function checkOktaSession() {
 
 	var baseUrl = 'https://tomco.okta.com';

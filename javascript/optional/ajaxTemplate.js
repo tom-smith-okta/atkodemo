@@ -1,3 +1,6 @@
+// for reference only, not currently used in demo
+// keeping around in case I need to use ajax
+
 
 // gets the user's first name and the appropriate HTML
 // for the top nav menu based on their session state

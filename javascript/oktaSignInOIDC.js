@@ -4,6 +4,7 @@
 
 		var oktaSignIn = new OktaSignIn({
 			baseUrl: '%oktaBaseURL%',
+			logo: '%logo%',
 			features: {
 				rememberDevice: false,
 				multiOptionalFactorEnroll: true,
