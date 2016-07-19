@@ -17,7 +17,17 @@ $config["localhost"] = "localhost:8888";
 // store the apiKey in a file not exposed to the web
 $apiKeyPath = "/usr/local/keys/oktaAPI.txt";
 
-$config["salesforce"] = "https://tomco.okta.com/home/salesforce/0oapq5e1G3yk5Syeg1t5/46";
+// you can supply a local path here or a URI
+// the value will be tested with fopen()
+// if fopen() fails the value will be prepended with $config["webHome"]
+$logoPath = "images/logo.png"; 
+
+// $config["bgImage"] = 
+
+// The path to salesforce on your Okta instance
+// future dev efforts might retrieve an end-user's list of apps automatically
+// but this demo is optimized for showing automatic provisioning to SF
+$config["salesforce"] = "/home/salesforce/0oapq5e1G3yk5Syeg1t5/46";
 
 /****************************************/
 
@@ -32,9 +42,13 @@ $config["host"] = "http://" . $config["host"];
 
 $config["oktaBaseURL"] = "https://" . $config["oktaOrg"] . ".okta.com";
 $config["apiHome"] = $config["oktaBaseURL"] . "/api/v1";
+$config["salesforce"] = $config["oktaBaseURL"] . $config["salesforce"];
 
 // e.g.: /atkotravel
 $config["webHome"] = "/" . $config["homeDir"];
+
+if (fopen($logoPath)) { $config["logo"] = $logoPath; }
+else { $config["logo"] = $config["webHome"] . "/" . $logoPath; }
 
 // http://localhost:8888/atkotravel
 $config["webHomeURL"] = $config["host"] . $config["webHome"];

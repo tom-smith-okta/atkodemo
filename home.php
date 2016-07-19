@@ -14,7 +14,7 @@ else {
 	$apiKey = $config["apiKey"];
 
 	// in a production system I would check the oktaCookieSessionID here
-	// again to make sure that someone has not messed with the GET call
+	// again to make sure that someone has not messed with the GET request
 
 	$oktaUserID = $_GET["oktaUserID"];
 
@@ -32,8 +32,6 @@ else {
 	$user = json_decode($result, TRUE);
 
 	$firstName = $user["profile"]["firstName"];
-
-	// $header = getAuthHeader($_GET["oktaCookieSessionID"], $firstName);
 
 	$header = getHeader("auth", $_GET["oktaCookieSessionID"], $firstName);
 
@@ -55,6 +53,8 @@ $body = file_get_contents("home.html");
 $body = str_replace("%HEADER%", $header, $body);
 
 $body = str_replace("%NAME%", $config["name"], $body);
+
+$body = str_replace("%LOGO%", $config["logo"], $body);
 
 $thisPage->addToBody($body);
 
