@@ -53,6 +53,9 @@ $config["host"] = $_SERVER["SERVER_NAME"];
 if (($config["host"]) == "localhost") {
 	$config["host"] = $config["localhost"];
 }
+else {
+	error_reporting(0); // turn off error reporting for "production" sites
+}
 
 // Need to add some logic here to accommodate https
 $config["host"] = "http://" . $config["host"];
@@ -69,10 +72,10 @@ $config["salesforce"] = $config["oktaBaseURL"] . $config["salesforce"];
 // /atkodemo
 $config["webHome"] = "/" . $config["homeDir"];
 
-if (fopen($logoPath)) { $config["logo"] = $logoPath; }
+if (fopen($logoPath, "r")) { $config["logo"] = $logoPath; }
 else { $config["logo"] = $config["webHome"] . "/" . $logoPath; }
 
-if (fopen($bgImagePath)) { $config["bgImage"] = $bgImagePath; }
+if (fopen($bgImagePath, "r")) { $config["bgImage"] = $bgImagePath; }
 else { $config["bgImage"] = $config["webHome"] . "/" . $bgImagePath; }
 
 // http://localhost:8888/atkodemo
