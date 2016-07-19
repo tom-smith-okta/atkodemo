@@ -5,6 +5,8 @@ $config["homeDir"] = $home; // e.g.: "atkodemo"
 // e.g.: "/Applications/MAMP/htdocs"
 $config["fsHome"] = $_SERVER['DOCUMENT_ROOT'] . "/" . $config["homeDir"];
 
+$oktaWidgetBaseURL = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3";
+
 // Settings that would need to change for this app to run
 // with a different okta tenant
 // or on someone else's localhost
@@ -66,44 +68,46 @@ $config["sessionManager"] = $config["host"] . $config["webHome"] . "/index.php";
 
 // Custom js to check for Okta session
 $config["checkForSession"]["type"] = "javascript";
+$config["checkForSession"]["location"] = "inline";
 $config["checkForSession"]["vars"] = array("oktaBaseURL", "homePage");
-$config["checkForSession"]["isInline"] = TRUE;
 
 // A little hack to keep the dates current on the
 // home page articles
 $config["dates"]["type"] = "javascript";
-$config["dates"]["url"] = $config["webHome"] . "/javascript/dates.js";
-$config["dates"]["isInline"] = FALSE;
+$config["dates"]["location"] = "local";
 
 $config["oktaSignInOIDC"]["type"] = "javascript";
+$config["oktaSignInOIDC"]["location"] = "inline";
 $config["oktaSignInOIDC"]["vars"] = array("oktaBaseURL", "sessionManager", "logo");
-$config["oktaSignInOIDC"]["isInline"] = TRUE;
 
 /************** Okta files *********************/
 
 // Okta widget
 $config["okta-signin-widget"]["type"] = "javascript";
-$config["okta-signin-widget"]["url"] = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/js/okta-sign-in-1.3.3.min.js";
-$config["okta-signin-widget"]["isInline"] = FALSE;
+$config["okta-signin-widget"]["location"] = "remote";
+$config["okta-signin-widget"]["url"] = $oktaWidgetBaseURL . "/js/okta-sign-in-1.3.3.min.js";
 
 // Okta core CSS
 $config["oktaWidgetCSScore"]["type"] = "css";
-$config["oktaWidgetCSScore"]["url"] = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/css/okta-sign-in-1.3.3.min.css";
-$config["oktaWidgetCSScore"]["isInline"] = FALSE;
+$config["oktaWidgetCSScore"]["location"] = "remote";
+$config["oktaWidgetCSScore"]["url"] = $oktaWidgetBaseURL . "/css/okta-sign-in-1.3.3.min.css";
 
-// Okta customizable CSS
+// Okta customizable CSS - remote
 $config["oktaWidgetCSStheme"]["type"] = "css";
-$config["oktaWidgetCSStheme"]["url"] = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3/css/okta-theme-1.3.3.css";
-$config["oktaWidgetCSStheme"]["isInline"] = FALSE;
+$config["oktaWidgetCSStheme"]["location"] = "remote";
+$config["oktaWidgetCSStheme"]["url"] = $oktaWidgetBaseURL . "/css/okta-theme-1.3.3.css";
+
+// Okta customizable CSS - local
+$config["oktaWidgetCSSlocal"]["type"] = "css";
+$config["oktaWidgetCSSlocal"]["location"] = "local"; 
 
 /***************** Design stuff ******************/
 $config["mainCSS"]["type"] = "css";
-$config["mainCSS"]["url"] = $config["webHome"] . "/css/main.css";
-$config["mainCSS"]["isInline"] = FALSE;
+$config["mainCSS"]["location"] = "local";
 
 /***************** Utilities *********************/
 
 // jquery
 $config["jquery"]["type"] = "javascript";
+$config["jquery"]["location"] = "remote";
 $config["jquery"]["url"] = "https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js";
-$config["jquery"]["isInline"] = FALSE;

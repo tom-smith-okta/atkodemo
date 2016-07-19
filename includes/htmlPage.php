@@ -27,15 +27,19 @@ class htmlPage {
 
 		$type = $this->config[$elementName]["type"]; // either "javascript" or "css"
 
-		if ($this->config[$elementName]["isInline"]) {
+		$location = $this->config[$elementName]["location"]; // remote || local || inline
+
+		if ($location == "local") {
 			$ext = $this->elements[$type]["ext"]; // either ".js" or ".css"
-
-			$filePath = $this->config["fsHome"] . "/" . $type . "/" . $elementName . $ext;
-
-			$content = $this->replaceVars($filePath, $elementName);
-
+			$filePath = $this->config["webHome"] . "/" . $type . "/" . $elementName . $ext;
+			$content = str_replace("%PATH%", $filePath, $this->elements[$type]["tag"]);
 		}
-		else {
+		else if ($location == "inline") {
+			$ext = $this->elements[$type]["ext"]; // either ".js" or ".css"
+			$filePath = $this->config["fsHome"] . "/" . $type . "/" . $elementName . $ext;
+			$content = $this->replaceVars($filePath, $elementName);
+		}
+		else { // $location = "remote"
 			$content = str_replace("%PATH%", $this->config[$elementName]["url"], $this->elements[$type]["tag"]);
 		}
 

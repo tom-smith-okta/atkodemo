@@ -22,6 +22,8 @@ $thisPage->addElement("oktaWidgetCSStheme");
 
 $thisPage->addElement("oktaSignInOIDC");
 
+$thisPage->addElement("oktaWidgetCSSlocal");
+
 $thisPage->setBodyParam("class", "single");
 
 $body = file_get_contents("login.html");
@@ -31,5 +33,17 @@ $header = getHeader("blank");
 $body = str_replace("%HEADER%", $header, $body);
 
 $thisPage->addToBody($body);
+
+// $content = 
+
+// $thisPage->addToBlock($content, $type) {
+
+// 		if (!empty($this->elements[$type]["block"])) { 
+// 			$this->elements[$type]["block"] .= "\n\t\t";
+// 		}
+
+// 		$this->elements[$type]["block"] .= "\n" . $content . "\n";
+// 	}
+
 
 $thisPage->display();
