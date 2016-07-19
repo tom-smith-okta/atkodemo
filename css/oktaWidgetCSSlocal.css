@@ -1,7 +1,9 @@
 <style>
   body {
-    background-image: url('https://farm9.staticflickr.com/8332/8451032652_b2bf0bdadc_h.jpg');
-    background-repeat: no-repeat;
+/*    background-image: url('https://farm9.staticflickr.com/8332/8451032652_b2bf0bdadc_h.jpg');
+*/
+    background-image: url('%bgImage%');
+   background-repeat: no-repeat;
     background-position: center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;

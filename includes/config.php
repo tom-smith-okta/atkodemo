@@ -52,6 +52,9 @@ $config["webHome"] = "/" . $config["homeDir"];
 if (fopen($logoPath)) { $config["logo"] = $logoPath; }
 else { $config["logo"] = $config["webHome"] . "/" . $logoPath; }
 
+if (fopen($bgImagePath)) { $config["bgImage"] = $bgImagePath; }
+else { $config["bgImage"] = $config["webHome"] . "/" . $bgImagePath; }
+
 // http://localhost:8888/atkotravel
 $config["webHomeURL"] = $config["host"] . $config["webHome"];
 
@@ -99,7 +102,9 @@ $config["oktaWidgetCSStheme"]["url"] = $oktaWidgetBaseURL . "/css/okta-theme-1.3
 
 // Okta customizable CSS - local
 $config["oktaWidgetCSSlocal"]["type"] = "css";
-$config["oktaWidgetCSSlocal"]["location"] = "local"; 
+$config["oktaWidgetCSSlocal"]["location"] = "inline";
+$config["oktaWidgetCSSlocal"]["vars"] = array("bgImage"); 
+
 
 /***************** Design stuff ******************/
 $config["mainCSS"]["type"] = "css";

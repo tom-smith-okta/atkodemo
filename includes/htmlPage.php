@@ -16,7 +16,7 @@ class htmlPage {
 		$this->elements["body"]["class"] = "";
 
 		// this function auto-loads files placed in certain locations.
-		// not using right now.
+		// not using it right now.
 		// $this->findFiles();
 
 		$this->config = $config;
