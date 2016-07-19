@@ -8,7 +8,7 @@ $thisPage = new htmlPage($config);
 
 /*** Manually add elements here ******/
 
-$thisPage->setTitle($config["name"] . " - Session manager");
+$thisPage->setTitle($config["name"] . " - Redirect URL");
 
 // okta sign-in widget js
 $thisPage->addElement("okta-signin-widget");

@@ -86,9 +86,7 @@ else {
 	// echo curl_error($curl);
 }
 
-// $url = "https://tomco.okta.com/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=http://localhost:8888/atkodemo";
-
-$url = $config["oktaBaseURL"] . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $config["sessionManager"];
+$url = $config["oktaBaseURL"] . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $config["redirectURL"];
 
 $headerString = "Location: " . $url; 
 

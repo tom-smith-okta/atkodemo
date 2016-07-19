@@ -13,7 +13,7 @@
 		  
 		// OIDC options
 		clientId: '%clientId%',
-		redirectUri: '%sessionManager%',
+		redirectUri: '%redirectURL%',
 
 		authScheme: 'OAUTH2',
 		authParams: {
@@ -42,8 +42,10 @@
 					console.dir(res);
 
 					// window.location = "http://localhost:8888/atkodemo/";
-
-					window.location = "%sessionManager%";
+					// doesn't seem like I should need to do this bc I 
+					// have already defined redirectURI above.
+					// worth some experimenting.
+					window.location = "%redirectURL%";
 
 				}
 			}

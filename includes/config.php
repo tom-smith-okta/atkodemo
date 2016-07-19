@@ -87,8 +87,8 @@ $config["apiKey"] = file_get_contents($apiKeyPath);
 // in your Okta tenant
 
 // http://localhost:8888/atkodemo/
-// i am using index.php as my session manager script
-$config["sessionManager"] = $config["host"] . $config["webHome"];
+// i am using index.php as my redirect target and session manager
+$config["redirectURL"] = $config["host"] . $config["webHome"];
 
 /************** Custom files *******************/
 
@@ -104,7 +104,7 @@ $config["dates"]["location"] = "local";
 
 $config["oktaSignInOIDC"]["type"] = "javascript";
 $config["oktaSignInOIDC"]["location"] = "inline";
-$config["oktaSignInOIDC"]["vars"] = array("oktaBaseURL", "sessionManager", "logo", "clientId", "idps");
+$config["oktaSignInOIDC"]["vars"] = array("oktaBaseURL", "redirectURL", "logo", "clientId", "idps");
 
 /************** Okta files *********************/
 
