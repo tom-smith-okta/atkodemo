@@ -35,7 +35,16 @@ $bgImagePath = "images/bgImage.jpg";
 // but this demo is optimized for showing automatic provisioning to SF
 $config["salesforce"] = "/home/salesforce/0oapq5e1G3yk5Syeg1t5/46";
 
+// OIDC client ID - from your Okta social auth app
+$config["clientId"] = "YYUAPHIAj3JPPO6yJans";
+
+$facebook = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");
+$idps[] = $facebook;
+// use those same two lines again to push another idp onto the stack
+
 /************************************************************************/
+
+$config["idps"] = json_encode($idps);
 
 $config["host"] = $_SERVER["SERVER_NAME"];
 
@@ -95,7 +104,7 @@ $config["dates"]["location"] = "local";
 
 $config["oktaSignInOIDC"]["type"] = "javascript";
 $config["oktaSignInOIDC"]["location"] = "inline";
-$config["oktaSignInOIDC"]["vars"] = array("oktaBaseURL", "sessionManager", "logo");
+$config["oktaSignInOIDC"]["vars"] = array("oktaBaseURL", "sessionManager", "logo", "clientId", "idps");
 
 /************** Okta files *********************/
 

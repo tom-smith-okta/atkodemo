@@ -12,8 +12,8 @@
 			},
 		  
 		// OIDC options
-		clientId: 'YYUAPHIAj3JPPO6yJans',
-		redirectUri: '%sessionManager%', // need to investigate further
+		clientId: '%clientId%',
+		redirectUri: '%sessionManager%',
 
 		authScheme: 'OAUTH2',
 		authParams: {
@@ -28,10 +28,8 @@
 			]
 		},
 		idpDisplay: 'PRIMARY',
-		idps: [{
-			'type': 'FACEBOOK',
-			'id': '0oa1w1pmezuPUbhoE1t6'
-			}]
+
+		idps: %idps%
 		});
 
 		oktaSignIn.renderEl(
