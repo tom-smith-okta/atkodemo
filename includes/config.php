@@ -5,18 +5,22 @@ $config["homeDir"] = $home; // e.g.: "atkodemo"
 // e.g.: "/Applications/MAMP/htdocs"
 $config["fsHome"] = $_SERVER['DOCUMENT_ROOT'] . "/" . $config["homeDir"];
 
-$oktaWidgetBaseURL = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3";
-
+/*************************************************************************/
 // Settings that would need to change for this app to run
 // with a different okta tenant
 // or on someone else's localhost
 $config["oktaOrg"] = "tomco";
 
+// name of fake company
 $config["name"] = "Atko Corp";
 
+// If your localhost is running on a specific port, indicate it here
 $config["localhost"] = "localhost:8888";
 
-// store the apiKey in a file not exposed to the web
+ // I add all new users to a group called "externalUsers"
+$config["groupID"] = "00g1yq9e5JOWsxFdu1t6";
+
+// store your apiKey in a file not exposed to the web
 $apiKeyPath = "/usr/local/keys/oktaAPI.txt";
 
 // you can supply a local path here or a URI
@@ -31,22 +35,29 @@ $bgImagePath = "images/bgImage.jpg";
 // but this demo is optimized for showing automatic provisioning to SF
 $config["salesforce"] = "/home/salesforce/0oapq5e1G3yk5Syeg1t5/46";
 
-/****************************************/
+/************************************************************************/
 
 $config["host"] = $_SERVER["SERVER_NAME"];
 
+// if this site is running on localhost, then use the value for localhost
+// indicated above: localhost:8888
 if (($config["host"]) == "localhost") {
 	$config["host"] = $config["localhost"];
 }
 
-// Need to update this to accommodate https
+// Need to add some logic here to accommodate https
 $config["host"] = "http://" . $config["host"];
 
+// https://tomco.okta.com
 $config["oktaBaseURL"] = "https://" . $config["oktaOrg"] . ".okta.com";
+
+// https://tomco.okta.com/api/v1
 $config["apiHome"] = $config["oktaBaseURL"] . "/api/v1";
+
+// https://tomco.okta.com/home/salesforce/0oapq5e1G3yk5Syeg1t5/46
 $config["salesforce"] = $config["oktaBaseURL"] . $config["salesforce"];
 
-// e.g.: /atkotravel
+// /atkodemo
 $config["webHome"] = "/" . $config["homeDir"];
 
 if (fopen($logoPath)) { $config["logo"] = $logoPath; }
@@ -55,7 +66,7 @@ else { $config["logo"] = $config["webHome"] . "/" . $logoPath; }
 if (fopen($bgImagePath)) { $config["bgImage"] = $bgImagePath; }
 else { $config["bgImage"] = $config["webHome"] . "/" . $bgImagePath; }
 
-// http://localhost:8888/atkotravel
+// http://localhost:8888/atkodemo
 $config["webHomeURL"] = $config["host"] . $config["webHome"];
 
 $config["homePage"] = $config["webHome"] . "/" . "home.php";
@@ -65,7 +76,10 @@ $config["apiKey"] = file_get_contents($apiKeyPath);
 // Danger Will Robinson
 // This value needs to match a value in the Redirect URIs list
 // in your Okta tenant
-$config["sessionManager"] = $config["host"] . $config["webHome"] . "/index.php";
+
+// http://localhost:8888/atkodemo/
+// i am using index.php as my session manager script
+$config["sessionManager"] = $config["host"] . $config["webHome"];
 
 /************** Custom files *******************/
 
@@ -84,6 +98,8 @@ $config["oktaSignInOIDC"]["location"] = "inline";
 $config["oktaSignInOIDC"]["vars"] = array("oktaBaseURL", "sessionManager", "logo");
 
 /************** Okta files *********************/
+
+$oktaWidgetBaseURL = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3";
 
 // Okta widget
 $config["okta-signin-widget"]["type"] = "javascript";
@@ -104,7 +120,6 @@ $config["oktaWidgetCSStheme"]["url"] = $oktaWidgetBaseURL . "/css/okta-theme-1.3
 $config["oktaWidgetCSSlocal"]["type"] = "css";
 $config["oktaWidgetCSSlocal"]["location"] = "inline";
 $config["oktaWidgetCSSlocal"]["vars"] = array("bgImage"); 
-
 
 /***************** Design stuff ******************/
 $config["mainCSS"]["type"] = "css";

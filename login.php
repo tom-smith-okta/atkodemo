@@ -1,6 +1,6 @@
 <?php
 
-$home = "atkotravel"; // establishes homedir in webdir
+$home = "atkodemo"; // establishes homedir in webdir
 
 include $_SERVER['DOCUMENT_ROOT'] . "/" . $home . "/includes/includes.php";
 
@@ -33,17 +33,5 @@ $header = getHeader("blank");
 $body = str_replace("%HEADER%", $header, $body);
 
 $thisPage->addToBody($body);
-
-// $content = 
-
-// $thisPage->addToBlock($content, $type) {
-
-// 		if (!empty($this->elements[$type]["block"])) { 
-// 			$this->elements[$type]["block"] .= "\n\t\t";
-// 		}
-
-// 		$this->elements[$type]["block"] .= "\n" . $content . "\n";
-// 	}
-
 
 $thisPage->display();

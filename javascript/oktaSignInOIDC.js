@@ -43,7 +43,7 @@
 
 					console.dir(res);
 
-					// window.location = "http://localhost:8888/atkotravel/";
+					// window.location = "http://localhost:8888/atkodemo/";
 
 					window.location = "%sessionManager%";
 

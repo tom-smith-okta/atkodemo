@@ -16,7 +16,7 @@ function checkOktaSession() {
 
 				console.log("the session token is: " + res.session.token);
 
-				res.session.setCookieAndRedirect('http://localhost:8888/atkotravel/index.html');
+				res.session.setCookieAndRedirect('http://localhost:8888/atkodemo/index.html');
 			}
 		}
 	);

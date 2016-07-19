@@ -1,10 +1,14 @@
 <?php
 
-$apiKey = file_get_contents("/usr/local/keys/oktaAPI.txt");
+$home = "atkodemo"; // establishes homedir in webdir
 
-$oktaHome = "https://tomco.okta.com";
+include $_SERVER['DOCUMENT_ROOT'] . "/" . $home . "/includes/includes.php";
 
-// this would probably be prettier if I built an assoc array
+/****************************/
+
+$apiKey = $config["apiKey"];
+
+// this might be prettier if I built an assoc array
 // and then did json_encode
 $userData = '{
 	"profile": {
@@ -24,7 +28,7 @@ $curl = curl_init();
 curl_setopt_array($curl, array(
 	CURLOPT_POST => 1,
 	CURLOPT_RETURNTRANSFER => 1,
-    CURLOPT_URL => $oktaHome . '/api/v1/users?activate=true',
+    CURLOPT_URL => $config["apiHome"] . "/users?activate=true",
     CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
     CURLOPT_POSTFIELDS => $userData
     ));
@@ -44,9 +48,7 @@ else {
 // Now let's assign this user to the group "externalUsers"
 // Use the Okta dashboard to assign apps to the group
 
-$groupID = "00g1yq9e5JOWsxFdu1t6";
-
-$url = $oktaHome . "/api/v1/groups/" . $groupID . "/users/" . $userID;
+$url = $config["apiHome"] . "/groups/" . $config["groupID"] . "/users/" . $userID;
 
 curl_setopt_array($curl, array(
     CURLOPT_URL => $url,
@@ -55,10 +57,6 @@ curl_setopt_array($curl, array(
 
 $result = curl_exec($curl);
 
-// header( 'Location: http://localhost:8888/atkotravel/login.php?userID=' . $userID ) ;
-
-// header( 'Location: http://localhost:8888/atkotravel/login.php') ;
-
 $password = $_POST['password'];
 
 $userData = '{
@@ -66,7 +64,7 @@ $userData = '{
 	"password": "' . $password . '"
 }';
 
-$url = $oktaHome . "/api/v1/sessions?additionalFields=cookieToken";
+$url = $config["apiHome"] . "/sessions?additionalFields=cookieToken";
 
 curl_setopt_array($curl, array(
 	CURLOPT_CUSTOMREQUEST => "POST",
@@ -83,33 +81,17 @@ if ($decodedResult["cookieToken"]) {
 
 	$cookieToken = $decodedResult["cookieToken"];
 
-	// echo "i have a cookieToken";
-	// echo "the cookie token is: " . $decodedResult["cookieToken"];
 }
 else {
 	// echo curl_error($curl);
 }
 
-// $cookieToken = $result->cookieToken;
+// $url = "https://tomco.okta.com/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=http://localhost:8888/atkodemo";
 
-// echo "the cookie token is: " . $cookieToken;
-
-$url = "https://tomco.okta.com/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=http://localhost:8888/atkotravel";
+$url = $config["oktaBaseURL"] . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $config["sessionManager"];
 
 $headerString = "Location: " . $url; 
 
 header($headerString);
 
 exit;
-
-// error-checking code
-// if ($decodedResult["status"] == "SUCCESS") {
-// 	echo "i have a sessionToken";
-// 	echo "the session token is: " . $decodedResult["sessionToken"];
-// }
-// elseif ($decodedResult["errorSummary"]) {
-// 	echo "the error was: " . $decodedResult["errorSummary"];
-// }
-// else {
-// 	echo curl_error($curl);
-// }
