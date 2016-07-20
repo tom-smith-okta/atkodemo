@@ -12,7 +12,7 @@ $config["fsHome"] = $_SERVER['DOCUMENT_ROOT'];
 
 if (strpos($_SERVER['DOCUMENT_ROOT'], $config["homeDir"])) {
 	// this means we are probably on www.atkodemo.com
-	$config["homeDir"] = "";
+	$config["homeDir"] = "/";
 }
 else {
 	$config["fsHome"] .= "/" . $config["homeDir"];

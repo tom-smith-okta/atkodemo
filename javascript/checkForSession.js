@@ -46,6 +46,6 @@ function checkForSession() {
 	});
 }
 
-window.onload = checkForSession;
+// window.onload = checkForSession;
 
 </script>
