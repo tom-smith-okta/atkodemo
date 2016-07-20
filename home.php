@@ -46,6 +46,8 @@ $thisPage->addElement("mainCSS");
 
 $thisPage->addElement("dates");
 
+$thisPage->addElement("font-awesome");
+
 $body = file_get_contents("home.html");
 
 $body = str_replace("%HEADER%", $header, $body);

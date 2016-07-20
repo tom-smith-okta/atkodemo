@@ -15,6 +15,12 @@ $thisPage->addElement("jquery");
 
 $thisPage->addElement("mainCSS");
 
+$thisPage->addElement("oktaWidgetCSScore");
+
+$thisPage->addElement("oktaWidgetCSStheme");
+
+$thisPage->addElement("oktaWidgetCSSlocal");
+
 $body = file_get_contents("register.html");
 
 $thisPage->setBodyParam("class", "single");
