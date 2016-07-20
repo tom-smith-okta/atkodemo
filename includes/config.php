@@ -12,7 +12,7 @@ $config["fsHome"] = $_SERVER['DOCUMENT_ROOT'];
 
 if (strpos($_SERVER['DOCUMENT_ROOT'], $config["homeDir"])) {
 	// this means we are probably on www.atkodemo.com
-	$config["homeDir"] = "/";
+	$config["homeDir"] = "";
 }
 else {
 	$config["fsHome"] .= "/" . $config["homeDir"];
@@ -84,7 +84,10 @@ $config["apiHome"] = $config["oktaBaseURL"] . "/api/v1";
 $config["salesforce"] = $config["oktaBaseURL"] . $config["salesforce"];
 
 // /atkodemo
-$config["webHome"] = "/" . $config["homeDir"];
+$config["webHome"] = "";
+if (!empty($config["homeDir"])) { $config["webHome"] = "/" . $config["homeDir"]; }
+
+
 
 if (fopen($logoPath, "r")) { $config["logo"] = $logoPath; }
 else { $config["logo"] = $config["webHome"] . "/" . $logoPath; }
