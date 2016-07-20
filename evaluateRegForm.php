@@ -1,8 +1,6 @@
 <?php
 
-$home = "atkodemo"; // establishes homedir in webdir
-
-include $_SERVER['DOCUMENT_ROOT'] . "/" . $home . "/includes/includes.php";
+include "includes/includes.php";
 
 /****************************/
 

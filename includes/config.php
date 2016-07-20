@@ -1,11 +1,25 @@
 <?php
 
-$config["homeDir"] = $home; // e.g.: "atkodemo"
+// this is the home directory name on the web server
+// (not the full path, just the dir name)
+$config["homeDir"] = "atkodemo"; // e.g.: "atkodemo"
 
-// e.g.: "/Applications/MAMP/htdocs"
-$config["fsHome"] = $_SERVER['DOCUMENT_ROOT'] . "/" . $config["homeDir"];
+/******* Next few lines should not be touched **************************/
+// I'm going to re-work the next few lines. They might not
+// really be necessary.
+
+$config["fsHome"] = $_SERVER['DOCUMENT_ROOT'];
+
+if (strpos($_SERVER['DOCUMENT_ROOT'], $config["homeDir"])) {
+	// this means we are probably on www.atkodemo.com
+	$config["homeDir"] = "";
+}
+else {
+	$config["fsHome"] .= "/" . $config["homeDir"];
+}
 
 /*************************************************************************/
+// MAIN CONFIGURATION BEGINS HERE
 // Settings that would need to change for this app to run
 // with a different okta tenant
 // or on someone else's localhost

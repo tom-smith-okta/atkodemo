@@ -1,10 +1,6 @@
 <?php
 
-echo "the document root is: " . $_SERVER['DOCUMENT_ROOT'];
-
-$home = "atkodemo"; // establishes homedir in webdir
-
-include $_SERVER['DOCUMENT_ROOT'] . "/" . $home . "/includes/includes.php";
+include "includes/includes.php";
 
 $thisPage = new htmlPage($config);
 

@@ -1,8 +1,10 @@
 <?php
 
-$home = "atkodemo"; // establishes homedir in webdir
+include "includes/includes.php";
 
-include $_SERVER['DOCUMENT_ROOT'] . "/" . $home . "/includes/includes.php";
+// $home = "atkodemo"; // establishes homedir in webdir
+
+// include $_SERVER['DOCUMENT_ROOT'] . "/" . $home . "/includes/includes.php";
 
 $thisPage = new htmlPage($config);
 
