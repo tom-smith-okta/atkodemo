@@ -36,17 +36,17 @@ this will basically output
 
 to the screen.
 
-Inserting content into the HTML page is broken down into two main sections, <head> and <body>.
+Inserting content into the HTML page is broken down into two main sections, \<head> and \<body>.
 
 The body is the easier part. Use the
 
     addToBody()
 
-method to add HTML to <body>. This method expects HTML as a parameter (without any body tags).
+method to add HTML to \<body>. This method expects HTML as a parameter (without any body tags).
 
-You can call this method as many times as you want to add new blocks of HTML to <body>.
+You can call this method as many times as you want to add new blocks of HTML to \<body>.
 
-To add a new component to <head> you have two options:
+To add a new component to \<head> you have two options:
 * addToBlock($content, $type)
   * This method is a little more free-form.
   * *$type* must be "javascript" || "css"
@@ -100,7 +100,7 @@ the following file must be in place:
 
 /atkodemo/css/mainCSS.js
 
-and this will result in the following tag to be added to <head>:
+and this will result in the following tag to be added to \<head>:
 
     <link rel = 'stylesheet' href = '/atkodemo/css/mainCSS.css'/>
 
@@ -116,7 +116,7 @@ and this will result in the following tag to be added to <head>:
 
 3. replace the %placeholders% with the corresponding value from $config
 
-4. add the string to the <head> as either a <script> or <style>
+4. add the string to the \<head> as either a \<script> or \<style>
 
 *example*
 
