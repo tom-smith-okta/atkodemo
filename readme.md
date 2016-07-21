@@ -26,11 +26,11 @@ This documentation is meant for those who want to do extensive configuration and
 
 The HTML generator generates HTML on-the-fly. You can create an empty HTML page by calling the class constructor:
 
-$thisPage = new htmlPage($config);
+    $thisPage = new htmlPage($config);
 
 the class constructor will probably complain if it doesn't get a value for $config, but you should be able to immediately display an empty html page with the display() method:
 
-$thisPage->display()
+    $thisPage->display()
 
 this will basically output
 
@@ -42,15 +42,20 @@ Inserting content into the HTML page is broken down into two main sections, HEAD
 
 The body is the easier part. Use the
 
-addToBody() method to add HTML to the body. This method expects HTML as a parameter.
+    addToBody()
+
+method to add HTML to the body. This method expects HTML as a parameter (without any body tags).
 
 You can call this method as many times as you want to add new blocks of HTML to the body.
 
-To add a new component to <HEAD>, you have two options:
+To add a new component to
+    <HEAD>
 
-1) the addToBlock($content, $type) method is a little more freeform.
-$type must be "javascript" || "css"
-$content should be html
+you have two options:
+
+1) the addToBlock($content, $type) method is a little more free-form.
+\$type must be "javascript" || "css"
+\$content should be html
 
 2) the addElement($elementName) is more structured, and good for creating elements that need to remain consistent across pages.
 
