@@ -136,14 +136,14 @@ the following file must be in place:
 
 4. the script will paste the string into the head as follows:
 
-    <head>
+    \<head>
 
-    <script>
+    \<script>
 
     [the string]
 
-    </script>
+    \</script>
 
     [other scripts and stuff]
 
-    </head>
+    \</head>
