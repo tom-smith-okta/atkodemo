@@ -32,7 +32,11 @@ the class constructor will probably complain if it doesn't get a value for $conf
 
 $thisPage->display()
 
-this will basically output <html><head></head><body></body></html> to the screen.
+this will basically output
+
+<html><head></head><body></body></html>
+
+to the screen.
 
 Inserting content into the HTML page is broken down into two main sections, HEAD and BODY.
 
