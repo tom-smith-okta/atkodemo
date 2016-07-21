@@ -13,7 +13,7 @@ $userData = '{
 		"firstName": "' . $_POST["firstName"] . '",
 		"lastName":  "' . $_POST["lastName"]  . '",
 		"email":     "' . $_POST["email"]     . '",
-		"login":     "' . $_POST["login"]     . '"
+		"login":     "' . $_POST["email"]     . '"
 	},
 	"credentials": {
 		"password": {
