@@ -91,6 +91,7 @@ class htmlPage {
 		}
 	}
 
+	// expects HTML w/o <body></body> tags
 	function addToBody($element) {
 		$this->body = $this->body . "\n\t\t" . $element;
 	}

@@ -87,8 +87,6 @@ $config["salesforce"] = $config["oktaBaseURL"] . $config["salesforce"];
 $config["webHome"] = "";
 if (!empty($config["homeDir"])) { $config["webHome"] = "/" . $config["homeDir"]; }
 
-
-
 if (fopen($logoPath, "r")) { $config["logo"] = $logoPath; }
 else { $config["logo"] = $config["webHome"] . "/" . $logoPath; }
 
