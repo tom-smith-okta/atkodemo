@@ -34,7 +34,7 @@ $thisPage->display()
 
 this will basically output
 
-<html><head></head><body></body></html>
+    <html><head></head><body></body></html>
 
 to the screen.
 
