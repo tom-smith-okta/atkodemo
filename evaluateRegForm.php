@@ -15,9 +15,30 @@ if (filter_var($email, FILTER_VALIDATE_EMAIL) == FALSE) {
 	exit;
 }
 
-// Is this an okta user?
-if (substr($email, -9) == "@okta.com") { $userType = "oktaUser"; }
-else { $userType = "endUser"; }
+// First, we'll assume that this is a regular user
+$userType = "regularUser";
+$password = $_POST["password"];
+$groupID = $config["groupID"];
+
+// Next, we'll check to see whether this is an Okta user
+
+/********************************************************/
+// MAKE SURE YOU CHANGE THIS BEFORE GOING TO PROD
+/********************************************************/
+
+$validEmailDomains = array("@okta.com", "@mailinator.com");
+
+foreach ($validEmailDomains as $domain) {
+
+	$offset = 0 - strlen($domain);
+
+	if (substr($email, $offset) == $domain) { 
+		// This is an Okta user
+		$userType = "oktaUser";
+		$password = "Atko1234!";
+		$groupID = $confg["oktaGroupID"];
+	}
+}
 
 $userData = '{
 	"profile": {
@@ -28,21 +49,12 @@ $userData = '{
 	},
 	"credentials": {
 		"password": {
-			"value": "' . $_POST["password"]  . '"
+			"value": "' . $password  . '"
 		}
 	}
 }';
 
-$url = $config["apiHome"] . "/users?activate=";
-
-if ($userType == "oktaUser") {
-	$url .= "false"; // do not automatically activate the user
-	$groupID = $confg["oktaGroupID"];
-}
-else {
-	$url .= "true";
-	$groupID = $config["groupID"];
-}
+$url = $config["apiHome"] . "/users?activate=true";
 
 $curl = curl_init();
 
@@ -97,7 +109,9 @@ if (array_key_exists("errorCauses", $decodedResult)) {
 	exit;
 }
 
-/************* IF IT'S AN OKTA USER, MAKE THEM AN ADMIN ***********/
+/******************* IF IT'S AN OKTA USER **********/
+
+/******************** MAKE THEM AN ADMIN ***********/
 
 if ($userType == "oktaUser") {
 	$url = $config["apiHome"] . "/users/" . $userID . "/roles";
@@ -123,46 +137,85 @@ if ($userType == "oktaUser") {
 
 		exit;
 	}
-}
 
-exit;
+	/************** AND SEND THEM A RESET PASSWORD EMAIL ******/
 
+	// {{url}}/api/v1/users/{{userId}}/credentials/forgot_password?sendEmail=false
+	// $url = $config["apiHome"] . "/users/" . $userID . "/credentials/forgot_password?sendEmail=true";
 
-/*************** AUTHENTICATE THE USER AND REDIRECT **************/
+	$url = $config["apiHome"] . "/authn/recovery/password";
 
-$password = $_POST['password'];
+	$userData = '{
+		"username": "' . $email . '",
+		"factorType": "EMAIL",
+		"relayState": "' . $config["redirectURL"] . '"
+	}';
 
-$userData = '{
-	"username": "' . $userName . '",
-	"password": "' . $password . '"
-}';
+	curl_setopt_array($curl, array(
+		CURLOPT_CUSTOMREQUEST => "POST",
+		CURLOPT_RETURNTRANSFER => 1,
+		CURLOPT_URL => $url,
+		CURLOPT_POSTFIELDS => $userData
+	));
 
-$url = $config["apiHome"] . "/sessions?additionalFields=cookieToken";
+	$result = curl_exec($curl);
 
-curl_setopt_array($curl, array(
-	CURLOPT_CUSTOMREQUEST => "POST",
-	CURLOPT_RETURNTRANSFER => 1,
-	CURLOPT_URL => $url,
-	CURLOPT_POSTFIELDS => $userData
-));
+	$decodedResult = json_decode($result, TRUE);
 
-$result = curl_exec($curl);
+	if (array_key_exists("errorCauses", $decodedResult)) {
+		// something went wrong
+		echo "<p>Sorry, there was an error trying to send that user a reset password email:</p>";
+		
+		echo "<p>" . $decodedResult["errorCauses"][0]["errorSummary"];
 
-$decodedResult = json_decode($result, TRUE);
+		echo "<pre>" . print_r($decodedResult) . "</pre>";
 
-if ($decodedResult["cookieToken"]) {
+		exit;
+	}
+	else {
+		echo "<p>we have sent you an email to verify your okta.com email address.</p>";
+		echo "<p>please verify your email and come back to the site to log in.</p>";
 
-	$cookieToken = $decodedResult["cookieToken"];
-
+		exit;
+	}
 }
 else {
-	// echo curl_error($curl);
+	/*************** AUTHENTICATE THE USER AND REDIRECT **************/
+
+	$userData = '{
+		"username": "' . $userName . '",
+		"password": "' . $password . '"
+	}';
+
+	$url = $config["apiHome"] . "/sessions?additionalFields=cookieToken";
+
+	curl_setopt_array($curl, array(
+		CURLOPT_CUSTOMREQUEST => "POST",
+		CURLOPT_RETURNTRANSFER => 1,
+		CURLOPT_URL => $url,
+		CURLOPT_POSTFIELDS => $userData
+	));
+
+	$result = curl_exec($curl);
+
+	$decodedResult = json_decode($result, TRUE);
+
+	if ($decodedResult["cookieToken"]) {
+
+		$cookieToken = $decodedResult["cookieToken"];
+
+	}
+	else {
+		echo "<p>Sorry, there was an error trying to authenticate the new user:</p>";
+			
+		echo "<p>" . $decodedResult["errorCauses"][0]["errorSummary"];
+	}
+
+	$url = $config["oktaBaseURL"] . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $config["redirectURL"];
+
+	$headerString = "Location: " . $url; 
+
+	header($headerString);
+
+	exit;
 }
-
-$url = $config["oktaBaseURL"] . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $config["redirectURL"];
-
-$headerString = "Location: " . $url; 
-
-header($headerString);
-
-exit;
