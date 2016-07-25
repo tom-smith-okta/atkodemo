@@ -25,6 +25,8 @@ function sendCurlRequest($curl, $errorMsg) {
 			
 			echo "<p>" . $result["errorCauses"][0]["errorSummary"];
 
+			echo $jsonResult;
+
 			exit;
 		}
 	}
