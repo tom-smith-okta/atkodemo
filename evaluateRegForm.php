@@ -32,6 +32,8 @@ if ($thisUser->type == "regular") {
 }
 else if ($thisUser->type == "okta") {
 	$thisUser->setAdminRights();
+
+	$thisUser->getSecurityQuestion();
 }
 
 

@@ -1,12 +1,12 @@
 <?php
 
+session_start();
+
 include "includes/includes.php";
 
 /******************************/
 
 $oktaCookieSessionID = $_GET["oktaCookieSessionID"];
-
-$apiKey = $config["apiKey"];
 
 $url = $config["apiHome"] . "/sessions/" . $oktaCookieSessionID;
 
@@ -15,12 +15,13 @@ curl_setopt_array($curl, array(
 	CURLOPT_RETURNTRANSFER => 1,
 	CURLOPT_CUSTOMREQUEST=> "DELETE",
 	CURLOPT_URL => $url,
-	CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
 ));
 
-$result = curl_exec($curl);
+$errorMsg = "<p>Sorry, something went wrong trying to kill the session.";
 
-$decodedResult = json_decode($result, TRUE);
+$result = sendCurlRequest($curl, $errorMsg);
+
+session_destroy();
 
 $headerString = "Location: " . $config["webHomeURL"];
 
