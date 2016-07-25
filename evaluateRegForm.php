@@ -1,11 +1,16 @@
 <?php
 
+// To be changed before PROD:
+
+// get rid of mailinator
+// change the default Okta password schema
+
 include "includes/includes.php";
 
 /****************************/
 
-$apiKey = $config["apiKey"];
 
+/******* check for valid email address syntax *********/
 $email = trim($_POST["email"]);
 
 if (filter_var($email, FILTER_VALIDATE_EMAIL) == FALSE) {
@@ -15,99 +20,23 @@ if (filter_var($email, FILTER_VALIDATE_EMAIL) == FALSE) {
 	exit;
 }
 
-// First, we'll assume that this is a regular user
-$userType = "regularUser";
-$password = $_POST["password"];
-$groupID = $config["groupID"];
+$firstName = trim($_POST["firstName"]);
+$lastName = trim($_POST["lastName"]);
+$password = trim($_POST["password"]);
 
-// Next, we'll check to see whether this is an Okta user
+$thisUser = new user($config, $email, $firstName, $lastName, $password);
 
-/********************************************************/
-// MAKE SURE YOU CHANGE THIS BEFORE GOING TO PROD
-/********************************************************/
+$thisUser->putOktaRecord();
 
-$validEmailDomains = array("@okta.com", "@mailinator.com");
+$thisUser->assignToOktaGroup();
 
-foreach ($validEmailDomains as $domain) {
-
-	$offset = 0 - strlen($domain);
-
-	if (substr($email, $offset) == $domain) { 
-		// This is an Okta user
-		$userType = "oktaUser";
-		$password = "Atko1234!";
-		$groupID = $confg["oktaGroupID"];
-	}
+if ($thisUser->type == "regular") {
+	$thisUser->authenticateAndRedirect();
 }
 
-$userData = '{
-	"profile": {
-		"firstName": "' . $_POST["firstName"] . '",
-		"lastName":  "' . $_POST["lastName"]  . '",
-		"email":     "' . $email     . '",
-		"login":     "' . $email     . '"
-	},
-	"credentials": {
-		"password": {
-			"value": "' . $password  . '"
-		}
-	}
-}';
+exit;
 
-$url = $config["apiHome"] . "/users?activate=true";
-
-$curl = curl_init();
-
-curl_setopt_array($curl, array(
-	CURLOPT_POST => 1,
-	CURLOPT_RETURNTRANSFER => 1,
-	CURLOPT_URL => $url,
-    CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
-    CURLOPT_POSTFIELDS => $userData
-));
-
-$result = curl_exec($curl);
-
-$decodedResult = json_decode($result, TRUE);
-
-if (array_key_exists("id", $decodedResult)) {
-	// success
-	$userID = $decodedResult["id"];
-	$userName = $decodedResult["profile"]["login"];
-}
-else {
-	echo "<p>Sorry, there was an error trying to create that user:</p>";
-	$errorCause = $decodedResult["errorCauses"][0]["errorSummary"];
-
-	echo "<p>" . $errorCause;
-
-	exit;
-}
-
-/************** ASSIGN THE USER TO AN OKTA GROUP *******************/
-
-// If it's a regular end-user then assign the user to the group "externalUsers"
-// If it's an okta user then assign the user to the group "OktaAdmin"
-
-$url = $config["apiHome"] . "/groups/" . $groupID . "/users/" . $userID;
-
-curl_setopt_array($curl, array(
-    CURLOPT_URL => $url,
-    CURLOPT_CUSTOMREQUEST => "PUT"
-));
-
-$result = curl_exec($curl);
-
-$decodedResult = json_decode($result, TRUE);
-
-if (array_key_exists("errorCauses", $decodedResult)) {
-	// something went wrong
-	echo "<p>Sorry, there was an error trying to assign that user to a group:</p>";
-	
-	echo "<p>" . $decodedResult["errorCauses"][0]["errorSummary"];
-
-	exit;
-}
+/****************************************************/
 
 /******************* IF IT'S AN OKTA USER **********/
 
