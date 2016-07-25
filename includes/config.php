@@ -35,7 +35,7 @@ $config["localhost"] = "localhost:8888";
 $config["groupID"] = "00g1yq9e5JOWsxFdu1t6";
 
 // I use this to add Okta admins. Optional.
-$confg["oktaGroupID"] = "00gqasglzEnaoUZdV1t5";
+$config["oktaGroupID"] = "00gqasglzEnaoUZdV1t5";
 
 // store your apiKey in a file not exposed to the web
 $apiKeyPath = "/usr/local/keys/oktaAPI.txt";

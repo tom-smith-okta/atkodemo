@@ -7,9 +7,6 @@
 
 include "includes/includes.php";
 
-/****************************/
-
-
 /******* check for valid email address syntax *********/
 $email = trim($_POST["email"]);
 
@@ -34,39 +31,12 @@ if ($thisUser->type == "regular") {
 	$thisUser->authenticateAndRedirect();
 }
 else if ($thisUser->type == "okta") {
-	$thisUser->giveAdminRights();
+	$thisUser->setAdminRights();
 }
 
 
 exit;
 
-
-/******************** MAKE THEM AN ADMIN ***********/
-
-if ($userType == "oktaUser") {
-	$url = $config["apiHome"] . "/users/" . $userID . "/roles";
-
-	$roleData = '{ "type": "READ_ONLY_ADMIN" }';
-
-	curl_setopt_array($curl, array(
-		CURLOPT_CUSTOMREQUEST => "POST",
-		CURLOPT_RETURNTRANSFER => 1,
-		CURLOPT_URL => $url,
-		CURLOPT_POSTFIELDS => $roleData
-	));
-
-	$result = curl_exec($curl);
-
-	$decodedResult = json_decode($result, TRUE);
-
-	if (array_key_exists("errorCauses", $decodedResult)) {
-		// something went wrong
-		echo "<p>Sorry, there was an error trying to give that user an admin role:</p>";
-		
-		echo "<p>" . $decodedResult["errorCauses"][0]["errorSummary"];
-
-		exit;
-	}
 
 	/************** AND SEND THEM A RESET PASSWORD EMAIL ******/
 

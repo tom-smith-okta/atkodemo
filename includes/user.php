@@ -60,15 +60,17 @@ class user {
 			exit;
 		}
 
-		$result = json_decode($jsonResult, TRUE);
+		if ($jsonResult) {
+			$result = json_decode($jsonResult, TRUE);
 
-		if (array_key_exists("errorCauses", $result)) {
-			// something went wrong
-			echo "<p>" . $errorMsg . "</p>";
-			
-			echo "<p>" . $result["errorCauses"][0]["errorSummary"];
+			if (array_key_exists("errorCauses", $result)) {
+				// something went wrong
+				echo "<p>" . $errorMsg . "</p>";
+				
+				echo "<p>" . $result["errorCauses"][0]["errorSummary"];
 
-			exit;
+				exit;
+			}
 		}
 
 		curl_close($curl);
@@ -146,8 +148,25 @@ class user {
 
 		// echo "<p>the userID is: " . $this->userID;
 
-		curl_close($curl);
+	}
 
+	function setAdminRights() {
+		$url = $this->config["apiHome"] . "/users/" . $this->userID . "/roles";
+
+		$roleData = '{ "type": "READ_ONLY_ADMIN" }';
+
+		$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+			CURLOPT_POST => TRUE,
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_URL => $url,
+			CURLOPT_POSTFIELDS => $roleData
+		));
+
+		$errorMsg = "<p>Sorry, something went wrong with trying to set admin rights";
+
+		$result = $this->sendCurlRequest($curl, $errorMsg);
 	}
 
 	function setEmail($email) { $this->email = $email; }
