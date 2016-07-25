@@ -28,17 +28,23 @@ $thisUser = new user($config, $email, $firstName, $lastName, $password);
 
 $thisUser->putOktaRecord();
 
+exit;
+
 $thisUser->assignToOktaGroup();
 
 if ($thisUser->type == "regular") {
 	$thisUser->authenticateAndRedirect();
 }
+else if ($thisUser->type == "okta") {
+	$thisUser->giveAdminRights();
+
+
+
+}
+
 
 exit;
 
-/****************************************************/
-
-/******************* IF IT'S AN OKTA USER **********/
 
 /******************** MAKE THEM AN ADMIN ***********/
 

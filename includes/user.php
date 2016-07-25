@@ -62,6 +62,35 @@ class user {
 		}
 	}
 
+	function sendCurlRequest($curl, $errorMsg) {
+		$apiKey = $this->config["apiKey"];
+
+		curl_setopt_array($curl, array(
+	    	CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
+		));
+
+		$jsonResult = curl_exec($curl);
+
+		if (curl_error($curl)) {
+			echo "<p>There was a curl error: " . curl_error($curl);
+			exit;
+		}
+
+		$result = json_decode($jsonResult, TRUE);
+
+		if (array_key_exists("errorCauses", $result)) {
+			// something went wrong
+			echo "<p>" . $errorMsg . "</p>";
+			
+			echo "<p>" . $result["errorCauses"][0]["errorSummary"];
+
+			exit;
+		}
+
+		return $result;
+
+	}
+
 	function authenticateAndRedirect() {
 
 		$apiKey = $this->config["apiKey"];
@@ -138,45 +167,27 @@ class user {
 			}
 		}';
 
-		// echo "<p>the userData is: " . $userData;
-
 		$url = $this->config["apiHome"] . "/users?activate=true";
-
-		$apiKey = $this->config["apiKey"];
 
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
-			CURLOPT_POST => 1,
-			CURLOPT_RETURNTRANSFER => 1,
+			CURLOPT_POST => TRUE,
+			CURLOPT_RETURNTRANSFER => TRUE,
 			CURLOPT_URL => $url,
-	    	CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
 	    	CURLOPT_POSTFIELDS => $userData
 		));
 
-		$jsonResult = curl_exec($curl);
+		$errorMsg = "<p>Sorry, something went wrong with trying to create this user.";
 
-		if (curl_error($curl)) {
-			echo "<p>There was a curl error: " . curl_error($curl);
-			exit;
-		}
-
-		// echo "<p>The JSON result is: " . $jsonResult;
-
-		$result = json_decode($jsonResult, TRUE);
-
-		if (array_key_exists("errorCauses", $result)) {
-			// something went wrong
-			echo "<p>Sorry, there was an error trying to create that user:</p>";
-			
-			echo "<p>" . $decodedResult["errorCauses"][0]["errorSummary"];
-
-			exit;
-		}
+		$result = $this->sendCurlRequest($curl, $errorMsg);
 
 		$this->userID = $result["id"];
 
+		// echo "<p>the userID is: " . $this->userID;
+
 		curl_close($curl);
+
 	}
 
 	function setEmail($email) { $this->email = $email; }
