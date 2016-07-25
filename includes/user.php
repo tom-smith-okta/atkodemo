@@ -30,8 +30,6 @@ class user {
 
 	function assignToOktaGroup() {
 
-		$apiKey = $this->config["apiKey"];
-
 		$url = $this->config["apiHome"] . "/groups/" . $this->groupID . "/users/" . $this->userID;
 
 		$curl = curl_init();
@@ -39,27 +37,13 @@ class user {
 		curl_setopt_array($curl, array(
 		    CURLOPT_CUSTOMREQUEST => "PUT",
 			CURLOPT_RETURNTRANSFER => 1,
-			CURLOPT_URL => $url,
-	    	CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
+			CURLOPT_URL => $url
 		));
 
-		$jsonResult = curl_exec($curl);
+		$errorMsg = "<p>Sorry, there was an error trying to assign that user to a group:</p>";
 
-		if (curl_error($curl)) {
-			echo "<p>There was a curl error: " . curl_error($curl);
-			exit;
-		}
+		$result = $this->sendCurlRequest($curl, $errorMsg);
 
-		$result = json_decode($jsonResult, TRUE);
-
-		if (array_key_exists("errorCauses", $result)) {
-			// something went wrong
-			echo "<p>Sorry, there was an error trying to assign that user to a group:</p>";
-			
-			echo "<p>" . $result["errorCauses"][0]["errorSummary"];
-
-			exit;
-		}
 	}
 
 	function sendCurlRequest($curl, $errorMsg) {
@@ -87,13 +71,13 @@ class user {
 			exit;
 		}
 
+		curl_close($curl);
+
 		return $result;
 
 	}
 
 	function authenticateAndRedirect() {
-
-		$apiKey = $this->config["apiKey"];
 
 		$curl = curl_init();
 
@@ -105,41 +89,17 @@ class user {
 		$url = $this->config["apiHome"] . "/sessions?additionalFields=cookieToken";
 
 		curl_setopt_array($curl, array(
-			CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
 			CURLOPT_POST => TRUE,
 			CURLOPT_RETURNTRANSFER => TRUE,
 			CURLOPT_URL => $url,
 			CURLOPT_POSTFIELDS => $userData
 		));
 
-		$jsonResult = curl_exec($curl);
+		$errorMsg = "<p>Sorry, there was an error trying to authenticate the new user:</p>";
 
-		if (curl_error($curl)) {
-			echo "<p>There was a curl error: " . curl_error($curl);
-			exit;
-		}
-
-		// echo "<p>The JSON result is: " . $jsonResult;
-
-		$result = json_decode($jsonResult, TRUE);
-
-		if (array_key_exists("errorCauses", $result)) {
-			// something went wrong
-			echo "<p>Sorry, there was an error trying to create that user:</p>";
-			
-			echo "<p>" . $decodedResult["errorCauses"][0]["errorSummary"];
-
-			exit;
-		}
+		$result = $this->sendCurlRequest($curl, $errorMsg);
 
 		$cookieToken = $result["cookieToken"];
-
-		// }
-		// else {
-		// 	echo "<p>Sorry, there was an error trying to authenticate the new user:</p>";
-				
-		// 	echo "<p>" . $decodedResult["errorCauses"][0]["errorSummary"];
-		// }
 
 		$url = $this->config["oktaBaseURL"] . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $this->config["redirectURL"];
 
