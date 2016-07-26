@@ -34,6 +34,9 @@ $config["localhost"] = "localhost:8888";
  // I add all new users to a group called "externalUsers"
 $config["groupID"] = "00g1yq9e5JOWsxFdu1t6";
 
+// I use this to add Okta admins. Optional.
+$config["oktaGroupID"] = "00gqasglzEnaoUZdV1t5";
+
 // store your apiKey in a file not exposed to the web
 $apiKeyPath = "/usr/local/keys/oktaAPI.txt";
 

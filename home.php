@@ -1,38 +1,33 @@
 <?php
 
+session_start();
+
 include "includes/includes.php";
 
 $thisPage = new htmlPage($config);
 
 /*************************************/
 
-if (empty($_GET["oktaCookieSessionID"])) { $header = getHeader("unAuth"); }
-else {
 
-	$apiKey = $config["apiKey"];
+// default state = unAuthenticated
+// the "header" is the nav menu at the top of the page
+// displays "Log In | Register" for unauth
+// or something more customized when the user is authed
+$_SESSION["header"] = getHeader("unAuth");
 
-	// in a production system I would check the oktaCookieSessionID here
-	// again to make sure that someone has not messed with the GET request
-
-	$oktaUserID = $_GET["oktaUserID"];
-
-	$url = $config["apiHome"] . "/users/" . $oktaUserID;
-
-	$curl = curl_init();
-	curl_setopt_array($curl, array(
-		CURLOPT_RETURNTRANSFER => 1,
-		CURLOPT_URL => $url,
-		CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
-	));
-
-	$result = curl_exec($curl);
-
-	$user = json_decode($result, TRUE);
-
-	$firstName = $user["profile"]["firstName"];
-
-	$header = getHeader("auth", $_GET["oktaCookieSessionID"], $firstName);
-
+// Summary: if i've received an oktaCookieSessionID and it's valid, then store the
+// okta session object in my local session.
+// Same if there is already an oktaCookieSessionID in my local session: if it's
+// valid, then store the okta session object in my local session.
+if (isset($_GET["oktaCookieSessionID"])){
+	if (oktaSessionIsValid($_GET["oktaCookieSessionID"])) {
+		setSession();
+	}
+}
+else if (isset($_SESSION["oktaCookieSessionID"])) {
+	if (oktaSessionIsValid($_SESSION["oktaCookieSessionID"])) {
+		setSession();
+	}
 }
 
 /*** Manually add elements here ******/
@@ -50,7 +45,7 @@ $thisPage->addElement("font-awesome");
 
 $body = file_get_contents("home.html");
 
-$body = str_replace("%HEADER%", $header, $body);
+$body = str_replace("%HEADER%", $_SESSION["header"], $body);
 
 $body = str_replace("%NAME%", $config["name"], $body);
 

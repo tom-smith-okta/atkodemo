@@ -10,27 +10,31 @@
 				multiOptionalFactorEnroll: true,
 				smsRecovery: true
 			},
+
+			labels: {
+				'primaryauth.password.tooltip': 'passwords must have at least 8 characters, a lowercase letter, an uppercase letter, a number, no parts of your username'
+			},
 		  
-		// OIDC options
-		clientId: '%clientId%',
-		redirectUri: '%redirectURL%',
+			// OIDC options
+			clientId: '%clientId%',
+			redirectUri: '%redirectURL%',
 
-		authScheme: 'OAUTH2',
-		authParams: {
-			responseType: 'id_token',
-			responseMode: 'okta_post_message',
-			scope: [
-				'openid',
-				'email',
-				'profile',
-				'address',
-				'phone'
-			]
-		},
-		idpDisplay: 'PRIMARY',
+			authScheme: 'OAUTH2',
+			authParams: {
+				responseType: 'id_token',
+				responseMode: 'okta_post_message',
+				scope: [
+					'openid',
+					'email',
+					'profile',
+					'address',
+					'phone'
+				]
+			},
+			idpDisplay: 'PRIMARY',
 
-		idps: %idps%
-		});
+			idps: %idps%
+			});
 
 		oktaSignIn.renderEl(
 			{ el: '#okta-login-container' },

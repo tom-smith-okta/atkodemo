@@ -1,93 +1,44 @@
 <?php
 
+session_start();
+
 include "includes/includes.php";
 
-/****************************/
+/******* check for valid email address syntax *********/
+$email = trim($_POST["email"]);
 
-$apiKey = $config["apiKey"];
+if (filter_var($email, FILTER_VALIDATE_EMAIL) == FALSE) {
 
-// this might be prettier if I built an assoc array
-// and then did json_encode
-$userData = '{
-	"profile": {
-		"firstName": "' . $_POST["firstName"] . '",
-		"lastName":  "' . $_POST["lastName"]  . '",
-		"email":     "' . $_POST["email"]     . '",
-		"login":     "' . $_POST["email"]     . '"
-	},
-	"credentials": {
-		"password": {
-			"value": "' . $_POST["password"]  . '"
-		}
-	}
-}';
+	echo "sorry, " . $email . " does not appear to be a valid email address.";
 
-$curl = curl_init();
-curl_setopt_array($curl, array(
-	CURLOPT_POST => 1,
-	CURLOPT_RETURNTRANSFER => 1,
-    CURLOPT_URL => $config["apiHome"] . "/users?activate=true",
-    CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
-    CURLOPT_POSTFIELDS => $userData
-    ));
-$result = curl_exec($curl);
-
-$decodedResult = json_decode($result, TRUE);
-
-if ($decodedResult["id"]) {
-	$userID = $decodedResult["id"];
-	$userName = $decodedResult["profile"]["login"];
-}
-else {
-	echo "something went wrong with trying to create a user.";
 	exit;
 }
 
-// Now let's assign this user to the group "externalUsers"
-// Use the Okta dashboard to assign apps to the group
+$firstName = trim($_POST["firstName"]);
+$lastName = trim($_POST["lastName"]);
+$password = trim($_POST["password"]);
 
-$url = $config["apiHome"] . "/groups/" . $config["groupID"] . "/users/" . $userID;
+$thisUser = new user($config, $email, $firstName, $lastName, $password);
 
-curl_setopt_array($curl, array(
-    CURLOPT_URL => $url,
-    CURLOPT_CUSTOMREQUEST => "PUT"
-));
+$thisUser->putOktaRecord();
 
-$result = curl_exec($curl);
+$thisUser->assignToOktaGroup();
 
-$password = $_POST['password'];
-
-$userData = '{
-	"username": "' . $userName . '",
-	"password": "' . $password . '"
-}';
-
-$url = $config["apiHome"] . "/sessions?additionalFields=cookieToken";
-
-curl_setopt_array($curl, array(
-	CURLOPT_CUSTOMREQUEST => "POST",
-	CURLOPT_RETURNTRANSFER => 1,
-	CURLOPT_URL => $url,
-	CURLOPT_POSTFIELDS => $userData
-));
-
-$result = curl_exec($curl);
-
-$decodedResult = json_decode($result, TRUE);
-
-if ($decodedResult["cookieToken"]) {
-
-	$cookieToken = $decodedResult["cookieToken"];
-
+if ($thisUser->type == "regular") {
+	$thisUser->authenticateAndRedirect();
 }
-else {
-	// echo curl_error($curl);
+else if ($thisUser->type == "okta") {
+	$thisUser->setAdminRights();
+
+	$_SESSION["nonce"] = random_int(0, PHP_INT_MAX);
+
+	$_SESSION["userID"] = $thisUser->userID;
+
+	$url = $config["webHomeURL"] . "/securityQuestion.php";
+
+	$headerString = "Location: " . $url;
+
+	header($headerString);
 }
-
-$url = $config["oktaBaseURL"] . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $config["redirectURL"];
-
-$headerString = "Location: " . $url; 
-
-header($headerString);
 
 exit;

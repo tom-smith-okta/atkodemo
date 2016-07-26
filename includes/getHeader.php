@@ -26,6 +26,15 @@ function getHeader($type, $sessionID = "", $firstName = "") {
 
 		$links .= "\n<li><a href = '#'>Welcome, " .  $firstName . "!</a></li>";
 	}
+	elseif ($type == "admin") {
+		$links = "\n<li><a href='" . $config["oktaBaseURL"] . "' target = '_blank'>Admin</a></li>";
+
+		$logoutLink = "logout.php?oktaCookieSessionID=" . $sessionID;
+
+		$links .= "\n<li><a href = '" . $logoutLink . "'>Log out</a></li>";
+
+		$links .= "\n<li><a href = '#'>Welcome, " .  $firstName . "!</a></li>";
+	}
 
 	$header = str_replace("%LINKS%", $links, $header);
 
