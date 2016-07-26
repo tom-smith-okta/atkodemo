@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 // To be changed before PROD:
 
 // get rid of mailinator
@@ -33,91 +35,15 @@ if ($thisUser->type == "regular") {
 else if ($thisUser->type == "okta") {
 	$thisUser->setAdminRights();
 
-	$thisUser->getSecurityQuestion();
-}
+	$_SESSION["nonce"] = random_int(0, PHP_INT_MAX);
 
+	$_SESSION["userID"] = $thisUser->userID;
 
-exit;
+	$url = $config["webHomeURL"] . "/securityQuestion.php";
 
-
-	/************** AND SEND THEM A RESET PASSWORD EMAIL ******/
-
-	// {{url}}/api/v1/users/{{userId}}/credentials/forgot_password?sendEmail=false
-	// $url = $config["apiHome"] . "/users/" . $userID . "/credentials/forgot_password?sendEmail=true";
-
-	$url = $config["apiHome"] . "/authn/recovery/password";
-
-	$userData = '{
-		"username": "' . $email . '",
-		"factorType": "EMAIL",
-		"relayState": "' . $config["redirectURL"] . '"
-	}';
-
-	curl_setopt_array($curl, array(
-		CURLOPT_CUSTOMREQUEST => "POST",
-		CURLOPT_RETURNTRANSFER => 1,
-		CURLOPT_URL => $url,
-		CURLOPT_POSTFIELDS => $userData
-	));
-
-	$result = curl_exec($curl);
-
-	$decodedResult = json_decode($result, TRUE);
-
-	if (array_key_exists("errorCauses", $decodedResult)) {
-		// something went wrong
-		echo "<p>Sorry, there was an error trying to send that user a reset password email:</p>";
-		
-		echo "<p>" . $decodedResult["errorCauses"][0]["errorSummary"];
-
-		echo "<pre>" . print_r($decodedResult) . "</pre>";
-
-		exit;
-	}
-	else {
-		echo "<p>we have sent you an email to verify your okta.com email address.</p>";
-		echo "<p>please verify your email and come back to the site to log in.</p>";
-
-		exit;
-	}
-}
-else {
-	/*************** AUTHENTICATE THE USER AND REDIRECT **************/
-
-	$userData = '{
-		"username": "' . $userName . '",
-		"password": "' . $password . '"
-	}';
-
-	$url = $config["apiHome"] . "/sessions?additionalFields=cookieToken";
-
-	curl_setopt_array($curl, array(
-		CURLOPT_CUSTOMREQUEST => "POST",
-		CURLOPT_RETURNTRANSFER => 1,
-		CURLOPT_URL => $url,
-		CURLOPT_POSTFIELDS => $userData
-	));
-
-	$result = curl_exec($curl);
-
-	$decodedResult = json_decode($result, TRUE);
-
-	if ($decodedResult["cookieToken"]) {
-
-		$cookieToken = $decodedResult["cookieToken"];
-
-	}
-	else {
-		echo "<p>Sorry, there was an error trying to authenticate the new user:</p>";
-			
-		echo "<p>" . $decodedResult["errorCauses"][0]["errorSummary"];
-	}
-
-	$url = $config["oktaBaseURL"] . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $config["redirectURL"];
-
-	$headerString = "Location: " . $url; 
+	$headerString = "Location: " . $url;
 
 	header($headerString);
-
-	exit;
 }
+
+exit;

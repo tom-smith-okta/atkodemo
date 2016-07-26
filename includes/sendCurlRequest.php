@@ -1,6 +1,6 @@
 <?php
 
-function sendCurlRequest($curl, $errorMsg) {
+function sendCurlRequest($curl, $errorMsg, $returnJSON = FALSE) {
 	global $config;
 
 	$apiKey = $config["apiKey"];
@@ -17,14 +17,15 @@ function sendCurlRequest($curl, $errorMsg) {
 	}
 
 	if ($jsonResult) {
+
+		if ($returnJSON) { return $jsonResult; }
+
 		$result = json_decode($jsonResult, TRUE);
 
-		if (array_key_exists("errorCauses", $result)) {
+		if (array_key_exists("errorCode", $result)) {
 			// something went wrong
 			echo "<p>" . $errorMsg . "</p>";
 			
-			echo "<p>" . $result["errorCauses"][0]["errorSummary"];
-
 			echo $jsonResult;
 
 			exit;

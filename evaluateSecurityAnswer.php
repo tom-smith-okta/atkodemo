@@ -9,11 +9,13 @@ session_start();
 
 include "includes/includes.php";
 
-if (isset($_SESSION['oktaCookieSessionID']) && oktaSessionIsValid($_SESSION['oktaCookieSessionID'])) {
-	//continue
+// this is just to make sure that there is a valid server-side session in place
+// (not an okta session)
+if (isset($_SESSION["nonce"])) {
+	// continue
 }
 else {
-	echo "<p>Sorry, there does not seem to be a user logged in.";
+	echo "<p>Sorry, but there does not appear to be a valid user session in place.";
 	exit;
 }
 
@@ -21,12 +23,7 @@ $securityAnswer = trim($_POST["securityAnswer"]);
 
 $securityAnswer = filter_var($securityAnswer, FILTER_SANITIZE_STRING);
 
-$data["credentials"]["recovery_question"]["question"] = "What is the best word to describe Oktane?";
-$data["credentials"]["recovery_question"]["answer"] = $securityAnswer;
-
-$data = json_encode($data);
-
-// for the love of god why doesn't json_encode work in this context
+// for the love of god why can't I get json_encode to handle this properly
 $data = '{
   "credentials": {
     "recovery_question": {
@@ -36,9 +33,7 @@ $data = '{
   }
 }';
 
-echo $data;
-
-$userID = $_SESSION["oktaSessionObj"]["userId"];
+$userID = $_SESSION["userID"];
 
 $url = $config["apiHome"] . "/users/" . $userID;
 
@@ -57,8 +52,6 @@ $result = sendCurlRequest($curl, $errorMsg);
 
 /************* Now send a reset password email *****************/
 
-// {{url}}/api/v1/users/00u2jc1r88cDiiQWH1t6/credentials/forgot_password?sendEmail=true
-
 $curl = curl_init();
 
 $url = $config["apiHome"] . "/users/" . $userID . "/credentials/forgot_password?sendEmail=true";
@@ -73,6 +66,8 @@ $errorMsg = "<p>something went wrong with trying to send a password reset email"
 
 $result = sendCurlRequest($curl, $errorMsg);
 
-echo "<p>Thank you. Please check your email to set your password and activate your account.";
+echo "<p>Thank you for registering as an administrator.</p>";
+echo "<p>Please check your email to set your password and activate your account.</p>";
+echo "<p>You can click <a href = '" . $config["webHomeURL"] . "'>here</a> to go to the home page.</p>";
 
 exit;

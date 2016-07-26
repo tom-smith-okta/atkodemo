@@ -46,6 +46,12 @@ class user {
 
 	}
 
+	function getSecurityQuestion() {
+		$_SESSION["nonce"] = random_int(0, PHP_INT_MAX);
+
+		echo "<p>The nonce is: " . $_SESSION["nonce"];
+	}
+
 	function sendCurlRequest($curl, $errorMsg) {
 		$apiKey = $this->config["apiKey"];
 
