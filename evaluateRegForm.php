@@ -2,11 +2,6 @@
 
 session_start();
 
-// To be changed before PROD:
-
-// get rid of mailinator
-// change the default Okta password schema
-
 include "includes/includes.php";
 
 /******* check for valid email address syntax *********/

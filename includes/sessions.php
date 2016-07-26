@@ -52,7 +52,7 @@ function oktaSessionIsValid($oktaCookieSessionID) {
 		session_destroy();
 		return FALSE;
 	}
-	else if ($result["status"] == "ACTIVE") {
+	else if ($result["status"] == "ACTIVE" || $result["status"] == "MFA_REQUIRED") {
 		$_SESSION["oktaSessionObj"] = $result;
 		return TRUE;
 	}

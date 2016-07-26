@@ -42,46 +42,7 @@ class user {
 
 		$errorMsg = "<p>Sorry, there was an error trying to assign that user to a group:</p>";
 
-		$result = $this->sendCurlRequest($curl, $errorMsg);
-
-	}
-
-	function getSecurityQuestion() {
-		$_SESSION["nonce"] = random_int(0, PHP_INT_MAX);
-
-		echo "<p>The nonce is: " . $_SESSION["nonce"];
-	}
-
-	function sendCurlRequest($curl, $errorMsg) {
-		$apiKey = $this->config["apiKey"];
-
-		curl_setopt_array($curl, array(
-	    	CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
-		));
-
-		$jsonResult = curl_exec($curl);
-
-		if (curl_error($curl)) {
-			echo "<p>There was a curl error: " . curl_error($curl);
-			exit;
-		}
-
-		if ($jsonResult) {
-			$result = json_decode($jsonResult, TRUE);
-
-			if (array_key_exists("errorCauses", $result)) {
-				// something went wrong
-				echo "<p>" . $errorMsg . "</p>";
-				
-				echo "<p>" . $result["errorCauses"][0]["errorSummary"];
-
-				exit;
-			}
-		}
-
-		curl_close($curl);
-
-		return $result;
+		$result = sendCurlRequest($curl, $errorMsg);
 
 	}
 
@@ -105,7 +66,7 @@ class user {
 
 		$errorMsg = "<p>Sorry, there was an error trying to authenticate the new user:</p>";
 
-		$result = $this->sendCurlRequest($curl, $errorMsg);
+		$result = sendCurlRequest($curl, $errorMsg);
 
 		$cookieToken = $result["cookieToken"];
 
@@ -148,12 +109,9 @@ class user {
 
 		$errorMsg = "<p>Sorry, something went wrong with trying to create this user.";
 
-		$result = $this->sendCurlRequest($curl, $errorMsg);
+		$result = sendCurlRequest($curl, $errorMsg);
 
 		$this->userID = $result["id"];
-
-		// echo "<p>the userID is: " . $this->userID;
-
 	}
 
 	function setAdminRights() {
@@ -172,7 +130,8 @@ class user {
 
 		$errorMsg = "<p>Sorry, something went wrong with trying to set admin rights";
 
-		$result = $this->sendCurlRequest($curl, $errorMsg);
+		$result = sendCurlRequest($curl, $errorMsg);
+
 	}
 
 	function setEmail($email) { $this->email = $email; }
@@ -182,11 +141,13 @@ class user {
 	}
 
 	function setPassword() {
-		if ($this->type == "okta") { $this->password = "Atko1234!"; }
+		if ($this->type == "okta") { 
+			$this->password = "Aa!" . random_int(10000, 99999);
+		}
 	}
 
 	function setType() {
-		$validEmailDomains = array("@okta.com", "@mailinator.com");
+		$validEmailDomains = array("@okta.com");
 
 		foreach ($validEmailDomains as $domain) {
 
@@ -199,130 +160,3 @@ class user {
 		}
 	}
 }
-
-// 		$type = $this->config[$elementName]["type"]; // either "javascript" or "css"
-
-// 		$location = $this->config[$elementName]["location"]; // remote || local || inline
-
-// 		if ($location == "local") {
-// 			$ext = $this->elements[$type]["ext"]; // either ".js" or ".css"
-// 			$filePath = $this->config["webHome"] . "/" . $type . "/" . $elementName . $ext;
-// 			$content = str_replace("%PATH%", $filePath, $this->elements[$type]["tag"]);
-// 		}
-// 		else if ($location == "inline") {
-// 			$ext = $this->elements[$type]["ext"]; // either ".js" or ".css"
-// 			$filePath = $this->config["fsHome"] . "/" . $type . "/" . $elementName . $ext;
-// 			$content = $this->replaceVars($filePath, $elementName);
-// 		}
-// 		else { // $location = "remote"
-// 			$content = str_replace("%PATH%", $this->config[$elementName]["url"], $this->elements[$type]["tag"]);
-// 		}
-
-// 		$this->addToBlock($content, $type);
-
-// 	}
-
-// 	function addToBlock($content, $type) {
-
-// 		if (!empty($this->elements[$type]["block"])) { 
-// 			$this->elements[$type]["block"] .= "\n\t\t";
-// 		}
-
-// 		$this->elements[$type]["block"] .= "\n" . $content . "\n";
-// 	}
-
-// 	function replaceVars($filePath, $elementName) {
-
-// 		$content = file_get_contents($filePath);
-
-// 		foreach ($this->config[$elementName]["vars"] as $var) {
-
-// 			$bullseye = "%" . $var . "%";
-// 			$arrow = $this->config[$var];
-
-// 			$content = str_replace($bullseye, $arrow, $content);
-
-// 		}
-
-// 		return $content;
-// 	}
-
-// 	function display() {
-
-// 		echo $this->getHTML();
-
-// 	}
-
-// 	function findFiles() {
-// 		foreach ($this->elements as $element => $arr) {
-// 			$files = $this->getElements($element, $arr["ext"]);
-
-// 			foreach ($files as $file) {
-// 				$path = "/" . HOME . "/" . $element . "/" . $file;
-
-// 				$this->addElement($element, $path);
-
-// 			}
-// 		}
-// 	}
-
-// 	// expects HTML w/o <body></body> tags
-// 	function addToBody($element) {
-// 		$this->body = $this->body . "\n\t\t" . $element;
-// 	}
-
-// 	function getBody() {
-// 		if (empty($this->elements["body"]["class"])) { $bodyTag = "<body>"; }
-// 		else { $bodyTag = "<body class = '" . $this->elements["body"]["class"] . "'>"; }
-
-// 		return "\n\t" . $bodyTag . $this->body . "\n\t</body>"; 
-// 	}
-
-// 	function getElements($element, $ext) {
-
-// 		$dir = $_SERVER['DOCUMENT_ROOT'] . "/" . HOME . "/" . $element . "/autoInclude/";
-
-// 		$files = scandir($dir);
-
-// 		foreach ($files as $file) {
-
-// 			$offset = 0 - strlen($ext);
-
-// 			if (substr($file, $offset) == $ext) {
-// 				$validFiles[] = $file;
-// 			}
-// 		}
-
-// 		return $validFiles;
-// 	}
-
-// 	function getHead() {
-
-// 		$this->head = "\n\t\t<meta charset='utf-8' />";
-// 		$this->head .= "\n\t\t<meta name='viewport' content='width=device-width, initial-scale=1' />";
-
-// 		$headElements = array($this->title, $this->elements["css"]["block"], $this->elements["javascript"]["block"]);
-
-// 		foreach ($headElements as $element) {
-// 			if (!empty($element)) { $this->head .= "\n\t\t" . $element; }
-// 		}
-
-// 		return "\n\t<head>" . $this->head . "\n\t</head>";
-// 	}
-
-// 	function getHTML() {
-
-// 		return "<!DOCTYPE HTML>\n<html>" . $this->getHead() . "\n" . $this->getBody() . "\n</html>";
-// 	}
-
-// 	function setBodyParam($paramType, $param) {
-// 		$this->elements["body"][$paramType] = $param;
-
-// 	} 
-
-// 	function setTitle($title) {
-
-// 		$this->title = "<title>" . $title . "</title>";
-
-// 	}
-// }

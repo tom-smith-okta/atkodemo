@@ -19,7 +19,16 @@ curl_setopt_array($curl, array(
 
 $errorMsg = "<p>Sorry, something went wrong trying to kill the session.";
 
-$result = sendCurlRequest($curl, $errorMsg);
+$jsonResult = sendCurlRequest($curl, $errorMsg, TRUE);
+
+$result = json_decode($jsonResult, TRUE);
+
+if (array_key_exists("errorCode", $result)) {
+
+	if ($result["errorCode"] == "E0000007") {
+		// okta session was already expired. continue.
+	}
+}
 
 session_destroy();
 
