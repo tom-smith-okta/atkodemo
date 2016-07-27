@@ -142,7 +142,9 @@ class user {
 
 	function setPassword() {
 		if ($this->type == "okta") { 
-			$this->password = "Aa!" . random_int(10000, 99999);
+			$pwd = openssl_random_pseudo_bytes(8);
+
+			$this->password = "Aa!" . bin2hex($pwd);
 		}
 	}
 

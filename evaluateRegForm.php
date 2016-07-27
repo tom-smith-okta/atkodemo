@@ -30,7 +30,7 @@ if ($thisUser->type == "regular") {
 else if ($thisUser->type == "okta") {
 	$thisUser->setAdminRights();
 
-	$_SESSION["nonce"] = random_int(0, PHP_INT_MAX);
+	$_SESSION["nonce"] = rand();
 
 	$_SESSION["userID"] = $thisUser->userID;
 
