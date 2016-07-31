@@ -15,7 +15,7 @@ class user {
 
 		$this->password = $password;
 
-		$this->groupID = $this->config["groupID"];
+		$this->groupID = $this->config["group"]["default"]["id"];
 
 		$this->type = "regular";
 
@@ -46,7 +46,7 @@ class user {
 
 	}
 
-	function authenticateAndRedirect() {
+	function authenticate() {
 
 		$curl = curl_init();
 
@@ -68,9 +68,22 @@ class user {
 
 		$result = sendCurlRequest($curl, $errorMsg);
 
-		$cookieToken = $result["cookieToken"];
+		echo json_encode($result);
+
+		exit;
+
+		return $result["cookieToken"];
+	}
+
+	function redirect($cookieToken) {
+
+		// $url = "/atkodemo/login.php";
+
+		// $redirectUrl = "http://localhost:8888/atkodemo/login.php";
 
 		$url = $this->config["oktaBaseURL"] . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $this->config["redirectURL"];
+
+		// $url = $this->config["oktaBaseURL"] . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $redirectUrl;
 
 		$headerString = "Location: " . $url; 
 
@@ -138,6 +151,7 @@ class user {
 
 	function setGroup() {
 		if ($this->type == "okta") { $this->groupID = $this->config["oktaGroupID"]; }
+		else if ($this->type == "mfa") { $this->groupID = $this->config["group"]["mfa"]["id"]; }
 	}
 
 	function setPassword() {
@@ -149,16 +163,15 @@ class user {
 	}
 
 	function setType() {
-		$validEmailDomains = array("@okta.com");
 
-		foreach ($validEmailDomains as $domain) {
+		$domain = $this->config["group"]["mfa"]["domain"];
 
-			$offset = 0 - strlen($domain);
+		$email = "@" . $domain;
 
-			if (substr($this->email, $offset) == $domain) {
-				$this->type = "okta";
-				break;
-			}
+		$offset = 0 - strlen($email);
+
+		if (substr($this->email, $offset) == $email) {
+			$this->type = "mfa";
 		}
 	}
 }

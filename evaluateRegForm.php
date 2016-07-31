@@ -24,21 +24,8 @@ $thisUser->putOktaRecord();
 
 $thisUser->assignToOktaGroup();
 
-if ($thisUser->type == "regular") {
-	$thisUser->authenticateAndRedirect();
-}
-else if ($thisUser->type == "okta") {
-	$thisUser->setAdminRights();
+$cookieToken = $thisUser->authenticate();
 
-	$_SESSION["nonce"] = rand();
-
-	$_SESSION["userID"] = $thisUser->userID;
-
-	$url = $config["webHomeURL"] . "/securityQuestion.php";
-
-	$headerString = "Location: " . $url;
-
-	header($headerString);
-}
+$thisUser->redirect($cookieToken);
 
 exit;

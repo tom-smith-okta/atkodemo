@@ -31,8 +31,13 @@ $config["name"] = "Atko Corp";
 // If your localhost is running on a specific port, indicate it here
 $config["localhost"] = "localhost:8888";
 
- // I add all new users to a group called "externalUsers"
-$config["groupID"] = "00g1yq9e5JOWsxFdu1t6";
+ // I add all new users to an Okta group called "externalUsers"
+$config["group"]["default"]["id"] = "00g1yq9e5JOWsxFdu1t6";
+
+// For users who should be added to to a group requiring MFA
+// triggered in reg flow by email address
+$config["group"]["mfa"]["id"] = "00g32ude0PD5Dbcqt1t6";
+$config["group"]["mfa"]["domain"] = "mailinator.com";
 
 // I use this to add Okta admins. Optional.
 $config["oktaGroupID"] = "00gqasglzEnaoUZdV1t5";

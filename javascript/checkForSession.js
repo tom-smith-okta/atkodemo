@@ -37,8 +37,26 @@ function checkForSession() {
 		  		}
 			});
 	  	} else {
-	    	// No active session found
+
+	  		// No active session found
 	    	console.log("there is *no* active session - according to session.exists()");
+
+	  		oktaSignIn.session.get(function (res) { 
+
+	  			if (res.status == 'MFA_ENROLL') {
+	  				console.log ("the status is MFA_ENROLL");
+
+	  				console.log("the result is: ");
+
+	  				console.dir(res);
+
+	  				console.log ("the cookie token is: " + res.mfaActive.cookieToken);
+
+	  				// window.location = "/atkodemo/login.php";
+	  			}
+	  			else { console.log("can't figure out the user's status."); }
+
+	  		});
 
 	    	// window.location = "/atkodemo/home.php";
 	    	window.location = "%homePage%";
