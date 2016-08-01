@@ -68,29 +68,18 @@ class user {
 
 		$result = sendCurlRequest($curl, $errorMsg);
 
-		echo json_encode($result);
-
-		exit;
-
 		return $result["cookieToken"];
 	}
 
 	function redirect($cookieToken) {
 
-		// $url = "/atkodemo/login.php";
-
-		// $redirectUrl = "http://localhost:8888/atkodemo/login.php";
-
 		$url = $this->config["oktaBaseURL"] . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $this->config["redirectURL"];
-
-		// $url = $this->config["oktaBaseURL"] . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $redirectUrl;
 
 		$headerString = "Location: " . $url; 
 
 		header($headerString);
 
 		exit;
-
 	}
 
 	function putOktaRecord() {

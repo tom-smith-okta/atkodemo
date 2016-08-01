@@ -19,7 +19,13 @@ curl_setopt_array($curl, array(
 
 $errorMsg = "<p>Sorry, something went wrong trying to kill the session.";
 
-$jsonResult = sendCurlRequest($curl, $errorMsg, TRUE);
+$apiKey = $config["apiKey"];
+
+curl_setopt_array($curl, array(
+	CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json")
+));
+
+$jsonResult = curl_exec($curl);
 
 $result = json_decode($jsonResult, TRUE);
 

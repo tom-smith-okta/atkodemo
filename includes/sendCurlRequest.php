@@ -1,6 +1,6 @@
 <?php
 
-function sendCurlRequest($curl, $errorMsg, $returnJSON = FALSE) {
+function sendCurlRequest($curl, $errorMsg) {
 	global $config;
 
 	$apiKey = $config["apiKey"];
@@ -16,9 +16,11 @@ function sendCurlRequest($curl, $errorMsg, $returnJSON = FALSE) {
 		exit;
 	}
 
-	if ($jsonResult) {
+	curl_close($curl);
 
-		if ($returnJSON) { return $jsonResult; }
+	// NOTE: the "PUT" call does not return a response
+	// so an empty jsonResult is not necessarily an error
+	if ($jsonResult) {
 
 		$result = json_decode($jsonResult, TRUE);
 
@@ -30,10 +32,6 @@ function sendCurlRequest($curl, $errorMsg, $returnJSON = FALSE) {
 
 			exit;
 		}
+		else { return $result; }
 	}
-
-	curl_close($curl);
-
-	return $result;
-
 }

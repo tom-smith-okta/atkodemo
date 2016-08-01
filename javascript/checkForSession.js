@@ -50,8 +50,6 @@ function checkForSession() {
 
 	  				console.dir(res);
 
-	  				console.log ("the cookie token is: " + res.mfaActive.cookieToken);
-
 	  				// window.location = "/atkodemo/login.php";
 	  			}
 	  			else { console.log("can't figure out the user's status."); }

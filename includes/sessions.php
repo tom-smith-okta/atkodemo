@@ -1,14 +1,35 @@
 <?php
 
-session_start();
+if (session_id() == '' || !isset($_SESSION)) { session_start(); }
 
 function setSession() {
 	global $config;
 
-	$userFullName = $_SESSION["oktaSessionObj"]["_links"]["user"]["name"];
+	if (isset($_SESSION["firstName"])) {
+		$firstName = $_SESSION["firstName"];
+	}
+	else {
+		$userID = $_SESSION["oktaSessionObj"]["userId"];
+
+		$url = $config["apiHome"] . "/users/" . $userID;
+
+		$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+			CURLOPT_CUSTOMREQUEST => "GET",
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_URL => $url
+		));
+
+		$errorMsg = "something went wrong with getting the user object";
+
+		$result = sendCurlRequest($curl, $errorMsg);
+
+		$firstName = $result["profile"]["firstName"];
+	}
 
 	$_SESSION["oktaCookieSessionID"] = $_SESSION["oktaSessionObj"]["id"];
-	$_SESSION["header"] = getHeader("auth", $_SESSION["oktaCookieSessionID"], $userFullName);
+	$_SESSION["header"] = getHeader("auth", $_SESSION["oktaCookieSessionID"], $firstName);
 
 	$url = $config["apiHome"] . "/users/" . $_SESSION["oktaSessionObj"]["userId"] . "/roles";
 
@@ -20,12 +41,12 @@ function setSession() {
 		CURLOPT_URL => $url
 	));
 
-	$jsonResult = sendCurlRequest($curl, $errorMsg, TRUE);
+	$errorMsg = "something went wrong with checking the admin status";
 
-	$result = json_decode($jsonResult, TRUE);
+	$result = sendCurlRequest($curl, $errorMsg);
 
 	if ($result) {
-		$_SESSION["header"] = getHeader("admin", $_SESSION["oktaCookieSessionID"], $userFullName);	
+		$_SESSION["header"] = getHeader("admin", $_SESSION["oktaCookieSessionID"], $firstName);	
 	}
 }
 
@@ -44,9 +65,7 @@ function oktaSessionIsValid($oktaCookieSessionID) {
 
 	$errorMsg = "<p>something went wrong with checking the session";
 
-	$jsonResult = sendCurlRequest($curl, $errorMsg, TRUE);
-
-	$result = json_decode($jsonResult, TRUE);
+	$result = sendCurlRequest($curl, $errorMsg);
 
 	if (array_key_exists("errorCode", $result)) {
 		session_destroy();
