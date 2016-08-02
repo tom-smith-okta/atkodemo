@@ -52,6 +52,11 @@
 					window.location = "%redirectURL%";
 
 				}
+				else {
+					console.log("something went wrong.");
+
+					console.dir(res);
+				}
 			}
 		);
 	}

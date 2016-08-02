@@ -62,7 +62,9 @@ $config["clientId"] = "YYUAPHIAj3JPPO6yJans";
 
 $facebook = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");
 $idps[] = $facebook;
-// use those same two lines again to push another idp onto the stack
+
+$google = array("type"=>"GOOGLE", "id"=>"0oa1w8n4dlYlOLjPl1t6");
+$idps[] = $google;
 
 /************************************************************************/
 
