@@ -39,24 +39,27 @@
 		oktaSignIn.renderEl(
 			{ el: '#okta-login-container' },
 		  	function (res) {
-		    	if (res.status === 'SUCCESS') { 
 
-					console.log("the OIDC token is: ");
+		  		console.dir(res);
 
-					console.dir(res);
+		  //   	if (res.idToken != "") { 
 
-					// window.location = "http://localhost:8888/atkodemo/";
-					// doesn't seem like I should need to do this bc I 
-					// have already defined redirectURI above.
-					// worth some experimenting.
-					window.location = "%redirectURL%";
+				// 	console.log("the OIDC token is: ");
 
-				}
-				else {
-					console.log("something went wrong.");
+				// 	console.dir(res);
 
-					console.dir(res);
-				}
+				// 	// window.location = "http://localhost:8888/atkodemo/";
+				// 	// doesn't seem like I should need to do this bc I 
+				// 	// have already defined redirectURI above.
+				// 	// worth some experimenting.
+				// 	// window.location = "%redirectURL%";
+
+				// }
+				// else {
+				// 	console.log("something went wrong.");
+
+				// 	console.dir(res);
+				// }
 			}
 		);
 	}

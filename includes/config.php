@@ -114,9 +114,9 @@ $config["apiKey"] = file_get_contents($apiKeyPath);
 // This value needs to match a value in the Redirect URIs list
 // in your Okta tenant
 
-// http://localhost:8888/atkodemo/
+// http://localhost:8888/atkodemo
 // i am using index.php as my redirect target and session manager
-$config["redirectURL"] = $config["host"] . $config["webHome"];
+$config["redirectURL"] = $config["host"] . $config["webHome"] . "/login.php";
 
 /************** Custom files *******************/
 
