@@ -58,7 +58,7 @@ define(["jquery", "okta-signin", "okta-config"], function ($, OktaSignIn, OktaCo
     var renderOktaWidget = function () {
         oktaSessionsMe(function (authenticated) {
 
-            // $('#widget').hide();
+            $('#widget').hide();
 
             if (authenticated) {
                 console.log("authenticated user - hiding widget");
@@ -68,7 +68,15 @@ define(["jquery", "okta-signin", "okta-config"], function ($, OktaSignIn, OktaCo
             // if (!authenticated) {
             else {
 
-                showAuthUI(false);
+                console.log("user is not authenticated");
+
+                // var loginLink = "<li><a href = '#' onclick = 'alert(\"working\")'>Login link</a>";
+
+                var loginLink = "<li><a href = '#' onclick = 'showWidget()'>Login link</a>";
+
+                $("#login").html(loginLink);
+
+                // showAuthUI(false);
 
                 // $('#widget').show();
 
@@ -108,6 +116,12 @@ define(["jquery", "okta-signin", "okta-config"], function ($, OktaSignIn, OktaCo
             }
         });
     };
+
+    var showWidget = function() {
+
+        $('#widget').show();
+
+    }
 
     var showAuthUI = function (isAuthenticated) {
         
