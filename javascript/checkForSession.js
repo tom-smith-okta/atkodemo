@@ -26,13 +26,13 @@ function checkForSession() {
 					console.log("this is the user ID: " + res.userId);
 
 					// window.location = "/atkodemo/home.php?oktaCookieSessionID=" + res.id + "&oktaUserID=" + res.userId;
-					// window.location = "%homePage%" + "?oktaCookieSessionID=" + res.id + "&oktaUserID=" + res.userId;
+					window.location = "%homePage%" + "?oktaCookieSessionID=" + res.id + "&oktaUserID=" + res.userId;
 
 		  		} else {
 		    		console.log("there is *no* active session - according to session.get()");
 
 		    		// window.location = "/atkodemo/home.php";
-					// window.location = "%homePage%";
+					window.location = "%homePage%";
 
 		  		}
 			});
@@ -50,14 +50,14 @@ function checkForSession() {
 
 	  				console.dir(res);
 
-	  				// window.location = "/atkodemo/login.php";
+	  				window.location = "/atkodemo/login.php";
 	  			}
 	  			else { console.log("can't figure out the user's status."); }
 
 	  		});
 
 	    	// window.location = "/atkodemo/home.php";
-	    	//window.location = "%homePage%";
+	    	window.location = "%homePage%";
 	  	}
 	});
 }
