@@ -57,10 +57,22 @@
 
     function showWidget() {
 
-        $('#widget').show();
+        $("#widget").show();
+
+        var loginLink = "<li id = 'loginItem'><a href = '#' id = 'login' onclick = 'hideWidget()'>Log in</a></li>";
+
+        $("#loginItem").html(loginLink);
 
     }
-    
+
+    function hideWidget() {
+    	$('#widget').hide();
+
+    	var loginLink = "<li id = 'loginItem'><a href = '#' id = 'login' onclick = 'showWidget()'>Log in</a></li>";
+
+        $("#loginItem").html(loginLink);
+
+    }
 </script>
 
 <!-- breaks require.js -->
@@ -198,15 +210,10 @@ $(function() {
 
 	<nav class="links">
 		<ul id = "authLinks">				
-			
-<!-- <li><a href='login.php'>Log in</a></li>
- -->
-<!--  	<li><div id = "login">Log in</div></li>
- --> 	<!--<li><a href = "#" id = "login" onclick="displayWidget()">Log in</a></li>-->
 
-	<li><a href = "#" id = "login">Log in</a></li>
+			<li id = "loginItem"><a href = "#" id = "login" onclick = "showWidget()">Log in</a></li>
 
- 	<li><a href = 'register.php'>Register</a></li>
+ 			<li><a href = 'register.php'>Register</a></li>
 
 		</ul>
 	</nav>

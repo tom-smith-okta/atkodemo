@@ -51,34 +51,22 @@ define(["jquery", "okta-signin", "okta-config"], function ($, OktaSignIn, OktaCo
 
     var sessionTokenKey = 'sessionToken';
 
-    // var showOktaWidget = function () {
-
-    // }
-
     var renderOktaWidget = function () {
         oktaSessionsMe(function (authenticated) {
 
             $('#widget').hide();
 
             if (authenticated) {
-                console.log("authenticated user - hiding widget");
+                console.log("user is authenticated");
             }
 
-            // showAuthUI(authenticated);
-            // if (!authenticated) {
             else {
 
                 console.log("user is not authenticated");
 
-                // var loginLink = "<li><a href = '#' onclick = 'alert(\"working\")'>Login link</a>";
+                var loginLink = "<li id = 'loginItem'><a href = '#' id = 'login' onclick = 'showWidget()'>Log in</a></li>";
 
-                var loginLink = "<li><a href = '#' onclick = 'showWidget()'>Login link</a>";
-
-                $("#login").html(loginLink);
-
-                // showAuthUI(false);
-
-                // $('#widget').show();
+                $("#loginItem").html(loginLink);
 
                 oktaSignIn.renderEl(
                 {
@@ -135,25 +123,17 @@ define(["jquery", "okta-signin", "okta-config"], function ($, OktaSignIn, OktaCo
         else {
             console.log("anonymous user - showing widget");
             $("#apicall-buttons").hide();
-            // $('#widget').show();
 
-            // var onclick = document.getElementById(boxid).style.visibility="visible";
-
-            // var fCall = document.getElementById('widget').style.visibility='visible'";
             var authLinks = "";
 
-            authLinks += '<li><a href = "#" id = "login" onclick = "document.getElementById(\'widget\').style.visibility=\'visible\';">Log in</a></li>';
+            authLinks += '<li id ="loginItem"><a href = "#" id = "login" onclick = "showWidget()">Log in</a></li>';
+
             authLinks += '<li><a href = "register.php">Register</a></li>';
 
             $("#authLinks").html(authLinks);
 
         }
     };
-
-    // var showWidget = function(true) {
-    //             $('#widget').hide();
-
-    // }
 
     var callSessionsMe = function () {
         oktaSessionsMe(function (authenticated) {
