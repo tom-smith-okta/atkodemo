@@ -57,6 +57,17 @@
 
 	var authenticatedMenu = "<li id = 'loginItem'><a href = '#' id = 'btnSignOut' onclick = 'signout()'>Log out</a></li>";
 
+	function getMenu(given_name) {
+		var authenticatedMenu = "<li id = 'loginItem'><a href = '#' id = 'btnSignOut' onclick = 'signout()'>Log out</a></li>";
+		var salesforceURL = "https://tomco.okta.com/home/salesforce/0oapq5e1G3yk5Syeg1t5/46";
+		
+		authenticatedMenu += "<li><a href='" + salesforceURL + "' target = '_blank'>Chatter</a></li>";
+
+		authenticatedMenu += "<li><a href='#'>Welcome, " + given_name + "!</a></li>";
+
+		return authenticatedMenu;
+	}
+
 	function displayWidget() {
 
 		$("#widget").hide();
@@ -107,7 +118,6 @@
 			}
 		});
 
-
 		oktaSignIn.renderEl(
 			{ el: '#widget'},
 		  	function (res) {
@@ -115,68 +125,20 @@
 		  		if (res.status == "SUCCESS") {
 
 		  			$("#widget").hide();
-
-		  			$("#authLinks").html(authenticatedMenu);
 		  			
 		  			console.log("authentication successful.");
 		  			console.log("user now has an active session.");
 		  			console.log("id_token:" + res.idToken);
 		  			console.log("claims:");
 		  			console.dir(res.claims);
+
+		  			var menu = getMenu(res.claims.given_name);
+
+		  			$("#authLinks").html(menu);
+
 		  		}
-
-		  		// console.log("raw object:");
-
-		  		// console.dir(res);
-
 			}
 		);
-
-	   //  $('#btnSignOut').click(function () {
-	   //      console.log('signing out');
-
-	   //      oktaSignIn.session.close(function (success) {
-				// // User is now logged out
-				// console.log('Is session closed? ' + success);
-    //             if (success) {
-    //                 //showAuthUI(false);
-    //                 location.reload(false);
-    //                 //$('#claims').hide();
-                    
-    //             }
-	   //   //    oktaSessionsMe(function (authenticated) {
-	   //   //        if (authenticated) {
-	   //   //            var sessionToken;
-	   //   //            var sessionTokenString = sessionStorage.getItem(sessionTokenKey);
-	   //   //            if (sessionTokenString) {
-	   //   //                sessionToken = JSON.parse(sessionTokenString);
-	   //   //                var sessionId = sessionToken.id;
-	   //   //                console.log('closing session ' + sessionId);
-
-	   //   //                oktaSignIn.session.close(function (success) {
-  		// 		// 			// User is now logged out
-  		// 		// 			console.log('Is session closed? ' + success);
-	   //   //                    if (success) {
-	   //   //                        //showAuthUI(false);
-	   //   //                        location.reload(false);
-	   //   //                        //$('#claims').hide();
-	                            
-	   //   //                    }
-				// 		// });
-
-	   //                  // closeSession(function (success) {
-	   //                  //     console.log('Is session closed? ' + success);
-	   //                  //     if (success) {
-	   //                  //         //showAuthUI(false);
-	   //                  //         location.reload(false);
-	   //                  //         //$('#claims').hide();
-	                            
-	   //                  //     }
-	   //                  // })
-	   //      });
-
-	   //  });
-
 	}
 
 	window.onload = displayWidget;
@@ -231,9 +193,7 @@
             async: true
         });
 
-        var loginLink = "<a href = '#' id = 'login' onclick = 'showWidget()'>Log in</a>";
-
-        $("#loginItem").html(loginLink);
+		$("#authLinks").html("<li id = 'loginItem'><a href = '#' id = 'login' onclick = 'showWidget()'>Log in</a></li>");
     }
 
 </script>
