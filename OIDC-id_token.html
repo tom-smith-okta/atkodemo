@@ -6,9 +6,7 @@
 		<meta name='viewport' content='width=device-width, initial-scale=1' />
 		<title>Atko Corp Home</title>
 
-<!------------------------>
-<!------STYLESHEETS------->
-<!------------------------>
+<!--***** stylesheets *****-->
 
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
 <link rel = 'stylesheet' href = '/atkodemo/css/mainCSS.css'/>
@@ -44,21 +42,12 @@
 
 </style>
 
-<!------------------------->
-<!----------SCRIPTS-------->
-<!------------------------->
-
-<!-- App Script -->
-<!--<script data-main="js/widget-app" src="js/require.js"></script>-->
-
-<!--<script data-main="javascript/widget-app" src="javascript/require.js"></script>-->
+<!--***** scripts *****-->
 
 <script src="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.4.0/js/okta-sign-in.min.js" type="text/javascript"></script>
 
-<!-- breaks require.js -->
 <script src = 'javascript/dates.js'></script>
 
-<!-- breaks require.js -->
 <script src = 'https://use.fontawesome.com/dc4e4e9270.js'></script>
 
 <script>
@@ -76,7 +65,6 @@
 			baseUrl: 'https://tomco.okta.com',
 			logo: 'images/logo.png',
 			features: {
-				// rememberDevice: false,
 				multiOptionalFactorEnroll: true,
 				smsRecovery: true
 			},
@@ -92,7 +80,6 @@
 			authScheme: 'OAUTH2',
 			authParams: {
 				responseType: 'id_token',
-				// responseType: 'code',
 				responseMode: 'okta_post_message',
 				scope: [
 					'openid',
@@ -110,10 +97,12 @@
 		oktaSignIn.session.exists(function (exists) {
 			if (exists) {
 				console.log("there is an active session.");
+				console.log("---------------------------");
 				$("#authLinks").html(authenticatedMenu);
 			}
 			else {
 				console.log("there is not an active session.");
+				console.log("-------------------------------");
 				$("#authLinks").html(anonMenu);
 			}
 		});
@@ -129,13 +118,14 @@
 
 		  			$("#authLinks").html(authenticatedMenu);
 		  			
-		  			console.log("\n--------------------------\n")
 		  			console.log("authentication successful.");
 		  			console.log("user now has an active session.");
 		  			console.log("id_token:" + res.idToken);
 		  			console.log("claims:");
 		  			console.dir(res.claims);
 		  		}
+
+		  		// console.log("raw object:");
 
 		  		// console.dir(res);
 

@@ -46,19 +46,13 @@
 
 <!------------------------->
 <!----------SCRIPTS-------->
-<!------------------------->
+<!- ------------------------>
 
-<!-- App Script -->
-<!--<script data-main="js/widget-app" src="js/require.js"></script>-->
-
-<!--<script data-main="javascript/widget-app" src="javascript/require.js"></script>-->
 
 <script src="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.4.0/js/okta-sign-in.min.js" type="text/javascript"></script>
 
-<!-- breaks require.js -->
 <script src = 'javascript/dates.js'></script>
 
-<!-- breaks require.js -->
 <script src = 'https://use.fontawesome.com/dc4e4e9270.js'></script>
 
 <script>
@@ -91,7 +85,8 @@
 
 			authScheme: 'OAUTH2',
 			authParams: {
-				responseType: 'id_token',
+				responseType: 'token',
+				// responseType: 'id_token',
 				// responseType: 'code',
 				responseMode: 'okta_post_message',
 				scope: [
@@ -110,10 +105,12 @@
 		oktaSignIn.session.exists(function (exists) {
 			if (exists) {
 				console.log("there is an active session.");
+				console.log("\n-----------------------\n");
 				$("#authLinks").html(authenticatedMenu);
 			}
 			else {
 				console.log("there is not an active session.");
+				console.log("\n-----------------------\n");
 				$("#authLinks").html(anonMenu);
 			}
 		});
@@ -137,7 +134,9 @@
 		  			console.dir(res.claims);
 		  		}
 
-		  		// console.dir(res);
+		  		console.log("raw object:");
+
+		  		console.dir(res);
 
 			}
 		);
