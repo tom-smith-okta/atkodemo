@@ -24,71 +24,6 @@
 
 	}
 
-function checkForSession() {
-	var baseUrl = 'https://tomco.okta.com';
-
-	// var baseUrl = "%oktaBaseURL%";
-
-	var oktaSignIn = new OktaSignIn({baseUrl: baseUrl});
-
-	oktaSignIn.session.exists(function (exists) {
-
-		if (exists) {
-	  		// There is an active session, according to session.exists
-	  		console.log("there is an active session - according to session.exists()");
-
-	  		oktaSignIn.session.get(function (res) {
-
-	  			console.log("the raw return value is: ");
-
-	  			console.dir(res);
-
-	  			// console.log("the raw value for '_links' is: ");
-
-	  			// console.log(res._links);
-
-	  			$.ajax({
-		            type: "GET",
-		            dataType: 'json',
-		            url: "%apiHome%/users/" + res.userId,
-
-		            xhrFields: {
-		                withCredentials: true
-		            },
-		            success: function (data) {
-		                console.log('success getting user object');
-		                console.log("the data is: ");
-		                console.dir(data);
-		                // sessionStorage.removeItem('sessionToken');
-		            },
-		            error: function (textStatus, errorThrown) {
-		                console.log('error retrieving session: ' + JSON.stringify(textStatus));
-		                console.log(errorThrown);
-		            },
-		            async: true
-	        	});
-
-	  			// var userObj = JSON.parse(res.user);
-
-	  			// console.log(userObj);
-
-	  			// var obj = JSON.parse(res);
-
-	  			// console.dir(obj);
-
-	  	// 		var jsonObj = JSON.stringify(res);
-
-	  	// 		console.dir(jsonObj);
-
-	  	// 		console.dir(res);
-
-				// console.log("this is the okta session ID: " + res.id);
-				// console.log("this is the user ID: " + res.userId);
-			});
-	  	}
-	 });
-}
-
 	function displayWidget() {
 
 		$("#widget").hide();
@@ -145,7 +80,6 @@ function checkForSession() {
 			                withCredentials: true
 			            },
 			            success: function (data) {
-			                console.dir(data);
 
 			                localStorage.setItem("given_name", data.profile.firstName);
 
@@ -232,11 +166,8 @@ function checkForSession() {
 
     window.onload = function() {
 		getDate();
-		// checkForSession();
 		displayWidget();
 
 	}
 
 </script>
-
-<script src = 'javascript/dates.js'></script>
