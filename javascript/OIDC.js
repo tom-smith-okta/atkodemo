@@ -1,19 +1,27 @@
 
 <script>
 
-	var anonMenu = "<li id = 'loginItem'><a href = '#' id = 'login' onclick = 'showWidget()'>Log in</a></li>";
-		anonMenu += "<li><a href = 'register.php'>Register</a></li>";
+	function setMenu(authState) {
 
-	var authenticatedMenu = "<li id = 'loginItem'><a href = '#' id = 'btnSignOut' onclick = 'signout()'>Log out</a></li>";
+		var menu;
 
-	function getMenu(given_name) {
-		var authenticatedMenu = "<li id = 'loginItem'><a href = '#' id = 'btnSignOut' onclick = 'signout()'>Log out</a></li>";
+		if (authState == "authenticated") {
+			menu = "<li><a href = '#' onclick = 'signout()'>Log out</a></li>";
 		
-		authenticatedMenu += "<li><a href='%salesforce%' target = '_blank'>Chatter</a></li>";
+			menu += "<li><a href='%salesforce%' target = '_blank'>Chatter</a></li>";
 
-		authenticatedMenu += "<li><a href='#'>Welcome, " + given_name + "!</a></li>";
+			if (localStorage.getItem("given_name")) {
+				menu += "<li><a href='#'>Welcome, " + localStorage.getItem("given_name") + "!</a></li>";
+			}
 
-		return authenticatedMenu;
+		}
+		else {
+			menu = "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in</a></li>";
+			menu += "<li><a href = 'register.php'>Register</a></li>";
+		}
+
+		$("#authLinks").html(menu);
+
 	}
 
 	function displayWidget() {
@@ -57,12 +65,12 @@
 			if (exists) {
 				console.log("there is an active session.");
 				console.log("---------------------------");
-				$("#authLinks").html(authenticatedMenu);
+				setMenu("authenticated");
 			}
 			else {
 				console.log("there is not an active session.");
 				console.log("-------------------------------");
-				$("#authLinks").html(anonMenu);
+				setMenu("anon");
 			}
 		});
 
@@ -80,35 +88,27 @@
 		  			console.log("claims:");
 		  			console.dir(res.claims);
 
-		  			var menu = getMenu(res.claims.given_name);
+		  			localStorage.setItem("given_name", res.claims.given_name);
 
-		  			$("#authLinks").html(menu);
+		  			setMenu("authenticated");
 
 		  		}
 			}
 		);
 	}
 
-</script>
-
-<script>
-
     function showWidget() {
 
         $("#widget").show();
 
-        var loginLink = "<a href = '#' id = 'login' onclick = 'hideWidget()'>Log in</a>";
-
-        $("#loginItem").html(loginLink);
+        $("#login").attr("onclick", "hideWidget()");
 
     }
 
     function hideWidget() {
     	$("#widget").hide();
 
-    	var loginLink = "<a href = '#' id = 'login' onclick = 'showWidget()'>Log in</a>";
-
-        $("#loginItem").html(loginLink);
+    	$("#login").attr("onclick", "showWidget()");
 
     }
 
@@ -135,16 +135,14 @@
             async: true
         });
 
-		$("#authLinks").html("<li id = 'loginItem'><a href = '#' id = 'login' onclick = 'showWidget()'>Log in</a></li>");
+		setMenu("anon");
     }
+
+    window.onload = function() {
+		getDate();
+		displayWidget();
+	}
 
 </script>
 
 <script src = 'javascript/dates.js'></script>
-
-<script>
-	window.onload = function() {
-		getDate();
-		displayWidget();
-	}
-</script>
