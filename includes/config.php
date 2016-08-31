@@ -124,7 +124,9 @@ $config["apiKey"] = file_get_contents($apiKeyPath);
 // i am using index.php as my redirect target and session manager
 // $config["redirectURL"] = $config["host"] . $config["webHome"] . "/login.php";
 
-$config["redirectURL"] = $config["host"] . $config["webHome"] . "/oidc.php";
+// $config["redirectURL"] = $config["host"] . $config["webHome"] . "/index.php";
+
+$config["redirectURL"] = $config["host"] . $config["webHome"];
 
 
 /************** Custom files *******************/
