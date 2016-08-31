@@ -4,14 +4,34 @@ include "includes/includes.php";
 
 $thisPage = new htmlPage($config);
 
-/*** Manually add elements here ******/
+/*************************************/
 
-$thisPage->setTitle($config["name"] . " - Redirect URL");
+$thisPage->setTitle($config["name"] . " Home");
 
-// okta sign-in widget js
+// css
+$thisPage->addElement("mainCSS");
+
+$thisPage->addElement("oktaWidgetCSScore");
+
+$thisPage->addElement("oktaWidgetCSStheme");
+
+$thisPage->addElement("oktaWidgetCSSlocal");
+
+// javascript
+$thisPage->addElement("jquery");
+
+$thisPage->addElement("font-awesome");
+
 $thisPage->addElement("okta-signin-widget");
 
-// local js logic to check to see whether an okta session exists
-$thisPage->addElement("checkForSession");
+$thisPage->addElement("OIDC");
 
+$thisPage->addElement("dates");
+
+// body
+$body = file_get_contents("html/id_token.html");
+
+$thisPage->addToBody($body);
+
+// display
 $thisPage->display();

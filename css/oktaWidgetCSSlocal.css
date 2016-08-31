@@ -1,12 +1,9 @@
 <style>
-  body {
-    background-image: url('%bgImage%');
-    background-repeat: no-repeat;
-    background-position: center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
+  #container {
+    z-index: 101;
+    position: absolute;
+    top: 60px;
+    left: 20px;
   }
 
   #container #okta-login-container .button {

@@ -55,10 +55,13 @@ $bgImagePath = "images/bgImage.jpg";
 // The path to salesforce on your Okta instance
 // future dev efforts might retrieve an end-user's list of apps automatically
 // but this demo is optimized for showing automatic provisioning to SF
-$config["salesforce"] = "/home/salesforce/0oapq5e1G3yk5Syeg1t5/46";
+$salesforce = "/home/salesforce/0oapq5e1G3yk5Syeg1t5/46";
 
 // OIDC client ID - from your Okta social auth app
 $config["clientId"] = "YYUAPHIAj3JPPO6yJans";
+
+// Widget version
+$widgetVer = "1.4.0";
 
 $facebook = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");
 $idps[] = $facebook;
@@ -91,15 +94,18 @@ $config["oktaBaseURL"] = "https://" . $config["oktaOrg"] . ".okta.com";
 $config["apiHome"] = $config["oktaBaseURL"] . "/api/v1";
 
 // https://tomco.okta.com/home/salesforce/0oapq5e1G3yk5Syeg1t5/46
-$config["salesforce"] = $config["oktaBaseURL"] . $config["salesforce"];
+$config["salesforce"] = $config["oktaBaseURL"] . $salesforce;
 
+// establishes web home relative to web root
 // /atkodemo
 $config["webHome"] = "";
 if (!empty($config["homeDir"])) { $config["webHome"] = "/" . $config["homeDir"]; }
 
+// check for a logo
 if (fopen($logoPath, "r")) { $config["logo"] = $logoPath; }
 else { $config["logo"] = $config["webHome"] . "/" . $logoPath; }
 
+// check for a background image
 if (fopen($bgImagePath, "r")) { $config["bgImage"] = $bgImagePath; }
 else { $config["bgImage"] = $config["webHome"] . "/" . $bgImagePath; }
 
@@ -114,9 +120,12 @@ $config["apiKey"] = file_get_contents($apiKeyPath);
 // This value needs to match a value in the Redirect URIs list
 // in your Okta tenant
 
-// http://localhost:8888/atkodemo/
+// http://localhost:8888/atkodemo
 // i am using index.php as my redirect target and session manager
-$config["redirectURL"] = $config["host"] . $config["webHome"];
+// $config["redirectURL"] = $config["host"] . $config["webHome"] . "/login.php";
+
+$config["redirectURL"] = $config["host"] . $config["webHome"] . "/oidc.php";
+
 
 /************** Custom files *******************/
 
@@ -134,24 +143,28 @@ $config["oktaSignInOIDC"]["type"] = "javascript";
 $config["oktaSignInOIDC"]["location"] = "inline";
 $config["oktaSignInOIDC"]["vars"] = array("oktaBaseURL", "redirectURL", "logo", "clientId", "idps");
 
+$config["OIDC"]["type"] = "javascript";
+$config["OIDC"]["location"] = "inline";
+$config["OIDC"]["vars"] = array("salesforce", "oktaBaseURL", "redirectURL", "logo", "clientId", "idps", "apiHome");
+
 /************** Okta files *********************/
 
-$oktaWidgetBaseURL = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.3.3";
+$oktaWidgetBaseURL = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/" . $widgetVer;
 
 // Okta widget
 $config["okta-signin-widget"]["type"] = "javascript";
 $config["okta-signin-widget"]["location"] = "remote";
-$config["okta-signin-widget"]["url"] = $oktaWidgetBaseURL . "/js/okta-sign-in-1.3.3.min.js";
+$config["okta-signin-widget"]["url"] = $oktaWidgetBaseURL . "/js/okta-sign-in.min.js";
 
 // Okta core CSS
 $config["oktaWidgetCSScore"]["type"] = "css";
 $config["oktaWidgetCSScore"]["location"] = "remote";
-$config["oktaWidgetCSScore"]["url"] = $oktaWidgetBaseURL . "/css/okta-sign-in-1.3.3.min.css";
+$config["oktaWidgetCSScore"]["url"] = $oktaWidgetBaseURL . "/css/okta-sign-in.min.css";
 
 // Okta customizable CSS - remote
 $config["oktaWidgetCSStheme"]["type"] = "css";
 $config["oktaWidgetCSStheme"]["location"] = "remote";
-$config["oktaWidgetCSStheme"]["url"] = $oktaWidgetBaseURL . "/css/okta-theme-1.3.3.css";
+$config["oktaWidgetCSStheme"]["url"] = $oktaWidgetBaseURL . "/css/okta-theme.css";
 
 // Okta customizable CSS - local
 $config["oktaWidgetCSSlocal"]["type"] = "css";

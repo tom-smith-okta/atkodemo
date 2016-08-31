@@ -2,6 +2,19 @@
 
 tom.smith@okta.com
 
+v3 release notes
+
+* login widget now appears as pop-up on same page
+* OIDC flow generates an id_token
+* View console to see id_token
+* Google social login not working in Safari and Firefox
+
+v2 release notes
+
+* added Google as IDP
+* stylesheet cleanup
+* MFA supported
+
 This demo is meant to show some of the capabilities of Okta's platform, specifically in terms of IDAAS for external users. This particular demo has a B2C slant, but it can be modified for other external use cases as well (B2B etc.).
 
 The public version of this demo is at: www.atkodemo.com

@@ -14,5 +14,3 @@ function getDate() {
 	$(".published").html(dateString);
 
 }
-
-window.onload = getDate;
