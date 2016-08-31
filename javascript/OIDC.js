@@ -24,6 +24,71 @@
 
 	}
 
+function checkForSession() {
+	var baseUrl = 'https://tomco.okta.com';
+
+	// var baseUrl = "%oktaBaseURL%";
+
+	var oktaSignIn = new OktaSignIn({baseUrl: baseUrl});
+
+	oktaSignIn.session.exists(function (exists) {
+
+		if (exists) {
+	  		// There is an active session, according to session.exists
+	  		console.log("there is an active session - according to session.exists()");
+
+	  		oktaSignIn.session.get(function (res) {
+
+	  			console.log("the raw return value is: ");
+
+	  			console.dir(res);
+
+	  			// console.log("the raw value for '_links' is: ");
+
+	  			// console.log(res._links);
+
+	  			$.ajax({
+		            type: "GET",
+		            dataType: 'json',
+		            url: "%apiHome%/users/" + res.userId,
+
+		            xhrFields: {
+		                withCredentials: true
+		            },
+		            success: function (data) {
+		                console.log('success getting user object');
+		                console.log("the data is: ");
+		                console.dir(data);
+		                // sessionStorage.removeItem('sessionToken');
+		            },
+		            error: function (textStatus, errorThrown) {
+		                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+		                console.log(errorThrown);
+		            },
+		            async: true
+	        	});
+
+	  			// var userObj = JSON.parse(res.user);
+
+	  			// console.log(userObj);
+
+	  			// var obj = JSON.parse(res);
+
+	  			// console.dir(obj);
+
+	  	// 		var jsonObj = JSON.stringify(res);
+
+	  	// 		console.dir(jsonObj);
+
+	  	// 		console.dir(res);
+
+				// console.log("this is the okta session ID: " + res.id);
+				// console.log("this is the user ID: " + res.userId);
+			});
+	  	}
+	 });
+}
+
 	function displayWidget() {
 
 		$("#widget").hide();
@@ -65,6 +130,33 @@
 			if (exists) {
 				console.log("there is an active session.");
 				console.log("---------------------------");
+
+				// getting the fname from the server instead of local storage
+				// to accomodate the use-case where a new user registers and
+				// then gets redirected to this page. There's probably a better
+				// way.
+				oktaSignIn.session.get(function (res) {
+		  			$.ajax({
+			            type: "GET",
+			            dataType: 'json',
+			            url: "%apiHome%/users/" + res.userId,
+
+			            xhrFields: {
+			                withCredentials: true
+			            },
+			            success: function (data) {
+			                console.dir(data);
+
+			                localStorage.setItem("given_name", data.profile.firstName);
+
+			            },
+			            error: function (textStatus, errorThrown) {
+			                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+			                console.log(errorThrown);
+			            },
+			            async: true
+		        	});
+		  		});
 				setMenu("authenticated");
 			}
 			else {
@@ -140,7 +232,9 @@
 
     window.onload = function() {
 		getDate();
+		// checkForSession();
 		displayWidget();
+
 	}
 
 </script>

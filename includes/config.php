@@ -122,7 +122,10 @@ $config["apiKey"] = file_get_contents($apiKeyPath);
 
 // http://localhost:8888/atkodemo
 // i am using index.php as my redirect target and session manager
-$config["redirectURL"] = $config["host"] . $config["webHome"] . "/login.php";
+// $config["redirectURL"] = $config["host"] . $config["webHome"] . "/login.php";
+
+$config["redirectURL"] = $config["host"] . $config["webHome"] . "/oidc.php";
+
 
 /************** Custom files *******************/
 
