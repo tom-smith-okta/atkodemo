@@ -100,7 +100,8 @@ $config["salesforce"] = $config["oktaBaseURL"] . $salesforce;
 
 // establishes web home relative to web root
 // /atkodemo
-$config["webHome"] = "/" . $config["homeDir"];
+$config["webHome"] = "/";
+if(!empty($config["homeDir"])) { $config["webHome"] = $config["webHome"] . $config["homeDir"]; }
 
 // check for a logo
 if (fopen($logoPath, "r")) { $config["logo"] = $logoPath; }

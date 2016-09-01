@@ -31,7 +31,7 @@ class htmlPage {
 
 		if ($location == "local") {
 			$ext = $this->elements[$type]["ext"]; // either ".js" or ".css"
-			$filePath = $this->config["webHome"] . "/" . $type . "/" . $elementName . $ext;
+			$filePath = $type . "/" . $elementName . $ext;
 			$content = str_replace("%PATH%", $filePath, $this->elements[$type]["tag"]);
 		}
 		else if ($location == "inline") {
