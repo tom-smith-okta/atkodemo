@@ -8,6 +8,8 @@ $config["homeDir"] = "atkodemo"; // e.g.: "atkodemo"
 // I'm going to re-work the next few lines. They might not
 // really be necessary.
 
+// the OS home dir
+// e.g. /var/www/html
 $config["fsHome"] = $_SERVER['DOCUMENT_ROOT'];
 
 if (strpos($_SERVER['DOCUMENT_ROOT'], $config["homeDir"])) {
@@ -98,8 +100,7 @@ $config["salesforce"] = $config["oktaBaseURL"] . $salesforce;
 
 // establishes web home relative to web root
 // /atkodemo
-$config["webHome"] = "";
-if (!empty($config["homeDir"])) { $config["webHome"] = "/" . $config["homeDir"]; }
+$config["webHome"] = "/" . $config["homeDir"];
 
 // check for a logo
 if (fopen($logoPath, "r")) { $config["logo"] = $logoPath; }

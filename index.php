@@ -31,6 +31,12 @@ $thisPage->addElement("dates");
 // body
 $body = file_get_contents("html/id_token.html");
 
+$body = str_replace("%HOME%", $config["webHome"], $body);
+
+// $body = str_replace("%PATH%", $this->config[$elementName]["url"], $this->elements[$type]["tag"]);
+
+
+
 $thisPage->addToBody($body);
 
 // display
