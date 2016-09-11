@@ -163,7 +163,13 @@ class htmlPage {
 	function setBodyParam($paramType, $param) {
 		$this->elements["body"][$paramType] = $param;
 
-	} 
+	}
+
+	function setConfigValue($name, $value) {
+
+		$this->config[$name] = $value;
+
+	}
 
 	function setTitle($title) {
 

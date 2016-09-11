@@ -11,7 +11,7 @@
 
 	<header id="header">
 
-		<h1><a href="%webHome%">Atko Corp</a></h1>
+		<h1><a href="%webHome%">%name%</a></h1>
 
 		<nav class="links">
 			<ul id = "authLinks">
@@ -88,7 +88,7 @@
 <div id="okta-login-container">
 	<div class="auth-container main-container no-beacon" id="okta-sign-in">
 		<div class="okta-sign-in-header auth-header">
-			<img class="auth-org-logo" src="images/logo.png">
+			<img class="auth-org-logo" src="%logo%">
 				<div class="beacon-container" data-type="beacon-container"></div>
 		</div>
 		<div class="auth-content">
@@ -96,122 +96,17 @@
 				<div class="primary-auth">
 					<div class="social-auth">
 						<h2 class="okta-form-title o-form-head" data-se="o-form-head">Sign up</h2>
-<!-- 						<a data-se="social-auth-facebook-button" href="#" class="social-auth-button social-auth-facebook-button link-button">Sign in with Facebook</a>
-						<div class="auth-divider">
-							<span class="auth-divider-text">OR</span>
-						</div> -->
 					</div>
 					
-					<!-- warning: I am ignoring most of the jquery data fields and just using the trad form fields
-					for data -->
-					<form method="POST" action="evaluateRegForm.php" data-se="o-form" id="form16" class="primary-auth-form o-form o-form-edit-mode">
+%regForm%
 
-					<div class="o-form-content o-form-theme clearfix" data-se="o-form-content">
-						<div data-se="o-form-error-container" class="o-form-error-container"></div>
 
-							<div data-se="o-form-fieldset-container" class="o-form-fieldset-container">
-								<div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top">
-									<div data-se="o-form-input-container" class="o-form-input">
-										<span data-se="o-form-input-username" class="okta-form-input-field input-fix o-form-control">
-											<span class="input-tooltip icon form-help-16" data-hasqtip="0"></span>
-											<span class="icon input-icon person-16-gray"></span>
-											<input type="text" autocomplete="off" value="" id="input25" name="firstName" placeholder="First name">
-										</span>
-									</div>
-								</div>
-								
-								<div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top">
-									<div data-se="o-form-input-container" class="o-form-input">
-										<span data-se="o-form-input-username" class="okta-form-input-field input-fix o-form-control">
-											<span class="input-tooltip icon form-help-16" data-hasqtip="0"></span>
-											<span class="icon input-icon person-16-gray"></span>
-											<input type="text" autocomplete="off" value="" id="input25" name="lastName" placeholder="Last name">
-										</span>
-									</div>
-								</div>
-
-								<div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top">
-									<div data-se="o-form-input-container" class="o-form-input">
-										<span data-se="o-form-input-username" class="okta-form-input-field input-fix o-form-control">
-											<span class="input-tooltip icon form-help-16" data-hasqtip="0"></span>
-											<span class="icon input-icon person-16-gray"></span>
-											<input type="text" autocomplete="off" value="" id="input25" name="email" placeholder="email">
-										</span>
-									</div>
-								</div>
-
-								<div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top">
-									<div data-se="o-form-input-container" class="o-form-input">
-										<span data-se="o-form-input-password" class="okta-form-input-field input-fix o-form-control">
-											<span class="input-tooltip icon form-help-16" aria-describedby="qtip-1" data-hasqtip="1">
-											</span>
-											<span class="icon input-icon remote-lock-16"></span>
-											<input type="password" autocomplete="off" value="" id="input32" name="password" placeholder="Password">
-										</span>
-									</div>
-								</div>
-
-								<!-- Remember Me checkbox -->
-<!--  								<div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top margin-btm-0">
-									<div data-se="o-form-input-container" class="o-form-input">
-										<span data-se="o-form-input-remember">
-										<div class="custom-checkbox">
-											<input type="checkbox" id="input39" name="remember">
-											<label data-se-for-name="remember" for="input39" class="">Remember me</label>
-											<input type="checkbox" id="input39" name="remember">
-											<label data-se-for-name="remember" for="input39" class="">Register as admin (okta users only)</label>
-										</div>
-										</span>
-									</div>
-								</div> -->
-
-								<!-- Remember Me checkbox -->
-								<!-- This version is fixed, kind of -->
-<!--  								<div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top margin-btm-0">
-									<div data-se="o-form-input-container" class="o-form-input">
-										<span data-se="o-form-input-remember">
-										<div class="custom-checkbox">
-											<input type="checkbox" id="input39" name="wantsAdmin">
-											<label data-se-for-name="remember" for="input39" class="">Register as admin (okta users only)</label>
-										</div>
-										</span>
-									</div>
-								</div> -->
-
-							</div>
-						</div>
-						<div class="o-form-button-bar">
-							<input type="submit" class="button button-primary" value="Sign Up" data-type="save">
-						</div>
-					</form>
-
-<!-- 					<div class="auth-footer">
-						<a class="link help js-help" data-se="needhelp" href="#">Need help signing in?</a>
-						<ul class="help-links js-help-links" style="display: none;">
-							<li><a class="link js-forgot-password" data-se="forgot-password" href="#">Forgot password?</a></li>
-							<li><a target="_blank" class="link js-help-link" data-se="help-link" href="https://tomco.okta.com/help/login">Help</a></li></ul>
-					</div> -->
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<!-- 		<div id = 'regForm' style='width: 300px'>
 
-			<p>Create a new account</p>				
-
-			<form action = 'evaluateRegForm.php' method = 'POST'>
-
-			<p>First name: <input type = 'text' name = 'firstName' value = ''></p>
-			<p>Last name: <input type = 'text' name = 'lastName' value = ''></p>
-			<p>email: <input type = 'text' name = 'email' value = ''></p>
-			<p>login: <input type = 'text' name = 'login' value = ''> required!</p>
-			<p>password: <input type = 'password' name = 'password' value = ''> passwords must have at least 8 characters, a lowercase letter, an uppercase letter, a number, no parts of your username</p>
-
-			<p><input type = 'submit' name = 'submit' value = 'submit'></p>
-
-			</form>
-		</div> -->
 	</div>
 </div>
 
