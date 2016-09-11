@@ -10,25 +10,39 @@ $thisPage = new htmlPage($config);
 
 $thisPage->setTitle($config["name"] . " - Register");
 
-// jquery
-$thisPage->addElement("jquery");
+$elements = [
+	"mainCSS",
+	"oktaWidgetCSScore",
+	"oktaWidgetCSStheme",
+	"oktaWidgetCSSlocal",
+	"jquery"
+];
 
-$thisPage->addElement("mainCSS");
+$thisPage->addElements($elements);
 
-$thisPage->addElement("oktaWidgetCSScore");
+$thisPage->loadBody("register");
 
-$thisPage->addElement("oktaWidgetCSStheme");
 
-$thisPage->addElement("oktaWidgetCSSlocal");
 
-$body = file_get_contents("register.html");
+// // jquery
+// $thisPage->addElement("jquery");
 
-$thisPage->setBodyParam("class", "single");
+// $thisPage->addElement("mainCSS");
 
-$header = getHeader("blank");
+// $thisPage->addElement("oktaWidgetCSScore");
 
-$body = str_replace("%HEADER%", $header, $body);
+// $thisPage->addElement("oktaWidgetCSStheme");
 
-$thisPage->addToBody($body);
+// $thisPage->addElement("oktaWidgetCSSlocal");
+
+// $body = file_get_contents("register.html");
+
+// $thisPage->setBodyParam("class", "single");
+
+// $header = getHeader("blank");
+
+// $body = str_replace("%HEADER%", $header, $body);
+
+// $thisPage->addToBody($body);
 
 $thisPage->display();

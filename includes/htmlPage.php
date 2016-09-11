@@ -47,6 +47,26 @@ class htmlPage {
 
 	}
 
+	function addElements($elements) {
+		foreach ($elements as $element) {
+			$this->addElement($element);
+		}
+	}
+
+	function loadBody($name, $vars = []) {
+		$filePath = "html/" . $name . ".html";
+		$body = file_get_contents($filePath);
+
+		if (!empty($vars)) {
+			foreach($vars as $var) {
+				$target = "%" . $var . "%";
+				$body = str_replace($target, $this->config[$var], $body);
+			}
+		}
+
+		$this->body = $body;
+	}
+
 	function addToBlock($content, $type) {
 
 		if (!empty($this->elements[$type]["block"])) { 

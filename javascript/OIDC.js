@@ -80,8 +80,12 @@
 			                withCredentials: true
 			            },
 			            success: function (data) {
+			            	console.log("the given_name is: " + data.profile.firstName);
 
 			                localStorage.setItem("given_name", data.profile.firstName);
+
+			                setMenu("authenticated");
+
 
 			            },
 			            error: function (textStatus, errorThrown) {
@@ -91,7 +95,6 @@
 			            async: true
 		        	});
 		  		});
-				setMenu("authenticated");
 			}
 			else {
 				console.log("there is not an active session.");
@@ -103,6 +106,8 @@
 		oktaSignIn.renderEl(
 			{ el: '#widget'},
 		  	function (res) {
+
+		  		console.log("the res.status is: " + res.status);
 
 		  		if (res.status == "SUCCESS") {
 
@@ -118,6 +123,10 @@
 
 		  			setMenu("authenticated");
 
+		  		}
+		  		else {
+		  			console.log("the user was not authenticated.");
+		  			console.log("the error is: " + res.status);
 		  		}
 			}
 		);
@@ -165,6 +174,7 @@
     }
 
     window.onload = function() {
+    	// setMenu();
 		getDate();
 		displayWidget();
 
