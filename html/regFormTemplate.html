@@ -1,8 +1,11 @@
 <form method="POST" action="evaluateRegForm.php" data-se="o-form" id="form16" class="primary-auth-form o-form o-form-edit-mode">
 	<div class="o-form-content o-form-theme clearfix" data-se="o-form-content">
-		<div data-se="o-form-error-container" class="o-form-error-container"></div>
+		<div data-se="o-form-error-container" class="o-form-error-container">
+		</div>
 
 		%fields%
+		
+		<input type="hidden" name = "regType" value="%regType%">
 
 		<div class="o-form-button-bar">
  			<input type="submit" class="button button-primary" value="Sign Up" data-type="save">

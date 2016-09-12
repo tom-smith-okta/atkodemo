@@ -1,5 +1,10 @@
 <?php
 
+
+echo "<p>the regType is: " . $_POST["regType"];
+
+exit;
+
 if (session_id() == '' || !isset($_SESSION)) { session_start(); }
 
 include "includes/includes.php";

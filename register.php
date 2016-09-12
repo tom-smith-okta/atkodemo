@@ -19,11 +19,37 @@ $elements = [
 
 $thisPage->addElements($elements);
 
+$thisPage->setConfigValue("regDesc", getRegDesc($regType));
+
 $thisPage->setConfigValue("regForm", getRegForm($regType)); 
 
-$thisPage->loadBody("register", ["name", "webHome", "logo", "regForm"]);
+$thisPage->loadBody("register", ["name", "webHome", "logo", "regForm", "regDesc"]);
 
 $thisPage->display();
+
+function getRegDesc($regType) {
+
+	$regTypes["default"]["title"] = "Default registration flow";
+	$regTypes["default"]["desc"] = "A user record will be created in the Okta universal directory, and the user will be provisioned to Salesforce Chatter.";
+
+	$regTypes["vanilla"]["title"] = "Vanilla registration flow";
+	$regTypes["vanilla"]["desc"] = "A basic user record will be created in the Okta universal directory.";
+
+	$regTypes["withMFA"]["title"] = "MFA registration flow";
+	$regTypes["withMFA"]["desc"] = "A user record will be created in the Okta universal directory. The user must use a 2nd factor every time they authenticate.";
+
+	$regTypes["withEmail"]["title"] = "Email verification user flow";
+	$regTypes["withEmail"]["desc"] = "A user record will be created in the Okta universal directory. The user must verify their email address before they can authenticate.";
+
+	$regTypes["okta"]["title"] = "Okta admin registration";
+	$regTypes["okta"]["desc"] = "An Okta employee can register and get admin access (read-only) to the demo tenant.";
+
+	$returnVal = "<p><b>" . $regTypes[$regType]["title"] . ":</b></p>\n";
+	$returnVal .= "<p>" . $regTypes[$regType]["desc"] . "</p>\n";
+
+	return $returnVal;
+
+}
 
 function getRegForm($regType) {
 
@@ -45,6 +71,7 @@ function getRegForm($regType) {
 	$fields["email"]["type"] = "text";
 	$fields["email"]["placeholder"] = "email";
 
+	// password
 	$fields["password"]["type"] = "password";
 	$fields["password"]["placeholder"] = "password"; 
 
@@ -52,61 +79,27 @@ function getRegForm($regType) {
 
 		$formField = $formFieldTemplate;
 
-		$formField = str_replace("%name%", $fieldName, $formField);
-		$formField = str_replace("%type%", $properties["type"], $formField);
-		$formField = str_replace("%placeholder%", $properties["placeholder"], $formField);
+		$input = "<input name = '" . $fieldName . "'";
+
+		foreach ($properties as $propertyName => $value) {
+			$input .= " " . $propertyName . " = '" . $value . "'";
+
+			if ($value == "hidden") {
+				$input .= " style='display:none'"; 
+			}
+		}
+
+		$input .= ">";
+
+		$formField = str_replace("%input%", $input, $formField);
 
 		$fieldsHTML .= $formField;
 	}
+
+	$regForm = str_replace("%regType%", $regType, $regForm);
 
 	$regForm = str_replace("%fields%", $fieldsHTML, $regForm);
 
 	return $regForm;
 
 }
-
-
-// 								<div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top">
-// 									<div data-se="o-form-input-container" class="o-form-input">
-// 										<span data-se="o-form-input-password" class="okta-form-input-field input-fix o-form-control">
-// 											<span class="input-tooltip icon form-help-16" aria-describedby="qtip-1" data-hasqtip="1">
-// 											</span>
-// 											<span class="icon input-icon remote-lock-16"></span>
-// 											<input type="password" autocomplete="off" value="" id="input32" name="password" placeholder="Password">
-// 										</span>
-// 									</div>
-// 								</div>
-
-// 								<!-- Remember Me checkbox -->
-// <!--  								<div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top margin-btm-0">
-// 									<div data-se="o-form-input-container" class="o-form-input">
-// 										<span data-se="o-form-input-remember">
-// 										<div class="custom-checkbox">
-// 											<input type="checkbox" id="input39" name="remember">
-// 											<label data-se-for-name="remember" for="input39" class="">Remember me</label>
-// 											<input type="checkbox" id="input39" name="remember">
-// 											<label data-se-for-name="remember" for="input39" class="">Register as admin (okta users only)</label>
-// 										</div>
-// 										</span>
-// 									</div>
-// 								</div> -->
-
-// 								<!-- Remember Me checkbox -->
-// 								<!-- This version is fixed, kind of -->
-// <!--  								<div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top margin-btm-0">
-// 									<div data-se="o-form-input-container" class="o-form-input">
-// 										<span data-se="o-form-input-remember">
-// 										<div class="custom-checkbox">
-// 											<input type="checkbox" id="input39" name="wantsAdmin">
-// 											<label data-se-for-name="remember" for="input39" class="">Register as admin (okta users only)</label>
-// 										</div>
-// 										</span>
-// 									</div>
-// 								</div> -->
-
-// 							</div>
-// 						</div>
-// 						<div class="o-form-button-bar">
-// 							<input type="submit" class="button button-primary" value="Sign Up" data-type="save">
-// 						</div>
-// 					</form>
