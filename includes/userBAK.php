@@ -2,79 +2,32 @@
 
 class user {
 
-	function __construct($regType, $user) {
+	function __construct($config, $regType, $user) {
+		$this->config = $config;
 
-		include "config.php";
+		$this->email = $user["email"];
 
-		$userData = '{
-			"profile": {
-				"firstName": "' . $user["firstName"] . '",
-				"lastName":  "' . $user["lastName"]  . '",
-				"email":     "' . $user["email"]     . '",
-				"login":     "' . $user["email"] .     '"
-			}';
+		$this->login = $this->email;
+
+		$this->firstName = $user["firstName"];
+
+		$this->lastName = $user["lastName"];
 
 		if ($regType == "default" || $regType == "vanilla") {
-			$userData .= ',
-			"credentials": {
-				"password": {
-					"value": "' . $user["password"] . '"
-				}
-			}'; 
+
+			$this->password = $user["password"];
+
+			if ($regType == "default") {
+				echo "<p>the type of user is default.</p>";
+			}
+			else {
+				echo "<p>the type of user is vanilla.</p>";
+			}
+
+
 		}
 
-		$userData .= "}";
-
-		$url = $config["apiHome"] . "/users?activate=true";
-
-		echo "<p>the url is: " . $url;
-
-		echo "<p>the user object is: " . $userData;
-
-		$curl = curl_init();
-
-		curl_setopt_array($curl, array(
-			CURLOPT_POST => TRUE,
-			CURLOPT_RETURNTRANSFER => TRUE,
-			CURLOPT_URL => $url,
-	    	CURLOPT_POSTFIELDS => $userData
-		));
-
-		$errorMsg = "<p>Sorry, something went wrong with trying to create this user.";
-
-		$result = sendCurlRequest($curl, $errorMsg);
-
-		$this->userID = $result["id"];
-
-				exit;
-
-
-
-		// $this->config = $config;
-
-		// $this->email = $user["email"];
-
-		// $this->login = $this->email;
-
-		// $this->firstName = $user["firstName"];
-
-		// $this->lastName = $user["lastName"];
-
-		// if ($regType == "default" || $regType == "vanilla") {
-
-		// 	$this->password = $user["password"];
-
-		// 	if ($regType == "default") {
-		// 		echo "<p>the type of user is default.</p>";
-		// 	}
-		// 	else {
-		// 		echo "<p>the type of user is vanilla.</p>";
-		// 	}
-
-
-		// }
-
-		// exit;
+		exit;
 
 
 

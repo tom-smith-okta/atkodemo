@@ -27,6 +27,7 @@ $thisPage->loadBody("register", ["name", "webHome", "logo", "regForm", "regDesc"
 
 $thisPage->display();
 
+// might move these to $config
 function getRegDesc($regType) {
 
 	$regTypes["default"]["title"] = "Default registration flow";

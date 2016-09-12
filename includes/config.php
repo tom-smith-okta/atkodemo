@@ -33,8 +33,11 @@ $config["name"] = "Atko Corp";
 // If your localhost is running on a specific port, indicate it here
 $config["localhost"] = "localhost:8888";
 
- // I add all new users to an Okta group called "externalUsers"
+// GROUPS
+
+// atkoDemoUsersDefault
 $config["group"]["default"]["id"] = "00g1yq9e5JOWsxFdu1t6";
+$config["group"]["vanilla"]["id"] = "00gntdlmx9Favuwhp1t6"; 
 
 // For users who should be added to to a group requiring MFA
 // triggered in reg flow by email address

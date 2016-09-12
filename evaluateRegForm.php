@@ -1,31 +1,24 @@
 <?php
 
+include "includes/includes.php";
 
-echo "<p>the regType is: " . $_POST["regType"];
+if (empty($_POST["regType"])) { $regType = "default"; }
+else { $regType = $_POST["regType"]; }
+
+foreach($_POST as $fieldName => $value) {
+	if ($fieldName == "regType") {}
+	else {
+		$user[$fieldName] = filter_var($value, FILTER_SANITIZE_STRING);
+	}	
+}
+
+// $thisUser = new user($config, $regType, $user);
+
+$thisUser = new user($regType, $user);
 
 exit;
 
-if (session_id() == '' || !isset($_SESSION)) { session_start(); }
-
-include "includes/includes.php";
-
-/******* check for valid email address syntax *********/
-$email = trim($_POST["email"]);
-
-if (filter_var($email, FILTER_VALIDATE_EMAIL) == FALSE) {
-
-	echo "sorry, " . $email . " does not appear to be a valid email address.";
-
-	exit;
-}
-
-$firstName = trim($_POST["firstName"]);
-$lastName = trim($_POST["lastName"]);
-$password = trim($_POST["password"]);
-
-$_SESSION["firstName"] = $firstName;
-
-$thisUser = new user($config, $email, $firstName, $lastName, $password);
+// $thisUser = new user($config, $email, $firstName, $lastName, $password);
 
 $thisUser->putOktaRecord();
 
