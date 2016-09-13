@@ -6,30 +6,38 @@ class user {
 
 		include "config.php";
 
-		$userData = '{
-			"profile": {
-				"firstName": "' . $user["firstName"] . '",
-				"lastName":  "' . $user["lastName"]  . '",
-				"email":     "' . $user["email"]     . '",
-				"login":     "' . $user["email"] .     '"
-			}';
+		// user properties
+		$this->firstName = $user["firstName"];
+		$this->lastName = $user["lastName"];
+		$this->email = $user["email"];
+		$this->login = $user["email"];
+		$this->regType = $regType;
+		$this->groupID = $config["group"][$regType]["id"];
+
+		// this is the object we will pass to the API call
+		$userData["profile"]["firstName"] = $this->firstName;
+		$userData["profile"]["lastName"] = $this->lastName;
+		$userData["profile"]["email"] = $this->email;
+		$userData["profile"]["login"] = $this->login;
+
+		$url = $config["apiHome"] . "/users?activate=";
 
 		if ($regType == "default" || $regType == "vanilla") {
-			$userData .= ',
-			"credentials": {
-				"password": {
-					"value": "' . $user["password"] . '"
-				}
-			}'; 
+			$this->password = $user["password"];
+
+			$userData["credentials"]["password"]["value"] = $this->password;
+
+			$url .= "true"; // activate=true
+		}
+		else { // $regType = withMFA || withEmail || okta
+			$url .= "false"; // activate=false
 		}
 
-		$userData .= "}";
+		$userData["groupIds"] = ["$this->groupID"];
 
-		$url = $config["apiHome"] . "/users?activate=true";
+		$data = json_encode($userData);
 
-		echo "<p>the url is: " . $url;
-
-		echo "<p>the user object is: " . $userData;
+		// echo $data;
 
 		$curl = curl_init();
 
@@ -37,7 +45,7 @@ class user {
 			CURLOPT_POST => TRUE,
 			CURLOPT_RETURNTRANSFER => TRUE,
 			CURLOPT_URL => $url,
-	    	CURLOPT_POSTFIELDS => $userData
+	    	CURLOPT_POSTFIELDS => $data
 		));
 
 		$errorMsg = "<p>Sorry, something went wrong with trying to create this user.";
@@ -46,68 +54,25 @@ class user {
 
 		$this->userID = $result["id"];
 
-				exit;
-
-
-
-		// $this->config = $config;
-
-		// $this->email = $user["email"];
-
-		// $this->login = $this->email;
-
-		// $this->firstName = $user["firstName"];
-
-		// $this->lastName = $user["lastName"];
-
-		// if ($regType == "default" || $regType == "vanilla") {
-
-		// 	$this->password = $user["password"];
-
-		// 	if ($regType == "default") {
-		// 		echo "<p>the type of user is default.</p>";
-		// 	}
-		// 	else {
-		// 		echo "<p>the type of user is vanilla.</p>";
-		// 	}
-
-
-		// }
-
-		// exit;
-
-
-
-		$this->groupID = $this->config["group"]["default"]["id"];
-
-		$this->type = "regular";
-
-		$this->userID = "";
-
-		$this->setType(); // regular or Okta
-
-		$this->setPassword();
-
-		$this->setGroup();
 	}
 
-	function assignToOktaGroup() {
+	// function assignToOktaGroup() {
 
-		$url = $this->config["apiHome"] . "/groups/" . $this->groupID . "/users/" . $this->userID;
+	// 	$url = $this->config["apiHome"] . "/groups/" . $this->groupID . "/users/" . $this->userID;
 
-		$curl = curl_init();
+	// 	$curl = curl_init();
 
-		curl_setopt_array($curl, array(
-		    CURLOPT_CUSTOMREQUEST => "PUT",
-			CURLOPT_RETURNTRANSFER => 1,
-			CURLOPT_URL => $url
-		));
+	// 	curl_setopt_array($curl, array(
+	// 	    CURLOPT_CUSTOMREQUEST => "PUT",
+	// 		CURLOPT_RETURNTRANSFER => 1,
+	// 		CURLOPT_URL => $url
+	// 	));
 
-		$errorMsg = "<p>Sorry, there was an error trying to assign that user to a group:</p>";
+	// 	$errorMsg = "<p>Sorry, there was an error trying to assign that user to a group:</p>";
 
-		$result = sendCurlRequest($curl, $errorMsg);
+	// 	$result = sendCurlRequest($curl, $errorMsg);
 
-	}
+	// }
 
 	function authenticate() {
 
@@ -134,6 +99,11 @@ class user {
 		return $result["cookieToken"];
 	}
 
+	function hasOktaEmailAddress() {
+		if (substr($this->email, -9 ) == "@okta.com") { return true; }
+		else { return false; }
+	}
+
 	function redirect($cookieToken) {
 
 		$url = $this->config["oktaBaseURL"] . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $this->config["redirectURL"];
@@ -145,39 +115,39 @@ class user {
 		exit;
 	}
 
-	function putOktaRecord() {
+	// function putOktaRecord() {
 
-		$userData = '{
-			"profile": {
-				"firstName": "' . $this->firstName . '",
-				"lastName":  "' . $this->lastName  . '",
-				"email":     "' . $this->email     . '",
-				"login":     "' . $this->login     . '"
-			},
-			"credentials": {
-				"password": {
-					"value": "' . $this->password  . '"
-				}
-			}
-		}';
+	// 	$userData = '{
+	// 		"profile": {
+	// 			"firstName": "' . $this->firstName . '",
+	// 			"lastName":  "' . $this->lastName  . '",
+	// 			"email":     "' . $this->email     . '",
+	// 			"login":     "' . $this->login     . '"
+	// 		},
+	// 		"credentials": {
+	// 			"password": {
+	// 				"value": "' . $this->password  . '"
+	// 			}
+	// 		}
+	// 	}';
 
-		$url = $this->config["apiHome"] . "/users?activate=true";
+	// 	$url = $this->config["apiHome"] . "/users?activate=true";
 
-		$curl = curl_init();
+	// 	$curl = curl_init();
 
-		curl_setopt_array($curl, array(
-			CURLOPT_POST => TRUE,
-			CURLOPT_RETURNTRANSFER => TRUE,
-			CURLOPT_URL => $url,
-	    	CURLOPT_POSTFIELDS => $userData
-		));
+	// 	curl_setopt_array($curl, array(
+	// 		CURLOPT_POST => TRUE,
+	// 		CURLOPT_RETURNTRANSFER => TRUE,
+	// 		CURLOPT_URL => $url,
+	//     	CURLOPT_POSTFIELDS => $userData
+	// 	));
 
-		$errorMsg = "<p>Sorry, something went wrong with trying to create this user.";
+	// 	$errorMsg = "<p>Sorry, something went wrong with trying to create this user.";
 
-		$result = sendCurlRequest($curl, $errorMsg);
+	// 	$result = sendCurlRequest($curl, $errorMsg);
 
-		$this->userID = $result["id"];
-	}
+	// 	$this->userID = $result["id"];
+	// }
 
 	function setAdminRights() {
 		$url = $this->config["apiHome"] . "/users/" . $this->userID . "/roles";
@@ -197,33 +167,5 @@ class user {
 
 		$result = sendCurlRequest($curl, $errorMsg);
 
-	}
-
-	function setEmail($email) { $this->email = $email; }
-
-	function setGroup() {
-		if ($this->type == "okta") { $this->groupID = $this->config["oktaGroupID"]; }
-		else if ($this->type == "mfa") { $this->groupID = $this->config["group"]["mfa"]["id"]; }
-	}
-
-	function setPassword() {
-		if ($this->type == "okta") { 
-			$pwd = openssl_random_pseudo_bytes(8);
-
-			$this->password = "Aa!" . bin2hex($pwd);
-		}
-	}
-
-	function setType() {
-
-		$domain = $this->config["group"]["mfa"]["domain"];
-
-		$email = "@" . $domain;
-
-		$offset = 0 - strlen($email);
-
-		if (substr($this->email, $offset) == $email) {
-			$this->type = "mfa";
-		}
 	}
 }

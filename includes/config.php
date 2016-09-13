@@ -37,12 +37,19 @@ $config["localhost"] = "localhost:8888";
 
 // atkoDemoUsersDefault
 $config["group"]["default"]["id"] = "00g1yq9e5JOWsxFdu1t6";
-$config["group"]["vanilla"]["id"] = "00gntdlmx9Favuwhp1t6"; 
 
-// For users who should be added to to a group requiring MFA
-// triggered in reg flow by email address
-$config["group"]["mfa"]["id"] = "00g32ude0PD5Dbcqt1t6";
-$config["group"]["mfa"]["domain"] = "mailinator.net";
+// atkoDemoUsersVanilla
+$config["group"]["vanilla"]["id"] = "00gntdlmx9Favuwhp1t6";
+
+// atkoDemoUsersWithMFA
+$config["group"]["withMFA"]["id"] = "00gnv1elhvYu03OLh1t6";
+
+// atkoDemoUsersWithEmail
+$config["group"]["withEmail"]["id"] = "00gnv4sf0vkoLWiC21t6";
+
+// atkodDemoUsersOktaAdmin
+$config["group"]["okta"]["id"] = "00gnv0lbm756RjxT61t6";
+
 
 // I use this to add Okta admins. Optional.
 $config["oktaGroupID"] = "00gqasglzEnaoUZdV1t5";

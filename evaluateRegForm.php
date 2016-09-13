@@ -12,20 +12,26 @@ foreach($_POST as $fieldName => $value) {
 	}	
 }
 
-// $thisUser = new user($config, $regType, $user);
-
 $thisUser = new user($regType, $user);
 
-exit;
+if ($regType == "vanilla" || $regType == "default") {
 
-// $thisUser = new user($config, $email, $firstName, $lastName, $password);
+	$cookieToken = $thisUser->authenticate();
 
-$thisUser->putOktaRecord();
+	$thisUser->redirect($cookieToken);
 
-$thisUser->assignToOktaGroup();
+}
+else {
 
-$cookieToken = $thisUser->authenticate();
+	if ($regType == "okta") {
+		if ($thisUser->hasOktaEmailAddress()) {
+			$thisUser->setAdminRights();
+		}
+	}
 
-$thisUser->redirect($cookieToken);
+	$headerString = "Location: " . $config["webHomeURL"] . "/thankYou.php"; 
 
-exit;
+	header($headerString);
+
+}
+

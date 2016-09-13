@@ -72,9 +72,11 @@ function getRegForm($regType) {
 	$fields["email"]["type"] = "text";
 	$fields["email"]["placeholder"] = "email";
 
-	// password
-	$fields["password"]["type"] = "password";
-	$fields["password"]["placeholder"] = "password"; 
+	if ($regType == "vanilla" || $regType == "default") {
+		// password
+		$fields["password"]["type"] = "password";
+		$fields["password"]["placeholder"] = "password";		
+	}
 
 	foreach ($fields as $fieldName => $properties) {
 
