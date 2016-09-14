@@ -4,7 +4,11 @@ class user {
 
 	function __construct($regType, $user) {
 
-		include "config.php";
+		// include "config.php";
+
+		global $config;
+
+		$this->config = $config;
 
 		// user properties
 		$this->firstName = $user["firstName"];

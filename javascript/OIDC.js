@@ -1,7 +1,7 @@
 
 <script>
 
-	function setMenu(authState) {
+	function setMenu(authState, userID) {
 
 		var menu;
 
@@ -9,6 +9,39 @@
 			menu = "<li><a href = '#' onclick = 'signout()'>Log out</a></li>";
 		
 			menu += "<li><a href='%salesforce%' target = '_blank'>Chatter</a></li>";
+
+			$.ajax({
+	            type: "GET",
+	            dataType: 'json',
+	            url: "%apiHome%/users/" + userID + "/appLinks",
+
+	            xhrFields: {
+	                withCredentials: true
+	            },
+	            success: function (data) {
+	            	console.log("the apps object is: ");
+	            	console.dir(data);
+
+	            	var apps = "";
+
+	            	for (var i = 0, len = data.length; i < len; i++) {
+  						console.log("the value of i is: " + i);
+  						console.log("the app name is: " + data[i].appName);
+
+  						apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + data[i].appName + "</a></li>"; 
+					}
+					$("#appLinks").html(apps);
+
+	            },
+	            error: function (textStatus, errorThrown) {
+	                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+	                console.log(errorThrown);
+	            },
+	            async: true
+        	});
+
+        	console.log("outside the function, the value of data is: ");
+        	console.dir(data);
 
 			if (localStorage.getItem("given_name")) {
 				menu += "<li><a href='#'>Welcome, " + localStorage.getItem("given_name") + "!</a></li>";
@@ -84,7 +117,7 @@
 
 			                localStorage.setItem("given_name", data.profile.firstName);
 
-			                setMenu("authenticated");
+			                setMenu("authenticated", res.userId);
 
 
 			            },
