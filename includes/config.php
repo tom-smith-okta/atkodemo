@@ -81,6 +81,12 @@ $idps[] = $facebook;
 $google = array("type"=>"GOOGLE", "id"=>"0oa1w8n4dlYlOLjPl1t6");
 $idps[] = $google;
 
+// The list of apps that should be displayed in the UI.
+// This prevents "junk" apps from cluttering up the user's list of apps
+
+$appsWhitelist = ["salesforce"];
+$config["appsWhitelist"] = json_encode($appsWhitelist);
+
 /************************************************************************/
 
 $config["idps"] = json_encode($idps);
@@ -159,7 +165,7 @@ $config["oktaSignInOIDC"]["vars"] = array("oktaBaseURL", "redirectURL", "logo", 
 
 $config["OIDC"]["type"] = "javascript";
 $config["OIDC"]["location"] = "inline";
-$config["OIDC"]["vars"] = array("salesforce", "oktaBaseURL", "redirectURL", "logo", "clientId", "idps", "apiHome");
+$config["OIDC"]["vars"] = array("salesforce", "oktaBaseURL", "redirectURL", "logo", "clientId", "idps", "apiHome", "appsWhitelist");
 
 /************** Okta files *********************/
 

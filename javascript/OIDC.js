@@ -8,8 +8,6 @@
 		if (authState == "authenticated") {
 			menu = "<li><a href = '#' onclick = 'signout()'>Log out</a></li>";
 		
-			menu += "<li><a href='%salesforce%' target = '_blank'>Chatter</a></li>";
-
 			$.ajax({
 	            type: "GET",
 	            dataType: 'json',
@@ -19,19 +17,21 @@
 	                withCredentials: true
 	            },
 	            success: function (data) {
-	            	console.log("the apps object is: ");
-	            	console.dir(data);
+
+	            	var whitelist = %appsWhitelist%;
 
 	            	var apps = "";
 
 	            	for (var i = 0, len = data.length; i < len; i++) {
-  						console.log("the value of i is: " + i);
-  						console.log("the app name is: " + data[i].appName);
-
-  						apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + data[i].appName + "</a></li>"; 
+  						if (whitelist.indexOf(data[i].appName) != -1) {
+  							apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + data[i].appName + "</a></li>";
+  						}
 					}
-					$("#appLinks").html(apps);
 
+					menu += apps;
+
+					$("#authLinks").html(menu);
+ 
 	            },
 	            error: function (textStatus, errorThrown) {
 	                console.log('error retrieving session: ' + JSON.stringify(textStatus));
@@ -39,9 +39,6 @@
 	            },
 	            async: true
         	});
-
-        	console.log("outside the function, the value of data is: ");
-        	console.dir(data);
 
 			if (localStorage.getItem("given_name")) {
 				menu += "<li><a href='#'>Welcome, " + localStorage.getItem("given_name") + "!</a></li>";
@@ -117,8 +114,7 @@
 
 			                localStorage.setItem("given_name", data.profile.firstName);
 
-			                setMenu("authenticated", res.userId);
-
+			                setMenu("authenticated", data.profile.userId);
 
 			            },
 			            error: function (textStatus, errorThrown) {
@@ -154,7 +150,7 @@
 
 		  			localStorage.setItem("given_name", res.claims.given_name);
 
-		  			setMenu("authenticated");
+		  			setMenu("authenticated", res.claims.sub);
 
 		  		}
 		  		else {
