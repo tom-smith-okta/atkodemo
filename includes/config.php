@@ -33,6 +33,7 @@ $config["name"] = "Atko Corp";
 // If your localhost is running on a specific port, indicate it here
 $config["localhost"] = "localhost:8888";
 
+/********************************************/
 // GROUPS
 
 // atkoDemoUsersDefault
@@ -50,10 +51,8 @@ $config["group"]["withEmail"]["id"] = "00gnv4sf0vkoLWiC21t6";
 // atkodDemoUsersOktaAdmin
 $config["group"]["okta"]["id"] = "00gnv0lbm756RjxT61t6";
 
-
-// I use this to add Okta admins. Optional.
-$config["oktaGroupID"] = "00gqasglzEnaoUZdV1t5";
-
+/*********************************************/
+// API Key
 // store your apiKey in a file not exposed to the web
 $apiKeyPath = "/usr/local/keys/oktaAPI.txt";
 
@@ -63,11 +62,6 @@ $apiKeyPath = "/usr/local/keys/oktaAPI.txt";
 $logoPath = "images/logo.png"; 
 
 $bgImagePath = "images/bgImage.jpg";
-
-// The path to salesforce on your Okta instance
-// future dev efforts might retrieve an end-user's list of apps automatically
-// but this demo is optimized for showing automatic provisioning to SF
-$salesforce = "/home/salesforce/0oapq5e1G3yk5Syeg1t5/46";
 
 // OIDC client ID - from your Okta social auth app
 $config["clientId"] = "YYUAPHIAj3JPPO6yJans";
@@ -111,9 +105,6 @@ $config["oktaBaseURL"] = "https://" . $config["oktaOrg"] . ".okta.com";
 // https://tomco.okta.com/api/v1
 $config["apiHome"] = $config["oktaBaseURL"] . "/api/v1";
 
-// https://tomco.okta.com/home/salesforce/0oapq5e1G3yk5Syeg1t5/46
-$config["salesforce"] = $config["oktaBaseURL"] . $salesforce;
-
 // establishes web home relative to web root
 // /atkodemo
 $config["webHome"] = "/";
@@ -138,30 +129,14 @@ $config["apiKey"] = file_get_contents($apiKeyPath);
 // This value needs to match a value in the Redirect URIs list
 // in your Okta tenant
 
-// http://localhost:8888/atkodemo
-// i am using index.php as my redirect target and session manager
-// $config["redirectURL"] = $config["host"] . $config["webHome"] . "/login.php";
-
-// $config["redirectURL"] = $config["host"] . $config["webHome"] . "/index.php";
-
 $config["redirectURL"] = $config["host"] . $config["webHome"];
 
-
 /************** Custom files *******************/
-
-// Custom js to check for Okta session
-$config["checkForSession"]["type"] = "javascript";
-$config["checkForSession"]["location"] = "inline";
-$config["checkForSession"]["vars"] = array("oktaBaseURL", "homePage");
 
 // A little hack to keep the dates current on the
 // home page articles
 $config["dates"]["type"] = "javascript";
 $config["dates"]["location"] = "local";
-
-$config["oktaSignInOIDC"]["type"] = "javascript";
-$config["oktaSignInOIDC"]["location"] = "inline";
-$config["oktaSignInOIDC"]["vars"] = array("oktaBaseURL", "redirectURL", "logo", "clientId", "idps");
 
 $config["OIDC"]["type"] = "javascript";
 $config["OIDC"]["location"] = "inline";

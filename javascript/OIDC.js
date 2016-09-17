@@ -1,4 +1,3 @@
-
 <script>
 
 	function setMenu(authState, userID) {
@@ -110,11 +109,14 @@
 			                withCredentials: true
 			            },
 			            success: function (data) {
+
+			            	console.dir(data);
+
 			            	console.log("the given_name is: " + data.profile.firstName);
 
 			                localStorage.setItem("given_name", data.profile.firstName);
 
-			                setMenu("authenticated", data.profile.userId);
+			                setMenu("authenticated", data.id);
 
 			            },
 			            error: function (textStatus, errorThrown) {
@@ -203,10 +205,8 @@
     }
 
     window.onload = function() {
-    	// setMenu();
 		getDate();
 		displayWidget();
-
 	}
 
 </script>

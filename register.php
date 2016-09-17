@@ -13,7 +13,7 @@ $elements = [
 	"mainCSS",
 	"oktaWidgetCSScore",
 	"oktaWidgetCSStheme",
-	"oktaWidgetCSSlocal",
+//	"oktaWidgetCSSlocal",
 	"jquery"
 ];
 

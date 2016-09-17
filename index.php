@@ -22,6 +22,6 @@ $elements = [
 
 $thisPage->addElements($elements);
 
-$thisPage->loadBody("index", ["webHome"]);
+$thisPage->loadBody("index", ["webHome", "index", "name"]);
 
 $thisPage->display();

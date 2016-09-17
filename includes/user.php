@@ -4,8 +4,6 @@ class user {
 
 	function __construct($regType, $user) {
 
-		// include "config.php";
-
 		global $config;
 
 		$this->config = $config;
@@ -60,24 +58,6 @@ class user {
 
 	}
 
-	// function assignToOktaGroup() {
-
-	// 	$url = $this->config["apiHome"] . "/groups/" . $this->groupID . "/users/" . $this->userID;
-
-	// 	$curl = curl_init();
-
-	// 	curl_setopt_array($curl, array(
-	// 	    CURLOPT_CUSTOMREQUEST => "PUT",
-	// 		CURLOPT_RETURNTRANSFER => 1,
-	// 		CURLOPT_URL => $url
-	// 	));
-
-	// 	$errorMsg = "<p>Sorry, there was an error trying to assign that user to a group:</p>";
-
-	// 	$result = sendCurlRequest($curl, $errorMsg);
-
-	// }
-
 	function authenticate() {
 
 		$curl = curl_init();
@@ -118,40 +98,6 @@ class user {
 
 		exit;
 	}
-
-	// function putOktaRecord() {
-
-	// 	$userData = '{
-	// 		"profile": {
-	// 			"firstName": "' . $this->firstName . '",
-	// 			"lastName":  "' . $this->lastName  . '",
-	// 			"email":     "' . $this->email     . '",
-	// 			"login":     "' . $this->login     . '"
-	// 		},
-	// 		"credentials": {
-	// 			"password": {
-	// 				"value": "' . $this->password  . '"
-	// 			}
-	// 		}
-	// 	}';
-
-	// 	$url = $this->config["apiHome"] . "/users?activate=true";
-
-	// 	$curl = curl_init();
-
-	// 	curl_setopt_array($curl, array(
-	// 		CURLOPT_POST => TRUE,
-	// 		CURLOPT_RETURNTRANSFER => TRUE,
-	// 		CURLOPT_URL => $url,
-	//     	CURLOPT_POSTFIELDS => $userData
-	// 	));
-
-	// 	$errorMsg = "<p>Sorry, something went wrong with trying to create this user.";
-
-	// 	$result = sendCurlRequest($curl, $errorMsg);
-
-	// 	$this->userID = $result["id"];
-	// }
 
 	function setAdminRights() {
 		$url = $this->config["apiHome"] . "/users/" . $this->userID . "/roles";
