@@ -1,9 +1,9 @@
 <style>
   #container {
     z-index: 101;
-    /*position: absolute;
+    position: absolute;
     top: 60px;
-    left: 20px; */
+    left: 20px;
   }
 
   #container #okta-login-container .button {

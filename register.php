@@ -10,10 +10,10 @@ if (empty($_GET["regType"])) { $regType = "default"; }
 else { $regType = $_GET["regType"]; }
 
 $elements = [
-	"mainCSS",
 	"oktaWidgetCSScore",
 	"oktaWidgetCSStheme",
-//	"oktaWidgetCSSlocal",
+	"oktaWidgetCSSlocal",
+	"mainCSS",
 	"jquery"
 ];
 
@@ -45,7 +45,7 @@ function getRegDesc($regType) {
 	$regTypes["okta"]["title"] = "Okta admin registration";
 	$regTypes["okta"]["desc"] = "An Okta employee can register and get admin access (read-only) to the demo tenant.";
 
-	$returnVal = "<p><b>" . $regTypes[$regType]["title"] . ":</b></p>\n";
+	$returnVal = "<b>" . $regTypes[$regType]["title"] . "</b>\n";
 	$returnVal .= "<p>" . $regTypes[$regType]["desc"] . "</p>\n";
 
 	return $returnVal;

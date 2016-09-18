@@ -9,10 +9,10 @@ $thisPage = new htmlPage($config);
 $thisPage->setTitle($config["name"] . " - Home");
 
 $elements = [
-	"mainCSS",
 	"oktaWidgetCSScore",
 	"oktaWidgetCSStheme",
 	"oktaWidgetCSSlocal",
+	"mainCSS",
 	"jquery",
 	"font-awesome",
 	"okta-signin-widget",
