@@ -27,7 +27,9 @@ else {
 		}
 	}
 
-	$headerString = "Location: " . $config["webHomeURL"] . "/thankYou.php"; 
+	$thisUser->sendActivationEmail();
+
+	$headerString = "Location: " . $config["webHomeURL"] . "/thankYou.php?email=" . $thisUser->email; 
 
 	header($headerString);
 }

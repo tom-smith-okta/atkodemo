@@ -2,9 +2,13 @@
 
 include "includes/includes.php";
 
+$email = $_GET["email"];
+
 $thisPage = new htmlPage($config);
 
 $thisPage->setTitle($config["name"] . " - Thank you");
+
+$thisPage->setConfigValue("email", $email);
 
 $elements = [
 	"mainCSS",
@@ -13,6 +17,6 @@ $elements = [
 
 $thisPage->addElements($elements);
 
-$thisPage->loadBody("thankYou", ["name", "webHome", "logo", "regForm", "regDesc"]);
+$thisPage->loadBody("thankYou", ["name", "webHome", "logo", "email"]);
 
 $thisPage->display();

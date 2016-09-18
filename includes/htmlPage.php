@@ -92,12 +92,6 @@ class htmlPage {
 		return $content;
 	}
 
-	function display() {
-
-		echo $this->getHTML();
-
-	}
-
 	function findFiles() {
 		foreach ($this->elements as $element => $arr) {
 			$files = $this->getElements($element, $arr["ext"]);
@@ -115,6 +109,9 @@ class htmlPage {
 	function addToBody($element) {
 		$this->body = $this->body . "\n\t\t" . $element;
 	}
+
+
+	function display() { echo $this->getHTML(); }
 
 	function getBody() {
 		if (empty($this->elements["body"]["class"])) { $bodyTag = "<body>"; }

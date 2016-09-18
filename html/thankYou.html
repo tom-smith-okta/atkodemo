@@ -14,7 +14,7 @@
 				<li><a href = 'register.php?regType=default'>Register as: default</a></li>
 				<li><a href = 'register.php?regType=vanilla'>Vanilla</a></li>
 				<li><a href = 'register.php?regType=withMFA'>Require MFA</a></li>
-				<li><a href = 'register.php?regType=withEmail'>email validation</a></li>
+				<li><a href = 'register.php?regType=withEmail'>email verification</a></li>
 				<li><a href = 'register.php?regType=okta'>Okta admin</a></li>
 			</ul>
 		</nav>
@@ -86,7 +86,11 @@
 	<!-- Main -->
 	<div id="main">
 
-	<article class="post">
-<p>Thank you for registering with us. Please check your inbox for an activation email, which will take you back to our home page.</p>
+		<article class="post">
+			<p>Thank you for registering with us. Please check your inbox for an activation email, which will take you back to our home page.</p>
+			<p>%email%</p>
 
-</article>
+		</article>
+
+	</div>
+</div>

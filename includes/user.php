@@ -99,6 +99,24 @@ class user {
 		exit;
 	}
 
+	function sendActivationEmail() {
+
+		$url = $this->config["apiHome"] . "/users/" . $this->userID . "/lifecycle/activate?sendEmail=true";
+
+		$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+			CURLOPT_POST => TRUE,
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_URL => $url,
+		));
+
+		$errorMsg = "<p>Sorry, something went wrong with trying to set admin rights";
+
+		$result = sendCurlRequest($curl, $errorMsg);
+
+	}
+
 	function setAdminRights() {
 		$url = $this->config["apiHome"] . "/users/" . $this->userID . "/roles";
 

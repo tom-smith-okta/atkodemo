@@ -14,7 +14,6 @@ $elements = [
 	"oktaWidgetCSStheme",
 	"oktaWidgetCSSlocal",
 	"mainCSS",
-	"jquery"
 ];
 
 $thisPage->addElements($elements);
@@ -31,19 +30,19 @@ $thisPage->display();
 function getRegDesc($regType) {
 
 	$regTypes["default"]["title"] = "Default registration flow";
-	$regTypes["default"]["desc"] = "A user record will be created in the Okta universal directory, and the user will be provisioned to Salesforce Chatter.";
+	$regTypes["default"]["desc"] = "A user record will be created in the Okta universal directory, and the user will be provisioned to Salesforce Chatter. User will be authenticated immediately.";
 
 	$regTypes["vanilla"]["title"] = "Vanilla registration flow";
-	$regTypes["vanilla"]["desc"] = "A basic user record will be created in the Okta universal directory.";
+	$regTypes["vanilla"]["desc"] = "A basic user record will be created in the Okta universal directory. User will be authenticated immediately.";
 
 	$regTypes["withMFA"]["title"] = "MFA registration flow";
-	$regTypes["withMFA"]["desc"] = "A user record will be created in the Okta universal directory. The user must use a 2nd factor every time they authenticate.";
+	$regTypes["withMFA"]["desc"] = "A user record will be created in the Okta universal directory. An activation email will be sent to the user. The user must use a 2nd factor when they authenticate.";
 
 	$regTypes["withEmail"]["title"] = "Email verification user flow";
 	$regTypes["withEmail"]["desc"] = "A user record will be created in the Okta universal directory. The user must verify their email address before they can authenticate.";
 
 	$regTypes["okta"]["title"] = "Okta admin registration";
-	$regTypes["okta"]["desc"] = "An Okta employee can register and get admin access (read-only) to the demo tenant.";
+	$regTypes["okta"]["desc"] = "An Okta employee can register and get admin access (read-only) to the demo tenant. An Okta email address is required. MFA is also enforced for authentication.";
 
 	$returnVal = "<b>" . $regTypes[$regType]["title"] . "</b>\n";
 	$returnVal .= "<p>" . $regTypes[$regType]["desc"] . "</p>\n";
