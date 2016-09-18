@@ -59,7 +59,9 @@ class htmlPage {
 
 		if (!empty($vars)) {
 			foreach($vars as $var) {
+
 				$target = "%" . $var . "%";
+
 				$body = str_replace($target, $this->config[$var], $body);
 			}
 		}

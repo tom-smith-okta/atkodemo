@@ -16,12 +16,12 @@ $elements = [
 	"jquery",
 	"font-awesome",
 	"okta-signin-widget",
-	"OIDC",
+	"index",
 	"dates"
 ];
 
 $thisPage->addElements($elements);
 
-$thisPage->loadBody("index", ["webHome", "index", "name"]);
+$thisPage->loadBody("index", ["webHome", "name"]);
 
 $thisPage->display();

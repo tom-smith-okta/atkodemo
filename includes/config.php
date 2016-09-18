@@ -138,9 +138,9 @@ $config["redirectURL"] = $config["host"] . $config["webHome"];
 $config["dates"]["type"] = "javascript";
 $config["dates"]["location"] = "local";
 
-$config["OIDC"]["type"] = "javascript";
-$config["OIDC"]["location"] = "inline";
-$config["OIDC"]["vars"] = array("salesforce", "oktaBaseURL", "redirectURL", "logo", "clientId", "idps", "apiHome", "appsWhitelist");
+$config["index"]["type"] = "javascript";
+$config["index"]["location"] = "inline";
+$config["index"]["vars"] = array("oktaBaseURL", "redirectURL", "logo", "clientId", "idps", "apiHome", "appsWhitelist");
 
 /************** Okta files *********************/
 
