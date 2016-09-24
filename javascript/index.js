@@ -22,6 +22,7 @@
 	            	var apps = "";
 
 	            	for (var i = 0, len = data.length; i < len; i++) {
+	            		console.log("found an app: " + data[i].appName);
   						if (whitelist.indexOf(data[i].appName) != -1) {
   							apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + data[i].appName + "</a></li>";
   						}

@@ -36,8 +36,11 @@ $config["localhost"] = "localhost:8888";
 /********************************************/
 // GROUPS
 
+
 // atkoDemoUsersDefault
-$config["group"]["default"]["id"] = "00g1yq9e5JOWsxFdu1t6";
+$config["group"]["default"]["id"] = "00goxo1ifVuBg7YKQ1t6";
+
+// $config["group"]["default"]["id"] = "00gozjp5ileIxkY0o1t6";
 
 // atkoDemoUsersVanilla
 $config["group"]["vanilla"]["id"] = "00gntdlmx9Favuwhp1t6";
@@ -68,6 +71,7 @@ $config["clientId"] = "YYUAPHIAj3JPPO6yJans";
 
 // Widget version
 $widgetVer = "1.4.0";
+// $widgetVer = "1.3.3";
 
 $facebook = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");
 $idps[] = $facebook;

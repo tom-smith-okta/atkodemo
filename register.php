@@ -29,7 +29,7 @@ $thisPage->display();
 // might move these to $config
 function getRegDesc($regType) {
 
-	$regTypes["default"]["title"] = "Default registration flow";
+	$regTypes["default"]["title"] = "Registration with Salesforce provisioning";
 	$regTypes["default"]["desc"] = "A user record will be created in the Okta universal directory, and the user will be provisioned to Salesforce Chatter. User will be authenticated immediately.";
 
 	$regTypes["vanilla"]["title"] = "Vanilla registration flow";

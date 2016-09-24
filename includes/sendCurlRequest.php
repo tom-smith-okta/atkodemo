@@ -11,8 +11,11 @@ function sendCurlRequest($curl, $errorMsg) {
 
 	$jsonResult = curl_exec($curl);
 
+	// echo "<p>result: " . $jsonResult;
+
 	// I keep getting a bogus "malformed" error in my curl calls.
 	// everything seems to be working so I am shutting down error checking for now
+	// uncomment when needed
 
 	if (curl_error($curl)) {
 		// echo "<p>There was a curl error: " . curl_error($curl);

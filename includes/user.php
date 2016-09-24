@@ -35,7 +35,7 @@ class user {
 			$url .= "false"; // activate=false
 		}
 
-		$userData["groupIds"] = ["$this->groupID"];
+		// $userData["groupIds"] = ["$this->groupID"];
 
 		$data = json_encode($userData);
 
@@ -55,6 +55,19 @@ class user {
 		$result = sendCurlRequest($curl, $errorMsg);
 
 		$this->userID = $result["id"];
+
+		/*********** ADD TO GROUP ******************/
+		$curl = curl_init();
+
+		$url = $config["apiHome"] . "/groups/" . $this->groupID . "/users/" . $this->userID;
+
+		curl_setopt_array($curl, array(
+			CURLOPT_CUSTOMREQUEST => "PUT",
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_URL => $url,
+		));
+
+		$result = sendCurlRequest($curl, $errorMsg);
 
 	}
 
@@ -79,6 +92,8 @@ class user {
 		$errorMsg = "<p>Sorry, there was an error trying to authenticate the new user:</p>";
 
 		$result = sendCurlRequest($curl, $errorMsg);
+
+		// echo "<p>the cookie token is: " . $result["cookieToken"];
 
 		return $result["cookieToken"];
 	}
