@@ -24,7 +24,9 @@ class userSchema {
 		$this->base = $this->definitions["base"];
 
 		$this->custom = $this->definitions["custom"];
+	}
 
+	function display() {
 		// Main user schema
 		echo "<p><b>Root schema</b></p>";
 		foreach($this->schema as $property => $value) {

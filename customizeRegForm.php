@@ -8,6 +8,12 @@ $thisPage->setTitle($config["name"] . " - Customize Registration Form");
 
 $thisUserSchema = new userSchema();
 
-$thisRegFrom = new regForm();
+$thisRegForm = new regForm("min");
+
+foreach($thisRegForm->fields as $field) {
+	echo "<p>the field is: " . $field;
+}
+
+
 
 exit;

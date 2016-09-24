@@ -184,3 +184,6 @@ $config["jquery"]["url"] = "https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/j
 $config["font-awesome"]["type"] = "javascript";
 $config["font-awesome"]["location"] = "remote";
 $config["font-awesome"]["url"] = "https://use.fontawesome.com/dc4e4e9270.js";
+
+/*************** Registration forms *************/
+$config["regForm"]["min"] = ["firstName", "lastName", "email"];
