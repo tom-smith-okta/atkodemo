@@ -2,33 +2,51 @@
 
 include "includes/includes.php";
 
-// if (session_status() == PHP_SESSION_NONE) {
-//     session_start();
-// }
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 $thisPage = new htmlPage($config);
 
 $thisPage->setTitle($config["name"] . " - Customize Registration Form");
 
-$config["userSchema"] = getUserSchema();
+$elements = [
+	"oktaWidgetCSScore",
+	"oktaWidgetCSStheme",
+	"oktaWidgetCSSlocal",
+	"mainCSS"
+];
 
-// if (empty($_SESSION["userSchema"])) { $_SESSION["userSchema"] = new userSchema(); }
+$thisPage->addElements($elements);
 
-// if (empty($_SESSION["regForm"])) {
-// 	echo "the session does not have regForm defined.";
-// 	exit;
+/* Load the Okta user schema */
+if (file_exists("userSchema.txt")) { $config["userSchema"] = file_get_contents("userSchema.txt"); }
+else {
+	$config["userSchema"] = getUserSchema();
+	file_put_contents("userSchema.txt", $config["userSchema"]);
+}
 
-// 	$_SESSION["regForm"] = new regForm("min");
-// }
-// else {
-// 	echo "<p>there is a regform in the session.";
-// 	//echo "<p>its value is: " . $_SESSION["regForm"];
-// }
+if (empty($_SESSION["regFormType"])) { $_SESSION["regFormType"] = "min"; }
 
-$regForm = new regForm("min");
+$regFormType = $_SESSION["regFormType"];
 
-// $regForm = $_SESSION["regForm"];
+if ($regFormType == "custom") {
+	$regFields = $_SESSION["regFields"];
+	$thisRegForm = new regForm("custom", $regFields);
+}
+else {
+	$thisRegForm = new regForm($regFormType);
+}
 
-echo $regForm->getHTML();
+$thisPage->setConfigValue("availableFields", $thisRegForm->displayAvailableFields());
+$thisPage->setConfigValue("currentFields", $thisRegForm->displayCurrentFields());
+
+$thisPage->loadBody("customizeRegForm", ["currentFields", "availableFields", "name"]);
+
+$thisPage->display();
+
+// $regForm = new regForm("min");
+
+// echo $regForm->getHTML();
 
 exit;

@@ -18,13 +18,13 @@ class regForm {
 
 			$this->fields = $config["regForm"][$regType];
 		}
-	}
-
-	function getHTML($flowType = "none") {
 
 		$jsonSchema = $this->config["userSchema"];
 
-		$schema = json_decode($jsonSchema, TRUE); // convert json schema to assoc array
+		$this->schema = json_decode($jsonSchema, TRUE); // convert json schema to assoc array
+	}
+
+	function getHTML($flowType = "none") {
 
 		$formHTML = file_get_contents("html/regFormTemplate.html");
 
@@ -34,11 +34,11 @@ class regForm {
 
 		foreach ($this->fields as $fieldName) {
 
-			$type = $schema["definitions"]["base"]["properties"][$fieldName]["type"];
+			$type = $this->schema["definitions"]["base"]["properties"][$fieldName]["type"];
 
 			if ($type == "string") { $type == "text"; }
 
-			$placeholder = $schema["definitions"]["base"]["properties"][$fieldName]["title"];
+			$placeholder = $this->schema["definitions"]["base"]["properties"][$fieldName]["title"];
 
 			$formField = $fieldTemplate;
 
@@ -62,15 +62,18 @@ class regForm {
 		return $formHTML;
 	}
 
-// <div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top">
-// 	<div data-se="o-form-input-container" class="o-form-input">
-// 		<span data-se="o-form-input-username" class="okta-form-input-field input-fix o-form-control">
-// 			<span class="input-tooltip icon form-help-16" data-hasqtip="0"></span>
-// 			<span class="icon input-icon person-16-gray"></span>		
-// 			%input%
-//  		</span>
-// 	</div>
-// </div>
+	function displayCurrentFields() {
+		$retVal = "<table border = '1'>";
+		foreach ($this->fields as $field) {
+			$retVal .= "<tr><td>" . $field . "</td></tr>";
+		}
+		$retVal .= "</table>";
+		return $retVal;
+	}
+
+	function displayAvailableFields() {
+
+	}
 
 	function addField($fieldName) {
 		$this->fields[] = $fieldName;
