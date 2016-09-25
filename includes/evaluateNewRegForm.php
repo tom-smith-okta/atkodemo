@@ -1,8 +1,17 @@
 <?php
 
-include "includes/includes.php";
+include "../includes/includes.php";
 
-echo "reached the evaluate New Reg Form script.";
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+echo "<p>the value for regFormType in the session is: " . $_SESSION["regFormType"];
+
+foreach($_SESSION["regFields"] as $field) { echo "<p>existing reg field is: " . $field; }
+
+
+echo "<p>reached the evaluate New Reg Form script.";
 
 echo "<p>";
 

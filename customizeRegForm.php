@@ -26,7 +26,13 @@ else {
 	file_put_contents("userSchema.txt", $config["userSchema"]);
 }
 
-if (empty($_SESSION["regFormType"])) { $_SESSION["regFormType"] = "min"; }
+if (empty($_SESSION["regFormType"])) {
+	$_SESSION["regFormType"] = "min";
+	$_SESSION["regFields"] = $config["regForm"]["min"];
+
+	echo "<p>the value for regFields is: " . $_SESSION["regFields"]; 
+
+}
 
 $regFormType = $_SESSION["regFormType"];
 
