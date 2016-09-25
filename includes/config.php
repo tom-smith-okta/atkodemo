@@ -187,3 +187,6 @@ $config["font-awesome"]["url"] = "https://use.fontawesome.com/dc4e4e9270.js";
 
 /*************** Registration forms *************/
 $config["regForm"]["min"] = ["firstName", "lastName", "email"];
+
+$config["regForm"]["pwd"] = $config["regForm"]["min"];
+$config["regForm"]["pwd"][] = "password";

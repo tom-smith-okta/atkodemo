@@ -1,6 +1,6 @@
 <?php
 
-function sendCurlRequest($curl, $errorMsg) {
+function sendCurlRequest($curl, $errorMsg, $returnType = "array") {
 	global $config;
 
 	$apiKey = $config["apiKey"];
@@ -10,6 +10,8 @@ function sendCurlRequest($curl, $errorMsg) {
 	));
 
 	$jsonResult = curl_exec($curl);
+
+	if ($returnType == "json") { return $jsonResult; }
 
 	// echo "<p>result: " . $jsonResult;
 

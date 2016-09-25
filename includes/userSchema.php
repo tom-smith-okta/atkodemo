@@ -70,4 +70,11 @@ class userSchema {
 		}
 
 	}
+
+	function getBaseFieldTitle($fieldName) {
+		return $this->base[$fieldName]["title"];
+	}
+	function getBaseFieldType($fieldName) {
+		return $this->base[$fieldName]["type"];
+	}
 }
