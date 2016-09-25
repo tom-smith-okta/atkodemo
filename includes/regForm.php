@@ -101,7 +101,7 @@ class regForm {
 
 	function getCurrentFields() {
 		$retVal = "<table border = '1'>";
-		foreach ($this->fields as $field) {
+		foreach ($_SESSION["regFields"] as $field) {
 
 			if (in_array($field, $this->config["regFormType"]["min"])) {
 
@@ -123,20 +123,14 @@ class regForm {
 
 		foreach ($properties as $fieldName => $values) {
 
-			// if (array_key_exists($fieldName, $_SESSION["regFields"])) {}
 			if (in_array($fieldName, $_SESSION["regFields"])) {}
 
 			else if (in_array($fieldName, $this->config["regFormType"]["min"])) {}
 			else {
-				$retVal .= "<label><input type = 'checkbox' name = '" . $fieldName . "' value = '" . $fieldName . "'> " . $values["title"] . "</label>";
+				$retVal .= "<label><input type = 'checkbox' name = '" . $fieldName . "' value = 'add'> " . $values["title"] . "</label>\n";
 			}
 		}
 
 		return $retVal;
-
-	}
-
-	function addField($fieldName) {
-		$this->fields[] = $fieldName;
 	}
 }

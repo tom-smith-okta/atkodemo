@@ -48,18 +48,8 @@ else {
 
 $thisPage->setConfigValue("allFields", $thisRegForm->displayAllFields());
 
-// $thisPage->setConfigValue("availableFields", $thisRegForm->displayAvailableFields());
-// $thisPage->setConfigValue("currentFields", $thisRegForm->displayCurrentFields());
-
-// $thisPage->loadBody("customizeRegForm", ["currentFields", "availableFields", "name"]);
-
 $thisPage->loadBody("customizeRegForm", ["allFields", "name"]);
 
-
 $thisPage->display();
-
-// $regForm = new regForm("min");
-
-// echo $regForm->getHTML();
 
 exit;

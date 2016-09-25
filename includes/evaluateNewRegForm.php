@@ -10,8 +10,18 @@ $_SESSION["regFormType"] = "custom";
 
 foreach ($_POST as $field => $value) {
 
-	if ($field != "submit") {
-		$_SESSION["regFields"][] = $field;
+	if ($field == "submit") {}
+	else {
+		if ($value == "add") {
+			$_SESSION["regFields"][] = $field;
+		}
+		else if ($value == "remove") {
+
+			$index = array_search($field, $_SESSION["regFields"]);
+
+			unset($_SESSION["regFields"][$index]);
+
+		}
 	}
 }
 
