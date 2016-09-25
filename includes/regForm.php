@@ -6,7 +6,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 class regForm {
 
-	function __construct($regType) {
+	function __construct($regFormType) {
 
 		global $config;
 
@@ -14,9 +14,12 @@ class regForm {
 
 		$this->fields = [];
 
-		if (array_key_exists($regType, $config["regForm"])) {
+		if (array_key_exists($regFormType, $config["regFormType"])) {
 
-			$this->fields = $config["regForm"][$regType];
+			$this->fields = $config["regFormType"][$regFormType];
+		}
+		else if ($regFormType == "custom") {
+			$this->fields = $_SESSION["regFields"];
 		}
 
 		$jsonSchema = $this->config["userSchema"];
@@ -55,36 +58,79 @@ class regForm {
 			$inputFieldsHTML .= $formField;
 		}
 
-		$formHTML = str_replace("%regType%", $flowType, $formHTML);
+		$formHTML = str_replace("%flowType%", $flowType, $formHTML);
 
 		$formHTML = str_replace("%fields%", $inputFieldsHTML, $formHTML);
 
 		return $formHTML;
 	}
 
-	function displayCurrentFields() {
+	function displayAllFields() {
+
+		$retVal = "<form action = 'includes/evaluateNewRegForm.php' method = 'post'>";
+
+		$retVal .= "<table border = '0'>";
+
+		$retVal .= "<tr><td>Current fields</td><td>Available fields</td></tr>";
+
+		$retVal .= "<tr>";
+
+		$retVal .= "<td>";
+
+		$retVal .= $this->getCurrentFields();
+
+		$retVal .= "</td>";
+
+		$retVal .= "<td>";
+
+		$retVal .= $this->getAvailableFields();
+
+		$retVal .= "</td>";
+
+		$retVal .= "</tr>";
+
+		$retVal .= "</table>";
+
+		$retVal .= "<input type = 'submit' value = 'submit' name = 'submit'>";
+
+		$retVal .= "</form>";
+
+		return $retVal;
+
+	}
+
+	function getCurrentFields() {
 		$retVal = "<table border = '1'>";
 		foreach ($this->fields as $field) {
-			$retVal .= "<tr><td>" . $field . "</td></tr>";
+
+			if (in_array($field, $this->config["regFormType"]["min"])) {
+
+				$retVal .= "<label>" . $field . "</label>\n";
+			}
+			else {
+				$retVal .= "<label><input type = 'checkbox' name = '" . $field . "' value = 'remove'> " . $field . "</label>\n";
+			}
 		}
 		$retVal .= "</table>";
 		return $retVal;
 	}
 
-	function displayAvailableFields() {
+	function getAvailableFields() {
 
-		$retVal = "<form action = 'includes/evaluateNewRegForm.php' method = 'post'>";
+		$retVal = "";
 
 		$properties = $this->schema["definitions"]["base"]["properties"];
 
 		foreach ($properties as $fieldName => $values) {
-			// $retVal .= "<p>the field name is: " . $fieldName["title"];
-			$retVal .= "<label><input type = 'checkbox' name = '" . $fieldName . "' value = '" . $fieldName . "'> " . $values["title"] . "</label>";
+
+			// if (array_key_exists($fieldName, $_SESSION["regFields"])) {}
+			if (in_array($fieldName, $_SESSION["regFields"])) {}
+
+			else if (in_array($fieldName, $this->config["regFormType"]["min"])) {}
+			else {
+				$retVal .= "<label><input type = 'checkbox' name = '" . $fieldName . "' value = '" . $fieldName . "'> " . $values["title"] . "</label>";
+			}
 		}
-
-		$retVal .= "<input type = 'submit' value = 'submit' name = 'submit'>";
-
-		$retVal .= "</form>";
 
 		return $retVal;
 

@@ -26,12 +26,14 @@ else {
 	file_put_contents("userSchema.txt", $config["userSchema"]);
 }
 
-if (empty($_SESSION["regFormType"])) {
+if (empty($_GET["action"])) {}
+else if ($_GET["action"] == "clear") {
 	$_SESSION["regFormType"] = "min";
-	$_SESSION["regFields"] = $config["regForm"]["min"];
-
-	echo "<p>the value for regFields is: " . $_SESSION["regFields"]; 
-
+	$_SESSION["regFields"] = $config["regFormType"]["min"];	
+}
+else if (empty($_SESSION["regFormType"])) {
+	$_SESSION["regFormType"] = "min";
+	$_SESSION["regFields"] = $config["regFormType"]["min"];		
 }
 
 $regFormType = $_SESSION["regFormType"];
@@ -44,12 +46,15 @@ else {
 	$thisRegForm = new regForm($regFormType);
 }
 
-// echo $thisRegForm->displayAvailableFields();
+$thisPage->setConfigValue("allFields", $thisRegForm->displayAllFields());
 
-$thisPage->setConfigValue("availableFields", $thisRegForm->displayAvailableFields());
-$thisPage->setConfigValue("currentFields", $thisRegForm->displayCurrentFields());
+// $thisPage->setConfigValue("availableFields", $thisRegForm->displayAvailableFields());
+// $thisPage->setConfigValue("currentFields", $thisRegForm->displayCurrentFields());
 
-$thisPage->loadBody("customizeRegForm", ["currentFields", "availableFields", "name"]);
+// $thisPage->loadBody("customizeRegForm", ["currentFields", "availableFields", "name"]);
+
+$thisPage->loadBody("customizeRegForm", ["allFields", "name"]);
+
 
 $thisPage->display();
 

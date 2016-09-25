@@ -11,12 +11,12 @@
 
 		<nav class="links">
 			<ul id = "authLinks">
-				<li><a href = 'register.php?regType=default'>Register as: default</a></li>
-				<li><a href = 'register.php?regType=vanilla'>Vanilla</a></li>
-				<li><a href = 'register.php?regType=withMFA'>Require MFA</a></li>
+				<li><a href = 'customizeRegForm.php?action=clear'>Clear form</a></li>
+				<li><a href = 'customRegister.php'>Register</a></li>
+<!-- 				<li><a href = 'register.php?regType=withMFA'>Require MFA</a></li>
 				<li><a href = 'register.php?regType=withEmail'>email validation</a></li>
 				<li><a href = 'register.php?regType=okta'>Okta admin</a></li>
-			</ul>
+ -->			</ul>
 		</nav>
 
 		<nav class="main">
@@ -86,7 +86,7 @@
 	<!-- Main -->
  	<div id="main">
 
-		<div style="position:absolute;top:125;left:50px;width:200px">
+<!-- 		<div style="position:absolute;top:125;left:50px;width:200px">
 		<p>Current fields:</p>
 		%currentFields%
 		</div>
@@ -95,6 +95,14 @@
 		<p>Available fields:</p>
 		%availableFields%
 		</div>
+ -->
+		<div style="position:absolute;top:125;left:275px;width:500px">
+<!-- 		<p>Available fields:</p>
+ -->		%allFields%
+		</div>
+
+
+		
 
 
 <!-- 		<div id="okta-login-container" style="position:absolute;top:0px;left:275px">
