@@ -38,6 +38,8 @@ else {
 	$thisRegForm = new regForm($regFormType);
 }
 
+// echo $thisRegForm->displayAvailableFields();
+
 $thisPage->setConfigValue("availableFields", $thisRegForm->displayAvailableFields());
 $thisPage->setConfigValue("currentFields", $thisRegForm->displayCurrentFields());
 

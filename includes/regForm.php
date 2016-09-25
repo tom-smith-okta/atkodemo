@@ -73,6 +73,19 @@ class regForm {
 
 	function displayAvailableFields() {
 
+		$retVal = "<form>";
+
+		$properties = $this->schema["definitions"]["base"]["properties"];
+
+		foreach ($properties as $fieldName => $values) {
+			// $retVal .= "<p>the field name is: " . $fieldName["title"];
+			$retVal .= "<label><input type = 'checkbox' id = '" . $fieldName . "' value = '" . $fieldName . "'>" . $values["title"] . "</label>";
+		}
+
+		$retVal .= "</form>";
+
+		return $retVal;
+
 	}
 
 	function addField($fieldName) {
