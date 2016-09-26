@@ -1,5 +1,9 @@
 <?php
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 class user {
 
 	function __construct($regType, $user) {
@@ -7,6 +11,55 @@ class user {
 		global $config;
 
 		$this->config = $config;
+
+		if ($regType == "none") {
+
+			$this->password = $user["password"];
+			$this->username = $user["login"];
+
+			if (empty($_SESSION["apiKey"])) {
+				echo "<p>Sorry, can't find an apiKey.";
+				exit;
+			}
+
+			$apiKey = $_SESSION["apiKey"];
+
+			$oktaOrg = $_SESSION["oktaOrg"];
+
+			if (array_key_exists("password", $user)) {
+				$userData["credentials"]["password"]["value"] = $user["password"];
+				unset($user["password"]);
+			}
+
+			$userData["profile"] = $user;
+
+			$url = "https://" . $oktaOrg . ".okta.com/api/v1/users?activate=true";
+
+			$jsonData = json_encode($userData);
+
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+				CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
+				CURLOPT_POST => TRUE,
+	    		CURLOPT_POSTFIELDS => $jsonData,
+				CURLOPT_RETURNTRANSFER => TRUE,
+				CURLOPT_URL => $url
+			));
+
+			$jsonResult = curl_exec($curl);
+
+			// echo "<p>" . $jsonResult;
+
+			echo "<p>Thank you for registering!";
+
+			$url = "https://" . $oktaOrg . ".okta.com";
+
+			echo "<p>Please visit <a href = '" . $url . "'>" . $url . "</a> to log in!</p>";
+
+			exit;
+
+		}
 
 		// user properties
 		$this->firstName = $user["firstName"];

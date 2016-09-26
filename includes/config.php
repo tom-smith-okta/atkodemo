@@ -186,7 +186,7 @@ $config["font-awesome"]["location"] = "remote";
 $config["font-awesome"]["url"] = "https://use.fontawesome.com/dc4e4e9270.js";
 
 /*************** Registration forms *************/
-$config["regFormType"]["min"] = ["firstName", "lastName", "email"];
+$config["regFormType"]["min"] = ["firstName", "lastName", "login", "email"];
 
 $config["regFormType"]["pwd"] = $config["regFormType"]["min"];
 $config["regFormType"]["pwd"][] = "password";

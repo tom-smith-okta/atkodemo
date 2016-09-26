@@ -13,8 +13,9 @@
 			<ul id = "authLinks">
 				<li><a href = 'customizeRegForm.php?action=clear'>Clear form</a></li>
 				<li><a href = 'customRegister.php'>Register</a></li>
- 				<li><a href = 'setAPIkey.php'>Set API key</a></li>
- 				<li><a href = 'clearAPIkey.php'>Clear API key</a></li>
+				<li><a href = 'setAPIkey.php'>Set API key</a></li>
+				<li><a href = 'clearAPIkey.php'>Clear API key</a></li>
+
 			</ul>
 		</nav>
 
@@ -85,45 +86,21 @@
 	<!-- Main -->
  	<div id="main">
 
-<!-- 		<div style="position:absolute;top:125;left:50px;width:200px">
-		<p>Current fields:</p>
-		%currentFields%
-		</div>
+ 		<div style="position:absolute;top:125;left:50px;width:400px">
+ 			
+	 		<form action = 'includes/evaluateAPIkey.php' method = 'post'>
 
-		<div style="position:absolute;top:125;left:275px;width:200px">
-		<p>Available fields:</p>
-		%availableFields%
-		</div>
- -->
-		<div style="position:absolute;top:125;left:275px;width:500px">
-<!-- 		<p>Available fields:</p>
- -->		%allFields%
-		</div>
+	 		<input type = 'text' name = 'apiKey' placeholder="API key">
 
+	 		<input type = 'text' name = 'oktaOrg' placeholder="Okta org name">
 
-		
+	 		<input type = 'submit' name = 'submit' value = 'submit'>
+
+	 		</form>
+
+ 		</div>
 
 
-<!-- 		<div id="okta-login-container" style="position:absolute;top:0px;left:275px">
-			<div class="auth-container main-container no-beacon" id="okta-sign-in">
 
-				<div class="okta-sign-in-header auth-header">
-					<img class="auth-org-logo" src="%logo%">
-						<div class="beacon-container" data-type="beacon-container"></div>
-				</div>
-				<div class="auth-content">
-					<div class="auth-content-inner">
-						<div class="primary-auth">
-							<div class="social-auth">
-								<h2 class="okta-form-title o-form-head" data-se="o-form-head">Sign up</h2>
-							</div>
-							
-							%regForm%
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</div> -->
 	</div>
 </div>

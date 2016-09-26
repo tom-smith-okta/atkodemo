@@ -19,21 +19,29 @@ $elements = [
 
 $thisPage->addElements($elements);
 
-/* Load the Okta user schema */
-if (file_exists("userSchema.txt")) { $config["userSchema"] = file_get_contents("userSchema.txt"); }
-else {
-	$config["userSchema"] = getUserSchema();
-	file_put_contents("userSchema.txt", $config["userSchema"]);
+if (empty($_SESSION["apiKey"])) {
+
+	$html = "<p>There is no api key available in this session.</p>";
+
+	$html .= "<p>Please click the 'set api key' link to get things rolling.</p>";
+
+	$thisPage->setConfigValue("allFields", $html);
+
+	$thisPage->loadBody("customizeRegForm", ["allFields", "name"]);
+
+	$thisPage->display();
+
+	exit;
 }
 
 if (empty($_GET["action"])) {}
 else if ($_GET["action"] == "clear") {
-	$_SESSION["regFormType"] = "min";
-	$_SESSION["regFields"] = $config["regFormType"]["min"];	
+	$_SESSION["regFormType"] = "pwd";
+	$_SESSION["regFields"] = $config["regFormType"]["pwd"];	
 }
-else if (empty($_SESSION["regFormType"])) {
-	$_SESSION["regFormType"] = "min";
-	$_SESSION["regFields"] = $config["regFormType"]["min"];		
+if (empty($_SESSION["regFormType"])) {
+	$_SESSION["regFormType"] = "pwd";
+	$_SESSION["regFields"] = $config["regFormType"]["pwd"];		
 }
 
 $regFormType = $_SESSION["regFormType"];

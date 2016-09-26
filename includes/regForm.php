@@ -22,7 +22,13 @@ class regForm {
 			$this->fields = $_SESSION["regFields"];
 		}
 
-		$jsonSchema = $this->config["userSchema"];
+		if (file_exists("userSchema.txt")) { $config["userSchema"] = file_get_contents("userSchema.txt"); }
+		else {
+			$config["userSchema"] = getUserSchema();
+			file_put_contents("userSchema.txt", $config["userSchema"]);
+		}
+
+		$jsonSchema = $config["userSchema"];
 
 		$this->schema = json_decode($jsonSchema, TRUE); // convert json schema to assoc array
 	}
@@ -37,11 +43,17 @@ class regForm {
 
 		foreach ($this->fields as $fieldName) {
 
-			$type = $this->schema["definitions"]["base"]["properties"][$fieldName]["type"];
+			if ($fieldName == "password") {
+				$type = "password";
+				$placeholder = "password";
+			}
+			else {
+				$type = $this->schema["definitions"]["base"]["properties"][$fieldName]["type"];
 
-			if ($type == "string") { $type == "text"; }
+				if ($type == "string") { $type = "text"; }
 
-			$placeholder = $this->schema["definitions"]["base"]["properties"][$fieldName]["title"];
+				$placeholder = $this->schema["definitions"]["base"]["properties"][$fieldName]["title"];
+			}
 
 			$formField = $fieldTemplate;
 
@@ -103,7 +115,7 @@ class regForm {
 		$retVal = "<table border = '1'>";
 		foreach ($_SESSION["regFields"] as $field) {
 
-			if (in_array($field, $this->config["regFormType"]["min"])) {
+			if (in_array($field, $this->config["regFormType"]["pwd"])) {
 
 				$retVal .= "<label>" . $field . "</label>\n";
 			}

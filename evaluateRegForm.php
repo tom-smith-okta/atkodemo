@@ -2,14 +2,19 @@
 
 include "includes/includes.php";
 
-if (empty($_POST["regType"])) { $regType = "default"; }
-else { $regType = $_POST["regType"]; }
+if (array_key_exists("flowType", $_POST)) {
+	$regType = $_POST["flowType"];
+}
+else {
+	if (empty($_POST["regType"])) { $regType = "default"; }
+	else { $regType = $_POST["regType"]; }
+}
 
 foreach ($_POST as $fieldName => $value) {
-	if ($fieldName == "regType") {}
+	if ($fieldName == "regType" || $fieldName == "flowType") {}
 	else {
 		$user[$fieldName] = filter_var($value, FILTER_SANITIZE_STRING);
-	}	
+	}
 }
 
 $thisUser = new user($regType, $user);

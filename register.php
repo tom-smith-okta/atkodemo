@@ -98,7 +98,7 @@ function getRegForm($regType) {
 		$fieldsHTML .= $formField;
 	}
 
-	$regForm = str_replace("%regType%", $regType, $regForm);
+	$regForm = str_replace("%flowType%", $regType, $regForm);
 
 	$regForm = str_replace("%fields%", $fieldsHTML, $regForm);
 
