@@ -1,0 +1,1 @@
+https://tomco.okta.com/oauth2/v1/authorize?response_type=code&client_id=YYUAPHIAj3JPPO6yJans&redirect_uri=http://localhost:8888/atkodemo/oauth/authCode&scope=openid&state=someState&nonce=someNonce
