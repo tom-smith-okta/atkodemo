@@ -1,0 +1,464 @@
+
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset='utf-8' />
+		<meta name='viewport' content='width=device-width, initial-scale=1' />
+		<title>Atko Corp - Home</title>
+		
+<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.4.0/css/okta-sign-in.min.css'/>
+
+		
+<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.4.0/css/okta-theme.css'/>
+
+		
+<style>
+  #container {
+    z-index: 101;
+    position: absolute;
+    top: 60px;
+    left: 20px;
+  }
+
+  #container #okta-login-container .button {
+    color: #ffffff;
+    background-color: #3a3f44;
+    border-color: #3a3f44;
+    background-image: -webkit-linear-gradient(#484e55, #3a3f44 60%, #313539);
+    background-image: -o-linear-gradient(#484e55, #3a3f44 60%, #313539);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#484e55), color-stop(60%, #3a3f44), to(#313539));
+    background-image: linear-gradient(#484e55, #3a3f44 60%, #313539);
+    background-repeat: no-repeat;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff484e55', endColorstr='#ff313539', GradientType=0);
+    -webkit-filter: none;
+    filter: none;
+  }
+</style>
+
+		
+<link rel = 'stylesheet' href = 'css/mainCSS.css'/>
+
+		
+<script src = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
+
+		
+<script src = 'https://use.fontawesome.com/dc4e4e9270.js'></script>
+
+		
+<script src = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.4.0/js/okta-sign-in.min.js'></script>
+
+		
+<script>
+
+	function setMenu(authState, userID) {
+
+		var menu;
+
+		if (authState == "authenticated") {
+			menu = "<li><a href = '#' onclick = 'signout()'>Log out</a></li>";
+		
+			$.ajax({
+	            type: "GET",
+	            dataType: 'json',
+	            url: "https://tomco.okta.com/api/v1/users/" + userID + "/appLinks",
+
+	            xhrFields: {
+	                withCredentials: true
+	            },
+	            success: function (data) {
+
+	            	var whitelist = ["salesforce"];
+
+	            	var apps = "";
+
+	            	for (var i = 0, len = data.length; i < len; i++) {
+	            		console.log("found an app: " + data[i].appName);
+  						if (whitelist.indexOf(data[i].appName) != -1) {
+  							apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + data[i].appName + "</a></li>";
+  						}
+					}
+
+					menu += apps;
+
+					$("#authLinks").html(menu);
+ 
+	            },
+	            error: function (textStatus, errorThrown) {
+	                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+	                console.log(errorThrown);
+	            },
+	            async: true
+        	});
+
+			if (localStorage.getItem("given_name")) {
+				menu += "<li><a href='#'>Welcome, " + localStorage.getItem("given_name") + "!</a></li>";
+			}
+
+		}
+		else {
+			menu = "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in</a></li>";
+			menu += "<li><a href = 'register.php'>Register</a></li>";
+		}
+
+		$("#authLinks").html(menu);
+
+	}
+
+	function displayWidget() {
+
+		$("#widget").hide();
+
+		var oktaSignIn = new OktaSignIn({
+			baseUrl: 'https://tomco.okta.com',
+			logo: 'images/logo.png',
+			features: {
+				multiOptionalFactorEnroll: true,
+				smsRecovery: true
+			},
+
+			labels: {
+				'primaryauth.password.tooltip': 'passwords must have at least 8 characters, a lowercase letter, an uppercase letter, a number, no parts of your username'
+			},
+		  
+			// OIDC options
+			clientId: 'YYUAPHIAj3JPPO6yJans',
+			redirectUri: 'http://www.atkodemo.com/',
+
+			authScheme: 'OAUTH2',
+			authParams: {
+				// responseType: 'id_token',
+				responseType: 'token',
+				responseMode: 'okta_post_message',
+				scope: [
+					'openid',
+					'email',
+					'profile',
+					'address',
+					'phone'
+				]
+			},
+			idpDisplay: 'PRIMARY',
+
+			idps: [{"type":"FACEBOOK","id":"0oa1w1pmezuPUbhoE1t6"},{"type":"GOOGLE","id":"0oa1w8n4dlYlOLjPl1t6"}]
+		});
+
+		oktaSignIn.session.exists(function (exists) {
+			if (exists) {
+				console.log("there is an active session.");
+				console.log("---------------------------");
+
+				// getting the fname from the server instead of local storage
+				// to accomodate the use-case where a new user registers and
+				// then gets redirected to this page. There's probably a better
+				// way.
+				oktaSignIn.session.get(function (res) {
+		  			$.ajax({
+			            type: "GET",
+			            dataType: 'json',
+			            url: "https://tomco.okta.com/api/v1/users/" + res.userId,
+
+			            xhrFields: {
+			                withCredentials: true
+			            },
+			            success: function (data) {
+
+			            	console.dir(data);
+
+			            	console.log("the given_name is: " + data.profile.firstName);
+
+			                localStorage.setItem("given_name", data.profile.firstName);
+
+			                setMenu("authenticated", data.id);
+
+			            },
+			            error: function (textStatus, errorThrown) {
+			                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+			                console.log(errorThrown);
+			            },
+			            async: true
+		        	});
+		  		});
+			}
+			else {
+				console.log("there is not an active session.");
+				console.log("-------------------------------");
+				setMenu("anon");
+			}
+		});
+
+		oktaSignIn.renderEl(
+			{ el: '#widget'},
+		  	function (res) {
+
+		  		console.log("the res.status is: " + res.status);
+
+		  		if (res.status == "SUCCESS") {
+		  			console.log("this should be an access token:");
+		  			console.dir(res);
+
+		  			$("#widget").hide();
+		  			
+		  			console.log("authentication successful.");
+		  			console.log("user now has an active session.");
+		  			console.log("id_token:" + res.idToken);
+		  			console.log("claims:");
+		  			console.dir(res.claims);
+
+		  			localStorage.setItem("given_name", res.claims.given_name);
+
+		  			setMenu("authenticated", res.claims.sub);
+
+		  		}
+		  		else {
+		  			console.log("the user was not authenticated.");
+		  			console.log("the error is: " + res.status);
+		  		}
+			}
+		);
+	}
+
+    function showWidget() {
+
+        $("#widget").show();
+
+        $("#login").attr("onclick", "hideWidget()");
+
+    }
+
+    function hideWidget() {
+    	$("#widget").hide();
+
+    	$("#login").attr("onclick", "showWidget()");
+
+    }
+
+    function signout() {
+
+    	console.log("attempting to sign out...");
+
+        $.ajax({
+            type: "DELETE",
+            dataType: 'json',
+            url: "https://tomco.okta.com/api/v1/sessions/me",
+
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+                console.log('success deleting session');
+                sessionStorage.removeItem('sessionToken');
+            },
+            error: function (textStatus, errorThrown) {
+                console.log('error deleting session: ' + JSON.stringify(textStatus));
+                console.log(errorThrown);
+            },
+            async: true
+        });
+
+		setMenu("anon");
+    }
+
+    window.onload = function() {
+		getDate();
+		displayWidget();
+	}
+
+</script>
+
+		
+<script src = 'javascript/dates.js'></script>
+
+	</head>
+
+	<body><!-- Wrapper -->
+<div id="wrapper">
+
+<!--***** OKTA LOGIN DIV *****-->
+
+	<div id = "container">
+		<div id="widget"></div>
+	</div>
+
+	<!-- Header -->
+
+	<header id="header">
+
+		<h1><a href="/">Atko Corp</a></h1>
+
+		<nav class="links">
+			<ul id = "authLinks">
+			</ul>
+		</nav>
+
+		<nav class="main">
+			<ul>
+				<li class="search">
+					<a class="fa-search" href="#search">Search</a>
+					<form id="search" method="get" action="#">
+						<input type="text" name="query" placeholder="Search" />
+					</form>
+				</li>
+				<li class="menu">
+					<a class="fa-bars" href="#menu">Menu</a>
+				</li>
+			</ul>
+		</nav>
+	</header>
+
+	<!-- Menu -->
+	<section id="menu">
+
+		<!-- Search -->
+		<section>
+			<form class="search" method="get" action="#">
+				<input type="text" name="query" placeholder="Search" />
+			</form>
+		</section>
+
+			<!-- Links -->
+				<section>
+					<ul class="links">
+						<li>
+							<a href="#">
+								<h3>Lorem ipsum</h3>
+								<p>Feugiat tempus veroeros dolor</p>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<h3>Dolor sit amet</h3>
+								<p>Sed vitae justo condimentum</p>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<h3>Feugiat veroeros</h3>
+								<p>Phasellus sed ultricies mi congue</p>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<h3>Etiam sed consequat</h3>
+								<p>Porta lectus amet ultricies</p>
+							</a>
+						</li>
+					</ul>
+				</section>
+
+			<!-- Actions -->
+				<section>
+					<ul class="actions vertical">
+						<li><a href="#" class="button big fit">Log In</a></li>
+					</ul>
+				</section>
+
+		</section>
+
+
+	<!-- Main -->
+		<div id="main">
+
+			<!-- Post -->
+				<article class="post">
+					<header>
+						<div class="title">
+							<h2><a href="#">Register now to chat with fellow travelers!</a></h2>
+							<p>NYC tour on sale through Thursday!</p>
+						</div>
+						<div class="meta">
+						<!-- <time class="published" datetime="2015-11-01">June 1, 2016</time>-->
+
+						<time class="published" datetime="2015-11-01"></time>
+						<!-- <div id = "published"></div>-->
+						<a href="#" class="author"><span class="name">Sansa Stark</span><img src="images/sansa.jpeg" alt="" /></a>
+						</div>
+					</header>
+					<a href="#" class="image featured"><img src="images/picnic.jpeg" alt="" /></a>
+					<p>Yes, it's that time of year again! Get ready for some great food and fun on the riverfront!</p>
+					<footer>
+						<ul class="actions">
+							<li><a href="#" class="button big">Continue Reading</a></li>
+						</ul>
+						<ul class="stats">
+							<li><a href="#">General</a></li>
+							<li><a href="#" class="icon fa-heart">28</a></li>
+							<li><a href="#" class="icon fa-comment">128</a></li>
+						</ul>
+					</footer>
+				</article>
+
+			<!-- Pagination -->
+				<ul class="actions pagination">
+					<li><a href="" class="disabled button big previous">Previous Page</a></li>
+					<li><a href="#" class="button big next">Next Page</a></li>
+				</ul>
+
+		</div>
+
+	<!-- Sidebar -->
+		<section id="sidebar">
+
+			<!-- Intro -->
+				<section id="intro">
+					<!--<a href="#" class="logo"><img src="images/logo.png" alt="" /></a>-->
+					<a href="#" class="logo"><img src="images/logo.png" alt="" /></a>
+
+					<header>
+						<h2>Atko Corp</h2>
+						<p>Here to take you there</p>
+					</header>
+				</section>
+
+			<!-- Mini Posts -->
+				<section>
+					<div class="mini-posts">
+
+						<!-- Mini Post -->
+							<article class="mini-post">
+								<header>
+									<h3><a href="#">New trip to Yosemite</a></h3>
+									<time class="published" datetime="2015-10-20">October 20, 2015</time>
+									<a href="#" class="author"><img src="images/yosemite.jpeg" alt="" /></a>
+								</header>
+								<a href="#" class="image"><img src="images/yosemite.jpeg" alt="" /></a>
+							</article>
+
+						<!-- Mini Post -->
+							<article class="mini-post">
+								<header>
+									<h3><a href="#">Yellowstone most popular so far in 2016</a></h3>
+									<time class="published" datetime="2015-10-19">October 19, 2015</time>
+									<a href="#" class="author"><img src="images/yellowstone.jpeg" alt="" /></a>
+								</header>
+								<a href="#" class="image"><img src="images/yellowstone.jpeg" alt="" /></a>
+							</article>
+
+					</div>
+				</section>
+
+			<!-- About -->
+				<section class="blurb">
+					<h2>About</h2>
+					<p>We put great products together for great people.</p>
+					<ul class="actions">
+						<li><a href="#" class="button">Learn More</a></li>
+					</ul>
+				</section>
+
+			<!-- Footer -->
+				<section id="footer">
+					<ul class="icons">
+						<li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>
+						<li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>
+						<li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>
+						<li><a href="#" class="fa-rss"><span class="label">RSS</span></a></li>
+						<li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>
+					</ul>
+					<p class="copyright">&copy; Okta. Design: <a href="http://html5up.net">HTML5 UP</a>. Images: <a href="http://unsplash.com">Unsplash</a>.</p>
+				</section>
+
+		</section>
+
+</div>
+	</body>
+</html>

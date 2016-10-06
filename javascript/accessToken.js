@@ -76,8 +76,7 @@
 
 			authScheme: 'OAUTH2',
 			authParams: {
-				// responseType: 'id_token',
-				responseType: '%responseType%',
+				responseType: 'token',
 				responseMode: 'okta_post_message',
 				scope: [
 					'openid',
@@ -87,9 +86,6 @@
 					'phone'
 				]
 			},
-			idpDisplay: 'PRIMARY',
-
-			idps: %idps%
 		});
 
 		oktaSignIn.session.exists(function (exists) {
@@ -114,7 +110,9 @@
 
 			            	console.dir(data);
 
-			            	console.log("the given_name is: " + data.profile.firstName);
+			            	console.log("there is an active session.");
+
+			            	// console.log("the given_name is: " + data.profile.firstName);
 
 			                localStorage.setItem("given_name", data.profile.firstName);
 
@@ -148,13 +146,14 @@
 		  			
 		  			console.log("authentication successful.");
 		  			console.log("user now has an active session.");
-		  			console.log("id_token:" + res.idToken);
-		  			console.log("claims:");
-		  			console.dir(res.claims);
+		  			console.log("user object:");
+		  			// console.log("id_token:" + res.idToken);
+		  			// console.log("claims:");
+		  			console.dir(res);
 
-		  			localStorage.setItem("given_name", res.claims.given_name);
+		  			// localStorage.setItem("given_name", res.claims.given_name);
 
-		  			setMenu("authenticated", res.claims.sub);
+		  			// setMenu("authenticated", res.user.id);
 
 		  		}
 		  		else {

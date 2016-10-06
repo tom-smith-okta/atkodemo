@@ -70,7 +70,7 @@ $bgImagePath = "images/bgImage.jpg";
 $config["clientId"] = "YYUAPHIAj3JPPO6yJans";
 
 // Widget version
-$widgetVer = "1.4.0";
+$widgetVer = "1.6.0";
 // $widgetVer = "1.3.3";
 
 $facebook = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");
@@ -145,6 +145,10 @@ $config["dates"]["location"] = "local";
 $config["index"]["type"] = "javascript";
 $config["index"]["location"] = "inline";
 $config["index"]["vars"] = array("oktaBaseURL", "redirectURL", "logo", "clientId", "idps", "apiHome", "appsWhitelist");
+
+$config["accessToken"]["type"] = "javascript";
+$config["accessToken"]["location"] = "inline";
+$config["accessToken"]["vars"] = array("oktaBaseURL", "redirectURL", "logo", "clientId", "apiHome", "appsWhitelist"); 
 
 /************** Okta files *********************/
 

@@ -1,0 +1,50 @@
+<head>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+	<script>
+		if (window.location.hash) {
+			var hash = window.location.hash.substring(1);
+
+			var arr = hash.split("&");
+
+			// key/value pair
+			var kvp = arr[0].split("=");
+
+			var authorizationCode = kvp[1];
+
+			console.log("the authorization code is: " + authorizationCode);
+
+			// Now that we have the authorization code
+			// let's send it to the server
+
+			$.ajax({
+	            type: "GET",
+	            dataType: 'json',
+	            url: "http://localhost:8888/atkodemo/oauth2/authCodeHandler.php?code=" + authorizationCode,
+
+	            success: function (data) {
+
+	            	console.log("this is what I got back from the client application.");
+	            	console.log(data);
+ 
+	            },
+	            error: function (textStatus, errorThrown) {
+	                console.log('error from the server: ' + JSON.stringify(textStatus));
+	                console.log(errorThrown);
+	            },
+	            async: true
+        	});
+		}
+	</script>
+
+</head>
+
+<body>
+	<div id="okta-login-container"></div>
+
+	<p><a href = "https://tomco.okta.com/oauth2/v1/authorize?client_id=YYUAPHIAj3JPPO6yJans&scope=openid%20email%20profile&response_type=code&response_mode=fragment&state=someState&nonce=someNonce&redirect_uri=http://localhost:8888/atkodemo/simple/authCode2.html">initiate auth code flow</a></p>
+
+</body>
+
+</html>

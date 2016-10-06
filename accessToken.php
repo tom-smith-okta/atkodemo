@@ -16,20 +16,12 @@ $elements = [
 	"jquery",
 	"font-awesome",
 	"okta-signin-widget",
-	"index",
+	"accessToken",
 	"dates"
 ];
 
 $thisPage->addElements($elements);
 
-if (empty($_GET["responseType"])) {
-	$responseType = "id_token";
-
-	$thisPage->setConfigValue("responseType", $responseType);
-
-
-	$thisPage->loadBody("index", ["webHome", "name", "responseType"]);
-}
-
+$thisPage->loadBody("index", ["webHome", "name"]);
 
 $thisPage->display();

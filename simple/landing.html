@@ -1,0 +1,50 @@
+<head>
+	<!-- Core widget js and css -->
+	<script src="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.6.0/js/okta-sign-in.min.js" type="text/javascript"></script>
+	<link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.6.0/css/okta-sign-in.min.css" type="text/css" rel="stylesheet">
+	<!-- Customizable css theme options. Link your own customized copy of this file or override styles in-line -->
+	<link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.6.0/css/okta-theme.css" type="text/css" rel="stylesheet">
+
+	<script>
+		if (window.location.hash) {
+			var hash = window.location.hash.substring(1);
+
+			var arr = hash.split("&");
+
+			var tokenArr = arr[0].split("=");
+
+			var accessToken = tokenArr[1];
+
+			console.log("the access token is: " + accessToken);
+
+		}
+	</script>
+
+</head>
+<body>
+	<div id="okta-login-container"></div>
+	<script type="text/javascript">
+		var orgUrl = 'https://tomco.okta.com';
+		var redirectUrl = 'http://localhost:8888/atkodemo/simple/landing.html';
+
+		var oktaSignIn = new OktaSignIn({baseUrl: orgUrl});
+		
+		oktaSignIn.renderEl(
+		  { el: '#okta-login-container' },
+		  function (res) {
+		    if (res.status === 'SUCCESS') {
+		    	res.session.setCookieAndRedirect(redirectUrl);
+
+		    	console.dir(res);
+		    }
+		  }
+		);
+	</script>
+
+<p align = 'center'>
+<br>
+	<a href = "https://tomco.okta.com/oauth2/v1/authorize?idp=0oa1w8n4dlYlOLjPl1t6&client_id=YYUAPHIAj3JPPO6yJans&scope=openid%20email%20profile&response_type=token&response_mode=fragment&state=someState&nonce=someNonce&redirect_uri=http://localhost:8888/atkodemo/simple/landing.html">Log in with Google</a>
+</p>
+
+
+</body>

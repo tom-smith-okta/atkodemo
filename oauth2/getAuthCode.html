@@ -1,0 +1,29 @@
+<head>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+	<script>
+		if (window.location.hash) {
+			var hash = window.location.hash.substring(1);
+
+			var arr = hash.split("&");
+
+			// key/value pair
+			var kvp = arr[0].split("=");
+
+			var authorizationCode = kvp[1];
+
+			console.log("the authorization code is: " + authorizationCode);
+		}
+
+	</script>
+
+</head>
+
+<body>
+
+	<p><a href = "https://tomco.okta.com/oauth2/v1/authorize?client_id=YYUAPHIAj3JPPO6yJans&scope=openid%20email%20profile&response_type=code&response_mode=fragment&state=someState&nonce=someNonce&redirect_uri=http://localhost:8888/atkodemo/oauth2/getAuthCode.html">initiate auth code flow</a></p>
+
+</body>
+
+</html>
