@@ -6,7 +6,7 @@ $thisPage = new htmlPage($config);
 
 $thisPage->setTitle($config["name"] . " - Register");
 
-if (empty($_GET["regType"])) { $regType = "default"; }
+if (empty($_GET["regType"])) { $regType = "basic"; }
 else { $regType = $_GET["regType"]; }
 
 $elements = [
@@ -29,11 +29,11 @@ $thisPage->display();
 // might move these to $config
 function getRegDesc($regType) {
 
-	$regTypes["default"]["title"] = "Registration with Salesforce provisioning";
-	$regTypes["default"]["desc"] = "A user record will be created in the Okta universal directory, and the user will be provisioned to Salesforce Chatter. User will be authenticated immediately.";
+	$regTypes["sfChatter"]["title"] = "Registration with Salesforce provisioning";
+	$regTypes["sfChatter"]["desc"] = "A user record will be created in the Okta universal directory, and the user will be provisioned to Salesforce Chatter. User will be authenticated immediately.";
 
-	$regTypes["vanilla"]["title"] = "Vanilla registration flow";
-	$regTypes["vanilla"]["desc"] = "A basic user record will be created in the Okta universal directory. User will be authenticated immediately.";
+	$regTypes["basic"]["title"] = "Basic registration flow";
+	$regTypes["basic"]["desc"] = "A basic user record will be created in the Okta universal directory. The user will be authenticated immediately.";
 
 	$regTypes["withMFA"]["title"] = "MFA registration flow";
 	$regTypes["withMFA"]["desc"] = "A user record will be created in the Okta universal directory. An activation email will be sent to the user. The user must use a 2nd factor when they authenticate.";
@@ -71,7 +71,7 @@ function getRegForm($regType) {
 	$fields["email"]["type"] = "text";
 	$fields["email"]["placeholder"] = "email";
 
-	if ($regType == "vanilla" || $regType == "default") {
+	if ($regType == "basic" || $regType == "sfChatter") {
 		// password
 		$fields["password"]["type"] = "password";
 		$fields["password"]["placeholder"] = "password";		

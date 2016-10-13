@@ -36,14 +36,11 @@ $config["localhost"] = "localhost:8888";
 /********************************************/
 // GROUPS
 
+// atkoDemoUsersBasic
+$config["group"]["basic"]["id"] = "00gntdlmx9Favuwhp1t6";
 
-// atkoDemoUsersDefault
-$config["group"]["default"]["id"] = "00goxo1ifVuBg7YKQ1t6";
-
-// $config["group"]["default"]["id"] = "00gozjp5ileIxkY0o1t6";
-
-// atkoDemoUsersVanilla
-$config["group"]["vanilla"]["id"] = "00gntdlmx9Favuwhp1t6";
+// atkoDemoUsersSFchatter
+$config["group"]["sfChatter"]["id"] = "00goxo1ifVuBg7YKQ1t6";
 
 // atkoDemoUsersWithMFA
 $config["group"]["withMFA"]["id"] = "00gnv1elhvYu03OLh1t6";
@@ -70,7 +67,7 @@ $bgImagePath = "images/bgImage.jpg";
 $config["clientId"] = "YYUAPHIAj3JPPO6yJans";
 
 // Widget version
-$widgetVer = "1.4.0";
+$widgetVer = "1.6.0";
 // $widgetVer = "1.3.3";
 
 $facebook = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");
@@ -112,20 +109,20 @@ $config["apiHome"] = $config["oktaBaseURL"] . "/api/v1";
 // establishes web home relative to web root
 // /atkodemo
 $config["webHome"] = "/";
-if(!empty($config["homeDir"])) { $config["webHome"] = $config["webHome"] . $config["homeDir"]; }
+if(!empty($config["homeDir"])) {
+	$config["webHome"] = $config["webHome"] . $config["homeDir"] . "/";
+}
 
 // check for a logo
 if (fopen($logoPath, "r")) { $config["logo"] = $logoPath; }
-else { $config["logo"] = $config["webHome"] . "/" . $logoPath; }
+else { $config["logo"] = $config["webHome"] . $logoPath; }
 
 // check for a background image
 if (fopen($bgImagePath, "r")) { $config["bgImage"] = $bgImagePath; }
-else { $config["bgImage"] = $config["webHome"] . "/" . $bgImagePath; }
+else { $config["bgImage"] = $config["webHome"] . $bgImagePath; }
 
 // http://localhost:8888/atkodemo
 $config["webHomeURL"] = $config["host"] . $config["webHome"];
-
-$config["homePage"] = $config["webHome"] . "/" . "home.php";
 
 $config["apiKey"] = file_get_contents($apiKeyPath);
 

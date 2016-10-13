@@ -75,9 +75,11 @@ class user {
 		$userData["profile"]["email"] = $this->email;
 		$userData["profile"]["login"] = $this->login;
 
+		// echo "<p>the user data is: " . json_encode($userData);
+
 		$url = $config["apiHome"] . "/users?activate=";
 
-		if ($regType == "default" || $regType == "vanilla") {
+		if ($regType == "sfChatter" || $regType == "basic") {
 			$this->password = $user["password"];
 
 			$userData["credentials"]["password"]["value"] = $this->password;

@@ -38,7 +38,7 @@ else {
 	$_SESSION["apiKey"] = $apiKey;
 	$_SESSION["oktaOrg"] = $oktaOrg;
 
-	$headerString = "Location: " . $config["webHomeURL"] . "/customizeRegForm.php"; 
+	$headerString = "Location: " . $config["webHomeURL"] . "customizeRegForm.php"; 
 
 	header($headerString);
 }

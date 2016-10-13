@@ -10,6 +10,8 @@ $thisPage->setTitle($config["name"] . " - Thank you");
 
 $thisPage->setConfigValue("email", $email);
 
+$thisPage->setConfigValue("firstName", $_GET["firstName"]);
+
 $elements = [
 	"mainCSS",
 	"jquery"
@@ -17,6 +19,6 @@ $elements = [
 
 $thisPage->addElements($elements);
 
-$thisPage->loadBody("thankYou", ["name", "webHome", "logo", "email"]);
+$thisPage->loadBody("thankYou", ["name", "webHome", "logo", "email", "firstName"]);
 
 $thisPage->display();

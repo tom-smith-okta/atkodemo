@@ -6,7 +6,7 @@ $thisPage = new htmlPage($config);
 
 $thisPage->setTitle($config["name"] . " - Register");
 
-if (empty($_GET["regType"])) { $regType = "default"; }
+if (empty($_GET["regType"])) { $regType = "sfChatter"; }
 else { $regType = $_GET["regType"]; }
 
 $elements = [

@@ -25,6 +25,6 @@ foreach ($_POST as $field => $value) {
 	}
 }
 
-$headerString = "Location: " . $config["webHomeURL"] . "/customizeRegForm.php"; 
+$headerString = "Location: " . $config["webHomeURL"] . "customizeRegForm.php"; 
 
 header($headerString);
