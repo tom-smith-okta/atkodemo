@@ -37,6 +37,7 @@ class htmlPage {
 		else if ($location == "inline") {
 			$ext = $this->elements[$type]["ext"]; // either ".js" or ".css"
 			$filePath = $this->config["fsHome"] . "/" . $type . "/" . $elementName . $ext;
+			// $filePath = "../" . $type . "/" . $elementName . $ext;
 			$content = $this->replaceVars($filePath, $elementName);
 		}
 		else { // $location = "remote"

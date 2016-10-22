@@ -12,8 +12,23 @@ $config["homeDir"] = "atkodemo"; // e.g.: "atkodemo"
 // e.g. /var/www/html
 $config["fsHome"] = $_SERVER['DOCUMENT_ROOT'];
 
+$config["host"] = $_SERVER["SERVER_NAME"];
+
+if (array_key_exists("SERVER_PORT", $_SERVER)) {
+	$config["host"] .= ":" . $_SERVER["SERVER_PORT"];
+}
+
+if (($config["host"]) != "localhost") {
+	error_reporting(0); // turn off error reporting for "production" sites
+}
+
+// Need to add some logic here to accommodate https
+$config["host"] = "http://" . $config["host"];
+
+// check to see if the homedir is defined as document root
+// if so, we are probably on www.atkodemo.com
+// otherwise we are on localhost
 if (strpos($_SERVER['DOCUMENT_ROOT'], $config["homeDir"])) {
-	// this means we are probably on www.atkodemo.com
 	$config["homeDir"] = "";
 }
 else {
@@ -31,7 +46,7 @@ $config["oktaOrg"] = "tomco";
 $config["name"] = "Atko Corp";
 
 // If your localhost is running on a specific port, indicate it here
-$config["localhost"] = "localhost:8888";
+// $config["localhost"] = "localhost:8888";
 
 /********************************************/
 // GROUPS
@@ -85,20 +100,6 @@ $config["appsWhitelist"] = json_encode($appsWhitelist);
 /************************************************************************/
 
 $config["idps"] = json_encode($idps);
-
-$config["host"] = $_SERVER["SERVER_NAME"];
-
-// if this site is running on localhost, then use the value for localhost
-// indicated above: localhost:8888
-if (($config["host"]) == "localhost") {
-	$config["host"] = $config["localhost"];
-}
-else {
-	error_reporting(0); // turn off error reporting for "production" sites
-}
-
-// Need to add some logic here to accommodate https
-$config["host"] = "http://" . $config["host"];
 
 // https://tomco.okta.com
 $config["oktaBaseURL"] = "https://" . $config["oktaOrg"] . ".okta.com";
