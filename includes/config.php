@@ -87,15 +87,7 @@ else { $config["logo"] = $config["webHome"] . $logoPath; }
 if (fopen($bgImagePath, "r")) { $config["bgImage"] = $bgImagePath; }
 else { $config["bgImage"] = $config["webHome"] . $bgImagePath; }
 
-
-
 $config["apiKey"] = file_get_contents($apiKeyPath);
-
-// Danger Will Robinson
-// This value needs to match a value in the Redirect URIs list
-// in your Okta tenant
-
-$config["redirectURL"] = $config["host"] . $config["webHome"];
 
 /************** Custom files *******************/
 
