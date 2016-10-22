@@ -4,51 +4,15 @@
 // (not the full path, just the dir name)
 $config["homeDir"] = "atkodemo"; // e.g.: "atkodemo"
 
-/******* Next few lines should not be touched **************************/
-// I'm going to re-work the next few lines. They might not
-// really be necessary.
-
-// the OS home dir
-// e.g. /var/www/html
-$config["fsHome"] = $_SERVER['DOCUMENT_ROOT'];
-
-$config["host"] = $_SERVER["SERVER_NAME"];
-
-if (array_key_exists("SERVER_PORT", $_SERVER)) {
-	if ($_SERVER["SERVER_PORT"] != "80") {
-		$config["host"] .= ":" . $_SERVER["SERVER_PORT"];
-	}
-}
-
-if (($config["host"]) != "localhost") {
-	error_reporting(0); // turn off error reporting for "production" sites
-}
-
-// Need to add some logic here to accommodate https
-$config["host"] = "http://" . $config["host"];
-
-// check to see if the homedir is defined as document root
-// if so, we are probably on www.atkodemo.com
-// otherwise we are on localhost
-if (strpos($_SERVER['DOCUMENT_ROOT'], $config["homeDir"])) {
-	$config["homeDir"] = "";
-}
-else {
-	$config["fsHome"] .= "/" . $config["homeDir"];
-}
-
-/*************************************************************************/
-// MAIN CONFIGURATION BEGINS HERE
-// Settings that would need to change for this app to run
-// with a different okta tenant
-// or on someone else's localhost
+// name of Okta organization
 $config["oktaOrg"] = "tomco";
 
 // name of fake company
 $config["name"] = "Atko Corp";
 
-// If your localhost is running on a specific port, indicate it here
-// $config["localhost"] = "localhost:8888";
+// OIDC client ID - from your Okta social auth app
+$config["clientId"] = "YYUAPHIAj3JPPO6yJans";
+
 
 /********************************************/
 // GROUPS
@@ -80,8 +44,7 @@ $logoPath = "images/logo.png";
 
 $bgImagePath = "images/bgImage.jpg";
 
-// OIDC client ID - from your Okta social auth app
-$config["clientId"] = "YYUAPHIAj3JPPO6yJans";
+
 
 // Widget version
 $widgetVer = "1.6.0";
@@ -190,3 +153,38 @@ $config["regFormType"]["min"] = ["firstName", "lastName", "login", "email"];
 
 $config["regFormType"]["pwd"] = $config["regFormType"]["min"];
 $config["regFormType"]["pwd"][] = "password";
+
+/**************** Hostname etc. ****************/
+
+// the OS home dir
+// e.g. /var/www/html
+$config["fsHome"] = $_SERVER['DOCUMENT_ROOT'];
+
+$config["host"] = $_SERVER["SERVER_NAME"];
+
+if (array_key_exists("SERVER_PORT", $_SERVER)) {
+	if ($_SERVER["SERVER_PORT"] != "80") {
+		$config["host"] .= ":" . $_SERVER["SERVER_PORT"];
+	}
+}
+
+if (($config["host"]) != "localhost") {
+	error_reporting(0); // turn off error reporting for "production" sites
+}
+
+// Need to add some logic here to accommodate https
+$config["host"] = "http://" . $config["host"];
+
+// check to see if the homedir is defined as document root
+// if so, we are probably on www.atkodemo.com
+// otherwise we are on localhost
+if (strpos($_SERVER['DOCUMENT_ROOT'], $config["homeDir"])) {
+	$config["homeDir"] = "";
+}
+else {
+	$config["fsHome"] .= "/" . $config["homeDir"];
+}
+
+
+
+
