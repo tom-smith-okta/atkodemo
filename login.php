@@ -16,9 +16,9 @@ $elements = [
 	"jquery",
 	"font-awesome",
 	"okta-signin-widget",
-//	"index",
 	"widgetBasic",
 	"setMenu",
+	"signout",
 	"dates"
 ];
 

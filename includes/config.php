@@ -11,13 +11,14 @@ $config["oktaOrg"] = "atkodemovm";
 // name of fake company
 $config["name"] = "Atko Corp";
 
-// OIDC client ID - from your Okta OIDC app
-$config["clientId"] = "YYUAPHIAj3JPPO6yJans";
-
 /********************************************/
 // GROUPS
 
-if ($config["clientId"] === "YYUAPHIAj3JPPO6yJans") {
+if ($config["oktaOrg"] === "tomco") {
+
+	// OIDC client ID - from your Okta OIDC app
+	$config["clientId"] = "YYUAPHIAj3JPPO6yJans";
+
 	// atkoDemoUsersBasic
 	$config["group"]["basic"]["id"] = "00gntdlmx9Favuwhp1t6";
 
@@ -32,7 +33,42 @@ if ($config["clientId"] === "YYUAPHIAj3JPPO6yJans") {
 
 	// atkodDemoUsersOktaAdmin
 	$config["group"]["okta"]["id"] = "00gnv0lbm756RjxT61t6";
+
+	$facebook = array("type"=>"FACEBOOK", "id"=>"0oassj82zxJdGVjjL1t6");
+	$idps[] = $facebook;
+
+	$google = array("type"=>"GOOGLE", "id"=>"0oa1w8n4dlYlOLjPl1t6");
+	$idps[] = $google;
+
 }
+else if ($config["oktaOrg"] === "atkodemovm") {
+
+	$config["clientId"] = "KySezizDE4ScxOlsNLsX";
+
+	// atkoDemoUsersBasic
+	$config["group"]["basic"]["id"] = "00gntdlmx9Favuwhp1t6";
+
+	// atkoDemoUsersSFchatter
+	$config["group"]["sfChatter"]["id"] = "00goxo1ifVuBg7YKQ1t6";
+
+	// atkoDemoUsersWithMFA
+	$config["group"]["withMFA"]["id"] = "00gnv1elhvYu03OLh1t6";
+
+	// atkoDemoUsersWithEmail
+	$config["group"]["withEmail"]["id"] = "00gnv4sf0vkoLWiC21t6";
+
+	// atkodDemoUsersOktaAdmin
+	$config["group"]["okta"]["id"] = "00gnv0lbm756RjxT61t6";
+
+	$facebook = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");
+	$idps[] = $facebook;
+
+	$google = array("type"=>"GOOGLE", "id"=>"0oa1w8n4dlYlOLjPl1t6");
+	$idps[] = $google;
+
+}
+
+
 
 /*********************************************/
 // API Key
@@ -52,11 +88,6 @@ $bgImagePath = "images/bgImage.jpg";
 $widgetVer = "1.6.0";
 // $widgetVer = "1.3.3";
 
-$facebook = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");
-$idps[] = $facebook;
-
-$google = array("type"=>"GOOGLE", "id"=>"0oa1w8n4dlYlOLjPl1t6");
-$idps[] = $google;
 
 // The list of apps that should be displayed in the UI.
 // This prevents "junk" apps from cluttering up the user's list of apps
@@ -103,6 +134,10 @@ $config["dates"]["location"] = "local";
 $config["setMenu"]["type"] = "javascript";
 $config["setMenu"]["location"] = "inline";
 $config["setMenu"]["vars"] = array("apiHome", "appsWhitelist");
+
+$config["signout"]["type"] = "javascript";
+$config["signout"]["location"] = "inline";
+$config["signout"]["vars"] = array("apiHome");
 
 $config["widgetOIDC"]["type"] = "javascript";
 $config["widgetOIDC"]["location"] = "inline";
