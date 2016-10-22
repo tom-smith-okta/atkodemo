@@ -87,8 +87,7 @@ else { $config["logo"] = $config["webHome"] . $logoPath; }
 if (fopen($bgImagePath, "r")) { $config["bgImage"] = $bgImagePath; }
 else { $config["bgImage"] = $config["webHome"] . $bgImagePath; }
 
-// http://localhost:8888/atkodemo
-$config["webHomeURL"] = $config["host"] . $config["webHome"];
+
 
 $config["apiKey"] = file_get_contents($apiKeyPath);
 
@@ -185,6 +184,11 @@ else {
 	$config["fsHome"] .= "/" . $config["homeDir"];
 }
 
+// http://localhost:8888/atkodemo
+$config["webHomeURL"] = $config["host"] . $config["webHome"];
 
+// Danger Will Robinson
+// This value needs to match a value in the Redirect URIs list
+// in your Okta tenant
 
-
+$config["redirectURL"] = $config["host"] . $config["webHome"];
