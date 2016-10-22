@@ -5,32 +5,34 @@
 $config["homeDir"] = "atkodemo"; // e.g.: "atkodemo"
 
 // name of Okta organization
-$config["oktaOrg"] = "tomco";
+// $config["oktaOrg"] = "tomco";
+$config["oktaOrg"] = "atkodemovm";
 
 // name of fake company
 $config["name"] = "Atko Corp";
 
-// OIDC client ID - from your Okta social auth app
+// OIDC client ID - from your Okta OIDC app
 $config["clientId"] = "YYUAPHIAj3JPPO6yJans";
-
 
 /********************************************/
 // GROUPS
 
-// atkoDemoUsersBasic
-$config["group"]["basic"]["id"] = "00gntdlmx9Favuwhp1t6";
+if ($config["clientId"] === "YYUAPHIAj3JPPO6yJans") {
+	// atkoDemoUsersBasic
+	$config["group"]["basic"]["id"] = "00gntdlmx9Favuwhp1t6";
 
-// atkoDemoUsersSFchatter
-$config["group"]["sfChatter"]["id"] = "00goxo1ifVuBg7YKQ1t6";
+	// atkoDemoUsersSFchatter
+	$config["group"]["sfChatter"]["id"] = "00goxo1ifVuBg7YKQ1t6";
 
-// atkoDemoUsersWithMFA
-$config["group"]["withMFA"]["id"] = "00gnv1elhvYu03OLh1t6";
+	// atkoDemoUsersWithMFA
+	$config["group"]["withMFA"]["id"] = "00gnv1elhvYu03OLh1t6";
 
-// atkoDemoUsersWithEmail
-$config["group"]["withEmail"]["id"] = "00gnv4sf0vkoLWiC21t6";
+	// atkoDemoUsersWithEmail
+	$config["group"]["withEmail"]["id"] = "00gnv4sf0vkoLWiC21t6";
 
-// atkodDemoUsersOktaAdmin
-$config["group"]["okta"]["id"] = "00gnv0lbm756RjxT61t6";
+	// atkodDemoUsersOktaAdmin
+	$config["group"]["okta"]["id"] = "00gnv0lbm756RjxT61t6";
+}
 
 /*********************************************/
 // API Key
@@ -88,15 +90,8 @@ if (fopen($bgImagePath, "r")) { $config["bgImage"] = $bgImagePath; }
 else { $config["bgImage"] = $config["webHome"] . $bgImagePath; }
 
 // http://localhost:8888/atkodemo
-$config["webHomeURL"] = $config["host"] . $config["webHome"];
 
 $config["apiKey"] = file_get_contents($apiKeyPath);
-
-// Danger Will Robinson
-// This value needs to match a value in the Redirect URIs list
-// in your Okta tenant
-
-$config["redirectURL"] = $config["host"] . $config["webHome"];
 
 /************** Custom files *******************/
 
@@ -105,9 +100,17 @@ $config["redirectURL"] = $config["host"] . $config["webHome"];
 $config["dates"]["type"] = "javascript";
 $config["dates"]["location"] = "local";
 
-$config["index"]["type"] = "javascript";
-$config["index"]["location"] = "inline";
-$config["index"]["vars"] = array("oktaBaseURL", "redirectURL", "logo", "clientId", "idps", "apiHome", "appsWhitelist");
+$config["setMenu"]["type"] = "javascript";
+$config["setMenu"]["location"] = "inline";
+$config["setMenu"]["vars"] = array("apiHome", "appsWhitelist");
+
+$config["widgetOIDC"]["type"] = "javascript";
+$config["widgetOIDC"]["location"] = "inline";
+$config["widgetOIDC"]["vars"] = array("oktaBaseURL", "redirectURL", "logo", "clientId", "idps", "apiHome", "appsWhitelist");
+
+$config["widgetBasic"]["type"] = "javascript";
+$config["widgetBasic"]["location"] = "inline";
+$config["widgetBasic"]["vars"] = array("oktaBaseURL", "redirectURL", "logo", "clientId", "idps", "apiHome", "appsWhitelist");
 
 /************** Okta files *********************/
 
@@ -185,6 +188,13 @@ else {
 	$config["fsHome"] .= "/" . $config["homeDir"];
 }
 
+// Danger Will Robinson
+// This value needs to match a value in the Redirect URIs list
+// in your Okta tenant
+
+$config["redirectURL"] = $config["host"] . $config["webHome"];
+
+$config["webHomeURL"] = $config["host"] . $config["webHome"];
 
 
 

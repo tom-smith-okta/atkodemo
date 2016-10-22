@@ -1,8 +1,61 @@
 <script>
 
-	function displayWidget() {
+	function setMenu(authState, userID) {
 
-		$("#widget").hide();
+		var menu;
+
+		if (authState == "authenticated") {
+			menu = "<li><a href = '#' onclick = 'signout()'>Log out</a></li>";
+		
+			$.ajax({
+	            type: "GET",
+	            dataType: 'json',
+	            url: "%apiHome%/users/" + userID + "/appLinks",
+
+	            xhrFields: {
+	                withCredentials: true
+	            },
+	            success: function (data) {
+
+	            	var whitelist = %appsWhitelist%;
+
+	            	var apps = "";
+
+	            	for (var i = 0, len = data.length; i < len; i++) {
+	            		console.log("found an app: " + data[i].appName);
+  						if (whitelist.indexOf(data[i].appName) != -1) {
+  							apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + data[i].appName + "</a></li>";
+  						}
+					}
+
+					menu += apps;
+
+					$("#authLinks").html(menu);
+ 
+	            },
+	            error: function (textStatus, errorThrown) {
+	                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+	                console.log(errorThrown);
+	            },
+	            async: true
+        	});
+
+			if (localStorage.getItem("given_name")) {
+				menu += "<li><a href='#'>Welcome, " + localStorage.getItem("given_name") + "!</a></li>";
+			}
+
+		}
+		else {
+			menu = "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in (OIDC)</a></li>";
+			menu += "<li><a href = 'login.php'>Log in (basic)</a></li>";
+			menu += "<li><a href = 'register.php'>Register</a></li>";
+		}
+
+		$("#authLinks").html(menu);
+
+	}
+
+	function displayWidget() {
 
 		var oktaSignIn = new OktaSignIn({
 			baseUrl: '%oktaBaseURL%',
@@ -12,25 +65,8 @@
 				smsRecovery: true
 			},
 		  
-			// OIDC options
-			clientId: '%clientId%',
 			redirectUri: '%redirectURL%',
 
-			authScheme: 'OAUTH2',
-			authParams: {
-				responseType: 'id_token',
-				responseMode: 'okta_post_message',
-				scope: [
-					'openid',
-					'email',
-					'profile',
-					'address',
-					'phone'
-				]
-			},
-			idpDisplay: 'PRIMARY',
-
-			idps: %idps%
 		});
 
 		oktaSignIn.session.exists(function (exists) {
@@ -78,24 +114,14 @@
 		});
 
 		oktaSignIn.renderEl(
-			{ el: '#widget'},
+			{ el: '#widgetBasic'},
 		  	function (res) {
 
 		  		console.log("the res.status is: " + res.status);
 
 		  		if (res.status == "SUCCESS") {
 
-		  			$("#widget").hide();
-		  			
-		  			console.log("authentication successful.");
-		  			console.log("user now has an active session.");
-		  			console.log("id_token:" + res.idToken);
-		  			console.log("claims:");
-		  			console.dir(res.claims);
-
-		  			localStorage.setItem("given_name", res.claims.given_name);
-
-		  			setMenu("authenticated", res.claims.sub);
+		  			res.session.setCookieAndRedirect('%redirectURL%');
 
 		  		}
 		  		else {
@@ -108,14 +134,14 @@
 
     function showWidget() {
 
-        $("#widget").show();
+        $("#widgetBasic").show();
 
         $("#login").attr("onclick", "hideWidget()");
 
     }
 
     function hideWidget() {
-    	$("#widget").hide();
+    	$("#widgetBasic").hide();
 
     	$("#login").attr("onclick", "showWidget()");
 
