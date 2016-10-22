@@ -15,7 +15,9 @@ $config["fsHome"] = $_SERVER['DOCUMENT_ROOT'];
 $config["host"] = $_SERVER["SERVER_NAME"];
 
 if (array_key_exists("SERVER_PORT", $_SERVER)) {
-	$config["host"] .= ":" . $_SERVER["SERVER_PORT"];
+	if ($_SERVER["SERVER_PORT"] != "80") {
+		$config["host"] .= ":" . $_SERVER["SERVER_PORT"];
+	}
 }
 
 if (($config["host"]) != "localhost") {
