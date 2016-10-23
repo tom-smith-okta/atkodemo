@@ -20,7 +20,7 @@
 			authParams: {
 				responseType: 'id_token',
 				responseMode: 'okta_post_message',
-				scope: [
+				scopes: [
 					'openid',
 					'email',
 					'profile',

@@ -11,6 +11,24 @@ $config["oktaOrg"] = "atkodemovm";
 // name of fake company
 $config["name"] = "Atko Corp";
 
+/*********************************************/
+// API Key
+// store your apiKey in a file not exposed to the web
+$apiKeyPath = "/usr/local/keys/oktaAPI.txt";
+// $config["apiKey"] = trim(file_get_contents($apiKeyPath));
+
+$config["apiKey"] = "00zOJ9HQrjkONOCPVC1hDNKN1BwWxKMxECGVQzvl6X";
+
+// you can supply a local path here or a URI
+// the value will be tested with fopen()
+// if fopen() fails the value will be prepended with $config["webHome"]
+$logoPath = "images/logo.png"; 
+
+$bgImagePath = "images/bgImage.jpg";
+
+// Widget version
+$widgetVer = "1.7.0";
+
 /********************************************/
 // GROUPS
 
@@ -34,7 +52,7 @@ if ($config["oktaOrg"] === "tomco") {
 	// atkodDemoUsersOktaAdmin
 	$config["group"]["okta"]["id"] = "00gnv0lbm756RjxT61t6";
 
-	$facebook = array("type"=>"FACEBOOK", "id"=>"0oassj82zxJdGVjjL1t6");
+	$facebook = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");
 	$idps[] = $facebook;
 
 	$google = array("type"=>"GOOGLE", "id"=>"0oa1w8n4dlYlOLjPl1t6");
@@ -46,47 +64,29 @@ else if ($config["oktaOrg"] === "atkodemovm") {
 	$config["clientId"] = "KySezizDE4ScxOlsNLsX";
 
 	// atkoDemoUsersBasic
-	$config["group"]["basic"]["id"] = "00gntdlmx9Favuwhp1t6";
+	$config["group"]["basic"]["id"] = "00gst60jvcizQe0No1t6";
 
 	// atkoDemoUsersSFchatter
-	$config["group"]["sfChatter"]["id"] = "00goxo1ifVuBg7YKQ1t6";
+	$config["group"]["sfChatter"]["id"] = "00gst7346E06ywPyc1t6";
 
 	// atkoDemoUsersWithMFA
-	$config["group"]["withMFA"]["id"] = "00gnv1elhvYu03OLh1t6";
+	$config["group"]["withMFA"]["id"] = "00gst4ezhRw5g3phR1t6";
 
 	// atkoDemoUsersWithEmail
-	$config["group"]["withEmail"]["id"] = "00gnv4sf0vkoLWiC21t6";
+	$config["group"]["withEmail"]["id"] = "00gst60n94ZTQFRqn1t6";
 
 	// atkodDemoUsersOktaAdmin
-	$config["group"]["okta"]["id"] = "00gnv0lbm756RjxT61t6";
+	$config["group"]["okta"]["id"] = "00gst6j0n6PI0iLle1t6";
 
-	$facebook = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");
+	$facebook = array("type"=>"FACEBOOK", "id"=>"0oassj82zxJdGVjjL1t6");
 	$idps[] = $facebook;
 
-	$google = array("type"=>"GOOGLE", "id"=>"0oa1w8n4dlYlOLjPl1t6");
+	$google = array("type"=>"GOOGLE", "id"=>"0oasss0hkdAGnhCzF1t6");
 	$idps[] = $google;
 
 }
 
 
-
-/*********************************************/
-// API Key
-// store your apiKey in a file not exposed to the web
-$apiKeyPath = "/usr/local/keys/oktaAPI.txt";
-
-// you can supply a local path here or a URI
-// the value will be tested with fopen()
-// if fopen() fails the value will be prepended with $config["webHome"]
-$logoPath = "images/logo.png"; 
-
-$bgImagePath = "images/bgImage.jpg";
-
-
-
-// Widget version
-$widgetVer = "1.6.0";
-// $widgetVer = "1.3.3";
 
 
 // The list of apps that should be displayed in the UI.
@@ -122,7 +122,6 @@ else { $config["bgImage"] = $config["webHome"] . $bgImagePath; }
 
 // http://localhost:8888/atkodemo
 
-$config["apiKey"] = file_get_contents($apiKeyPath);
 
 /************** Custom files *******************/
 
