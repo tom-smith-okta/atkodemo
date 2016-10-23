@@ -14,18 +14,11 @@
 		<h1><a href="%webHome%">%name%</a></h1>
 
 		<nav class="links">
-			<ul id = "authLinks">
-			</ul>
+			<ul id = "authLinks"></ul>
 		</nav>
 
 		<nav class="main">
 			<ul>
-				<li class="search">
-					<a class="fa-search" href="#search">Search</a>
-					<form id="search" method="get" action="#">
-						<input type="text" name="query" placeholder="Search" />
-					</form>
-				</li>
 				<li class="menu">
 					<a class="fa-bars" href="#menu">Menu</a>
 				</li>
@@ -36,47 +29,54 @@
 	<!-- Menu -->
 	<section id="menu">
 
-		<!-- Search -->
-		<section>
-			<form class="search" method="get" action="#">
-				<input type="text" name="query" placeholder="Search" />
-			</form>
-		</section>
-
 			<!-- Links -->
 				<section>
 					<ul class="links">
 						<li>
-							<a href="#">
-								<h3>Lorem ipsum</h3>
-								<p>Feugiat tempus veroeros dolor</p>
+							<a href="index.php">
+								<h3>Home</h3>
 							</a>
 						</li>
 						<li>
-							<a href="#">
-								<h3>Dolor sit amet</h3>
-								<p>Sed vitae justo condimentum</p>
+							<a href="login.php">
+								<h3>Log in: basic</h3>
 							</a>
 						</li>
 						<li>
-							<a href="#">
-								<h3>Feugiat veroeros</h3>
-								<p>Phasellus sed ultricies mi congue</p>
+							<a href="register.php?regType=basic">
+								<h3>Registration: basic</h3>
 							</a>
 						</li>
 						<li>
-							<a href="#">
-								<h3>Etiam sed consequat</h3>
-								<p>Porta lectus amet ultricies</p>
+							<a href="register.php?regType=sfChatter">
+								<h3>Registration: SF Chatter</h3>
+								<p>Provision a Salesforce Chatter user</p>
 							</a>
 						</li>
-					</ul>
-				</section>
-
-			<!-- Actions -->
-				<section>
-					<ul class="actions vertical">
-						<li><a href="#" class="button big fit">Log In</a></li>
+						<li>
+							<a href="register.php?regType=withMFA">
+								<h3>Registration: MFA</h3>
+								<p>User must enroll in MFA</p>
+							</a>
+						</li>
+						<li>
+							<a href="register.php?regType=withEmail">
+								<h3>Registration: Email verification</h3>
+								<p>User must verify their email address</p>
+							</a>
+						</li>
+<!-- 						<li>
+							<a href="register.php?regType=provisional">
+								<h3>Registration: Provisional</h3>
+								<p>User must be approved by an admin</p>
+							</a>
+						</li>
+ -->						<li>
+							<a href="register.php?regType=okta">
+								<h3>Registration: Okta admin</h3>
+								<p>Okta users can register as an admin</p>
+							</a>
+						</li>
 					</ul>
 				</section>
 
