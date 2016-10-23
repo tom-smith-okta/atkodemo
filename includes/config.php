@@ -14,10 +14,11 @@ $config["name"] = "Atko Corp";
 /*********************************************/
 // API Key
 // store your apiKey in a file not exposed to the web
-$apiKeyPath = "/usr/local/keys/oktaAPI.txt";
-// $config["apiKey"] = trim(file_get_contents($apiKeyPath));
+// $apiKeyPath = "/usr/local/keys/oktaAPI.txt";
 
-$config["apiKey"] = "00zOJ9HQrjkONOCPVC1hDNKN1BwWxKMxECGVQzvl6X";
+$apiKeyPath = "/usr/local/keys/atkodemovm.txt";
+
+$config["apiKey"] = trim(file_get_contents($apiKeyPath));
 
 // you can supply a local path here or a URI
 // the value will be tested with fopen()
@@ -120,8 +121,6 @@ else { $config["logo"] = $config["webHome"] . $logoPath; }
 if (fopen($bgImagePath, "r")) { $config["bgImage"] = $bgImagePath; }
 else { $config["bgImage"] = $config["webHome"] . $bgImagePath; }
 
-// http://localhost:8888/atkodemo
-
 
 /************** Custom files *******************/
 
@@ -129,6 +128,15 @@ else { $config["bgImage"] = $config["webHome"] . $bgImagePath; }
 // home page articles
 $config["dates"]["type"] = "javascript";
 $config["dates"]["location"] = "local";
+
+$config["main"]["type"] = "javascript";
+$config["main"]["location"] = "local";
+
+$config["skel.min"]["type"] = "javascript";
+$config["skel.min"]["location"] = "local";
+
+$config["util"]["type"] = "javascript";
+$config["util"]["location"] = "local";
 
 $config["setMenu"]["type"] = "javascript";
 $config["setMenu"]["location"] = "inline";

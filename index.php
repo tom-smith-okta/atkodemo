@@ -19,7 +19,10 @@ $elements = [
 	"widgetOIDC",
 	"setMenu",
 	"signout",
-	"dates"
+	"dates",
+	"skel.min",
+	"main",
+	"util"
 ];
 
 $thisPage->addElements($elements);
