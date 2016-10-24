@@ -55,8 +55,16 @@ class htmlPage {
 	}
 
 	function loadBody($name, $vars = []) {
+		$body = file_get_contents("html/template.html");
+
 		$filePath = "html/" . $name . ".html";
-		$body = file_get_contents($filePath);
+
+		// $main = file_get_contents(filename)
+		// $body = file_get_contents($filePath);
+
+		$main = file_get_contents($filePath);
+
+		$body = str_replace("%main%", $main, $body);
 
 		if (!empty($vars)) {
 			foreach($vars as $var) {

@@ -16,13 +16,15 @@ $elements = [
 	"jquery",
 	"font-awesome",
 	"okta-signin-widget",
-	"widgetOIDC",
-	"setMenu",
+	"loadWidgetOIDC",
+	"checkForSession",
+	"renderWidgetOIDC",
 	"signout",
 	"dates",
 	"skel.min",
 	"main",
-	"util"
+	"util",
+	"setMenu"
 ];
 
 $thisPage->addElements($elements);

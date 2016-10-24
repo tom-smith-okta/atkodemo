@@ -16,10 +16,15 @@ $elements = [
 	"jquery",
 	"font-awesome",
 	"okta-signin-widget",
-	"widgetBasic",
+	"loadWidgetBasic",
+	"checkForSession",
+	"renderWidget",
+	// "widgetBasic",
 	"setMenu",
 	"signout",
-	"dates"
+	"skel.min",
+	"main",
+	"util"
 ];
 
 $thisPage->addElements($elements);

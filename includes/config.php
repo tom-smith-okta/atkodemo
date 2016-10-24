@@ -87,9 +87,6 @@ else if ($config["oktaOrg"] === "atkodemovm") {
 
 }
 
-
-
-
 // The list of apps that should be displayed in the UI.
 // This prevents "junk" apps from cluttering up the user's list of apps
 
@@ -129,6 +126,7 @@ else { $config["bgImage"] = $config["webHome"] . $bgImagePath; }
 $config["dates"]["type"] = "javascript";
 $config["dates"]["location"] = "local";
 
+// UI elements from HTML5up
 $config["main"]["type"] = "javascript";
 $config["main"]["location"] = "local";
 
@@ -138,6 +136,27 @@ $config["skel.min"]["location"] = "local";
 $config["util"]["type"] = "javascript";
 $config["util"]["location"] = "local";
 
+// Okta Widget and session elements
+$config["renderWidget"]["type"] = "javascript";
+$config["renderWidget"]["location"] = "inline";
+$config["renderWidget"]["vars"] = array("redirectURL");
+
+$config["renderWidgetOIDC"]["type"] = "javascript";
+$config["renderWidgetOIDC"]["location"] = "inline";
+// $config["renderWidgetOIDC"]
+
+$config["checkForSession"]["type"] = "javascript";
+$config["checkForSession"]["location"] = "inline";
+$config["checkForSession"]["vars"] = array("apiHome");
+
+$config["loadWidgetBasic"]["type"] = "javascript";
+$config["loadWidgetBasic"]["location"] = "inline";
+$config["loadWidgetBasic"]["vars"] = array("oktaBaseURL", "logo", "redirectURL");
+
+$config["loadWidgetOIDC"]["type"] = "javascript";
+$config["loadWidgetOIDC"]["location"] = "inline";
+$config["loadWidgetOIDC"]["vars"] = array("oktaBaseURL", "logo", "redirectURL", "clientId", "idps");
+
 $config["setMenu"]["type"] = "javascript";
 $config["setMenu"]["location"] = "inline";
 $config["setMenu"]["vars"] = array("apiHome", "appsWhitelist");
@@ -146,9 +165,13 @@ $config["signout"]["type"] = "javascript";
 $config["signout"]["location"] = "inline";
 $config["signout"]["vars"] = array("apiHome");
 
+$config["indexUtils"]["type"] = "javascript";
+$config["indexUtils"]["location"] = "inline";
+
+
 $config["widgetOIDC"]["type"] = "javascript";
 $config["widgetOIDC"]["location"] = "inline";
-$config["widgetOIDC"]["vars"] = array("oktaBaseURL", "redirectURL", "logo", "clientId", "idps", "apiHome", "appsWhitelist");
+$config["widgetOIDC"]["vars"] = array("oktaBaseURL", "logo", "clientId", "idps", "apiHome", "appsWhitelist");
 
 $config["widgetBasic"]["type"] = "javascript";
 $config["widgetBasic"]["location"] = "inline";
