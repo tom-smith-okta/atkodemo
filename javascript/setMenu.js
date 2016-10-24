@@ -46,13 +46,13 @@
 
 		}
 		else {
-			if (window.location.href.indexOf("login.php") == -1) {
-				menu += "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in (OIDC)</a></li>";
+			if (window.location.href.indexOf("login.php") > 0 || window.location.href.indexOf("register.php") > 0) {
+			}
+			else {
+				menu += "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in (OIDC)</a></li>";				
 			}
 			menu += "<li><a href = 'login.php'>Log in (basic)</a></li>";
-			// menu += "<li><a href = 'register.php'>Register</a></li>";
 			menu += "<li><a href = '#menu'>Registration options</a></li>";
-
 		}
 
 		$("#authLinks").html(menu);

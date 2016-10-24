@@ -137,9 +137,9 @@ $config["util"]["type"] = "javascript";
 $config["util"]["location"] = "local";
 
 // Okta Widget and session elements
-$config["renderWidget"]["type"] = "javascript";
-$config["renderWidget"]["location"] = "inline";
-$config["renderWidget"]["vars"] = array("redirectURL");
+$config["renderWidgetBasic"]["type"] = "javascript";
+$config["renderWidgetBasic"]["location"] = "inline";
+$config["renderWidgetBasic"]["vars"] = array("redirectURL");
 
 $config["renderWidgetOIDC"]["type"] = "javascript";
 $config["renderWidgetOIDC"]["location"] = "inline";
