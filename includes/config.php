@@ -1,41 +1,30 @@
 <?php
 
-// this is the home directory name on the web server
-// (not the full path, just the dir name)
-$config["homeDir"] = "atkodemo"; // e.g.: "atkodemo"
+// First, set the important environment variables
 
-// name of Okta organization
-$config["oktaOrg"] = "tomco";
+$homeDir = "atkodemo";
+$oktaOrg = "tomco";
+$apiKeyPath = "/usr/local/keys/oktaAPI.txt";
+
+if (file_exists("/usr/local/env/tomlocalhost.txt")) {
+	// on Tom's localhost
+}
+else if (file_exists("/usr/local/env/atkoserver.txt")) {
+	// on the www.atkodemo.com server
+	$homeDir = "";
+}
+else {
+	// on a virtual machine or someplace else
+	$oktaOrg = "atkodemovm";
+	$apiKeyPath = "/usr/local/keys/atkodemovm.txt";
+}
+
+$config["homeDir"] = $homeDir;
+$config["oktaOrg"] = $oktaOrg;
+$config["apiKey"] = trim(file_get_contents($apiKeyPath));
 
 // name of fake company
 $config["name"] = "Atko Corp";
-
-// OIDC client ID - from your Okta social auth app
-$config["clientId"] = "YYUAPHIAj3JPPO6yJans";
-
-
-/********************************************/
-// GROUPS
-
-// atkoDemoUsersBasic
-$config["group"]["basic"]["id"] = "00gntdlmx9Favuwhp1t6";
-
-// atkoDemoUsersSFchatter
-$config["group"]["sfChatter"]["id"] = "00goxo1ifVuBg7YKQ1t6";
-
-// atkoDemoUsersWithMFA
-$config["group"]["withMFA"]["id"] = "00gnv1elhvYu03OLh1t6";
-
-// atkoDemoUsersWithEmail
-$config["group"]["withEmail"]["id"] = "00gnv4sf0vkoLWiC21t6";
-
-// atkodDemoUsersOktaAdmin
-$config["group"]["okta"]["id"] = "00gnv0lbm756RjxT61t6";
-
-/*********************************************/
-// API Key
-// store your apiKey in a file not exposed to the web
-$apiKeyPath = "/usr/local/keys/oktaAPI.txt";
 
 // you can supply a local path here or a URI
 // the value will be tested with fopen()
@@ -44,17 +33,65 @@ $logoPath = "images/logo.png";
 
 $bgImagePath = "images/bgImage.jpg";
 
-
-
 // Widget version
-$widgetVer = "1.6.0";
-// $widgetVer = "1.3.3";
+$widgetVer = "1.7.0";
 
-$facebook = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");
-$idps[] = $facebook;
+/********************************************/
+// GROUPS
 
-$google = array("type"=>"GOOGLE", "id"=>"0oa1w8n4dlYlOLjPl1t6");
-$idps[] = $google;
+if ($config["oktaOrg"] === "tomco") {
+
+	// OIDC client ID - from your Okta OIDC app
+	$config["clientId"] = "YYUAPHIAj3JPPO6yJans";
+
+	// atkoDemoUsersBasic
+	$config["group"]["basic"]["id"] = "00gntdlmx9Favuwhp1t6";
+
+	// atkoDemoUsersSFchatter
+	$config["group"]["sfChatter"]["id"] = "00goxo1ifVuBg7YKQ1t6";
+
+	// atkoDemoUsersWithMFA
+	$config["group"]["withMFA"]["id"] = "00gnv1elhvYu03OLh1t6";
+
+	// atkoDemoUsersWithEmail
+	$config["group"]["withEmail"]["id"] = "00gnv4sf0vkoLWiC21t6";
+
+	// atkodDemoUsersOktaAdmin
+	$config["group"]["okta"]["id"] = "00gnv0lbm756RjxT61t6";
+
+	$facebook = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");
+	$idps[] = $facebook;
+
+	$google = array("type"=>"GOOGLE", "id"=>"0oa1w8n4dlYlOLjPl1t6");
+	$idps[] = $google;
+
+}
+else if ($config["oktaOrg"] === "atkodemovm") {
+
+	$config["clientId"] = "KySezizDE4ScxOlsNLsX";
+
+	// atkoDemoUsersBasic
+	$config["group"]["basic"]["id"] = "00gst60jvcizQe0No1t6";
+
+	// atkoDemoUsersSFchatter
+	$config["group"]["sfChatter"]["id"] = "00gst7346E06ywPyc1t6";
+
+	// atkoDemoUsersWithMFA
+	$config["group"]["withMFA"]["id"] = "00gst4ezhRw5g3phR1t6";
+
+	// atkoDemoUsersWithEmail
+	$config["group"]["withEmail"]["id"] = "00gst60n94ZTQFRqn1t6";
+
+	// atkodDemoUsersOktaAdmin
+	$config["group"]["okta"]["id"] = "00gst6j0n6PI0iLle1t6";
+
+	$facebook = array("type"=>"FACEBOOK", "id"=>"0oassj82zxJdGVjjL1t6");
+	$idps[] = $facebook;
+
+	$google = array("type"=>"GOOGLE", "id"=>"0oasss0hkdAGnhCzF1t6");
+	$idps[] = $google;
+
+}
 
 // The list of apps that should be displayed in the UI.
 // This prevents "junk" apps from cluttering up the user's list of apps
@@ -87,8 +124,6 @@ else { $config["logo"] = $config["webHome"] . $logoPath; }
 if (fopen($bgImagePath, "r")) { $config["bgImage"] = $bgImagePath; }
 else { $config["bgImage"] = $config["webHome"] . $bgImagePath; }
 
-$config["apiKey"] = file_get_contents($apiKeyPath);
-
 /************** Custom files *******************/
 
 // A little hack to keep the dates current on the
@@ -96,9 +131,46 @@ $config["apiKey"] = file_get_contents($apiKeyPath);
 $config["dates"]["type"] = "javascript";
 $config["dates"]["location"] = "local";
 
-$config["index"]["type"] = "javascript";
-$config["index"]["location"] = "inline";
-$config["index"]["vars"] = array("oktaBaseURL", "redirectURL", "logo", "clientId", "idps", "apiHome", "appsWhitelist");
+// UI elements from HTML5up
+$config["main"]["type"] = "javascript";
+$config["main"]["location"] = "local";
+
+$config["skel.min"]["type"] = "javascript";
+$config["skel.min"]["location"] = "local";
+
+$config["util"]["type"] = "javascript";
+$config["util"]["location"] = "local";
+
+// Okta Widget and session elements
+$config["renderWidgetBasic"]["type"] = "javascript";
+$config["renderWidgetBasic"]["location"] = "inline";
+$config["renderWidgetBasic"]["vars"] = array("redirectURL");
+
+$config["renderWidgetOIDC"]["type"] = "javascript";
+$config["renderWidgetOIDC"]["location"] = "inline";
+
+$config["checkForSession"]["type"] = "javascript";
+$config["checkForSession"]["location"] = "inline";
+$config["checkForSession"]["vars"] = array("apiHome");
+
+$config["loadWidgetBasic"]["type"] = "javascript";
+$config["loadWidgetBasic"]["location"] = "inline";
+$config["loadWidgetBasic"]["vars"] = array("oktaBaseURL", "logo", "redirectURL");
+
+$config["loadWidgetOIDC"]["type"] = "javascript";
+$config["loadWidgetOIDC"]["location"] = "inline";
+$config["loadWidgetOIDC"]["vars"] = array("oktaBaseURL", "logo", "redirectURL", "clientId", "idps");
+
+$config["setMenu"]["type"] = "javascript";
+$config["setMenu"]["location"] = "inline";
+$config["setMenu"]["vars"] = array("apiHome", "appsWhitelist");
+
+$config["signout"]["type"] = "javascript";
+$config["signout"]["location"] = "inline";
+$config["signout"]["vars"] = array("apiHome");
+
+// $config["indexUtils"]["type"] = "javascript";
+// $config["indexUtils"]["location"] = "inline";
 
 /************** Okta files *********************/
 
@@ -176,7 +248,6 @@ else {
 	$config["fsHome"] .= "/" . $config["homeDir"];
 }
 
-// http://localhost:8888/atkodemo
 $config["webHomeURL"] = $config["host"] . $config["webHome"];
 
 // Danger Will Robinson

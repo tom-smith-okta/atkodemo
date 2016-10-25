@@ -14,6 +14,16 @@ $elements = [
 	"oktaWidgetCSStheme",
 	"oktaWidgetCSSlocal",
 	"mainCSS",
+	"font-awesome",
+	"jquery",
+	"okta-signin-widget",
+	// "widgetBasic",
+	"loadWidgetBasic",
+	"checkForSession",
+	"setMenu",
+	"skel.min",
+	"main",
+	"util"
 ];
 
 $thisPage->addElements($elements);
@@ -23,6 +33,10 @@ $thisPage->setConfigValue("regDesc", getRegDesc($regType));
 $thisPage->setConfigValue("regForm", getRegForm($regType)); 
 
 $thisPage->loadBody("register", ["name", "webHome", "logo", "regForm", "regDesc"]);
+
+// $body = file_get_contents("html/template.html");
+
+
 
 $thisPage->display();
 

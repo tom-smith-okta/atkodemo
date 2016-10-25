@@ -6,7 +6,7 @@ $thisPage = new htmlPage($config);
 
 /*************************************/
 
-$thisPage->setTitle($config["name"] . " - Home");
+$thisPage->setTitle($config["name"] . " - Login (basic)");
 
 $elements = [
 	"oktaWidgetCSScore",
@@ -16,19 +16,18 @@ $elements = [
 	"jquery",
 	"font-awesome",
 	"okta-signin-widget",
-	"loadWidgetOIDC",
+	"loadWidgetBasic",
 	"checkForSession",
-	"renderWidgetOIDC",
+	"renderWidgetBasic",
+	"setMenu",
 	"signout",
-	"dates",
 	"skel.min",
 	"main",
-	"util",
-	"setMenu"
+	"util"
 ];
 
 $thisPage->addElements($elements);
 
-$thisPage->loadBody("index", ["webHome", "name"]);
+$thisPage->loadBody("login", ["webHome", "name"]);
 
 $thisPage->display();

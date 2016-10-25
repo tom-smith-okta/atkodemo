@@ -6,6 +6,8 @@
     left: 20px;
   }
 
+  #containerBasic {}
+  
   #container #okta-login-container .button {
     color: #ffffff;
     background-color: #3a3f44;
