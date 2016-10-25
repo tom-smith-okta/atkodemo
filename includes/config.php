@@ -96,7 +96,8 @@ else if ($config["oktaOrg"] === "atkodemovm") {
 // The list of apps that should be displayed in the UI.
 // This prevents "junk" apps from cluttering up the user's list of apps
 
-$appsWhitelist = ["salesforce"];
+// The value stored in the list is the <label> of the app
+$appsWhitelist = ["Salesforce.com", "401k balance"];
 $config["appsWhitelist"] = json_encode($appsWhitelist);
 
 /************************************************************************/
