@@ -1,24 +1,30 @@
 <?php
 
-// this is the home directory name on the web server
-// (not the full path, just the dir name)
-$config["homeDir"] = "atkodemo"; // e.g.: "atkodemo"
+// First, set the important environment variables
 
-// name of Okta organization
-// $config["oktaOrg"] = "tomco";
-$config["oktaOrg"] = "atkodemovm";
+$homeDir = "atkodemo";
+$oktaOrg = "tomco";
+$apiKeyPath = "/usr/local/keys/oktaAPI.txt";
+
+if (file_exists("/usr/local/env/tomlocalhost.txt")) {
+	// on Tom's localhost
+}
+else if (file_exists("/usr/local/env/atkoserver.txt")) {
+	// on the www.atkodemo.com server
+	$homeDir = "";
+}
+else {
+	// on a virtual machine or someplace else
+	$oktaOrg = "atkodemovm";
+	$apiKeyPath = "/usr/local/keys/atkodemovm.txt";
+}
+
+$config["homeDir"] = $homeDir;
+$config["oktaOrg"] = $oktaOrg;
+$config["apiKey"] = trim(file_get_contents($apiKeyPath));
 
 // name of fake company
 $config["name"] = "Atko Corp";
-
-/*********************************************/
-// API Key
-// store your apiKey in a file not exposed to the web
-// $apiKeyPath = "/usr/local/keys/oktaAPI.txt";
-
-$apiKeyPath = "/usr/local/keys/atkodemovm.txt";
-
-$config["apiKey"] = trim(file_get_contents($apiKeyPath));
 
 // you can supply a local path here or a URI
 // the value will be tested with fopen()
@@ -165,17 +171,8 @@ $config["signout"]["type"] = "javascript";
 $config["signout"]["location"] = "inline";
 $config["signout"]["vars"] = array("apiHome");
 
-$config["indexUtils"]["type"] = "javascript";
-$config["indexUtils"]["location"] = "inline";
-
-
-$config["widgetOIDC"]["type"] = "javascript";
-$config["widgetOIDC"]["location"] = "inline";
-$config["widgetOIDC"]["vars"] = array("oktaBaseURL", "logo", "clientId", "idps", "apiHome", "appsWhitelist");
-
-$config["widgetBasic"]["type"] = "javascript";
-$config["widgetBasic"]["location"] = "inline";
-$config["widgetBasic"]["vars"] = array("oktaBaseURL", "redirectURL", "logo", "clientId", "idps", "apiHome", "appsWhitelist");
+// $config["indexUtils"]["type"] = "javascript";
+// $config["indexUtils"]["location"] = "inline";
 
 /************** Okta files *********************/
 
