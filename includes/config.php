@@ -30,10 +30,13 @@ $config["logo"] = "images/logo.png";
 // $config["logo"] = "http://oauth2.atkodemo.com/images/USI/USIlogo.jpg";
 
 $config["mainImage"] = "images/picnic.jpeg";
+// $config["mainImage"] = "http://oauth2.atkodemo.com/images/USI/communityInvolvement.png";
 
 $config["topImage"] = "images/yosemite.jpeg";
+// $config["topImage"] = "http://oauth2.atkodemo.com/images/USI/retirementPlanning.png";
 
 $config["bottomImage"] = "images/yellowstone.jpeg";
+// $config["bottomImage"] = "http://oauth2.atkodemo.com/images/USI/personalRiskServices.png";
 
 // Widget version
 $widgetVer = "1.7.0";
