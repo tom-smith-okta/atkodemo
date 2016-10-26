@@ -26,12 +26,14 @@ $config["apiKey"] = trim(file_get_contents($apiKeyPath));
 // name of fake company
 $config["name"] = "Atko Corp";
 
-// you can supply a local path here or a URI
-// the value will be tested with fopen()
-// if fopen() fails the value will be prepended with $config["webHome"]
-$logoPath = "images/logo.png"; 
+$config["logo"] = "images/logo.png";
+// $config["logo"] = "http://oauth2.atkodemo.com/images/USI/USIlogo.jpg";
 
-$bgImagePath = "images/bgImage.jpg";
+$config["mainImage"] = "images/picnic.jpeg";
+
+$config["topImage"] = "images/yosemite.jpeg";
+
+$config["bottomImage"] = "images/yellowstone.jpeg";
 
 // Widget version
 $widgetVer = "1.7.0";
@@ -116,14 +118,6 @@ $config["webHome"] = "/";
 if(!empty($config["homeDir"])) {
 	$config["webHome"] = $config["webHome"] . $config["homeDir"] . "/";
 }
-
-// check for a logo
-if (fopen($logoPath, "r")) { $config["logo"] = $logoPath; }
-else { $config["logo"] = $config["webHome"] . $logoPath; }
-
-// check for a background image
-if (fopen($bgImagePath, "r")) { $config["bgImage"] = $bgImagePath; }
-else { $config["bgImage"] = $config["webHome"] . $bgImagePath; }
 
 /************** Custom files *******************/
 

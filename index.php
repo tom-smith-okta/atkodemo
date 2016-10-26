@@ -29,6 +29,6 @@ $elements = [
 
 $thisPage->addElements($elements);
 
-$thisPage->loadBody("index", ["webHome", "name"]);
+$thisPage->loadBody("index", ["webHome", "name", "logo", "topImage", "bottomImage", "mainImage"]);
 
 $thisPage->display();
