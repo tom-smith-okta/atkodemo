@@ -1,27 +1,14 @@
 <?php
 
+$config; // this is an array that is used to store most values
+
 // First, set the important environment variables
 
 $homeDir = "atkodemo";
 $oktaOrg = "tomco";
 $apiKeyPath = "/usr/local/keys/oktaAPI.txt";
 
-if (file_exists("/usr/local/env/tomlocalhost.txt")) {
-	// on Tom's localhost
-}
-else if (file_exists("/usr/local/env/atkoserver.txt")) {
-	// on the www.atkodemo.com server
-	$homeDir = "";
-}
-else {
-	// on a virtual machine or someplace else
-	$oktaOrg = "atkodemovm";
-	$apiKeyPath = "/usr/local/keys/atkodemovm.txt";
-}
-
-$config["homeDir"] = $homeDir;
-$config["oktaOrg"] = $oktaOrg;
-$config["apiKey"] = trim(file_get_contents($apiKeyPath));
+setEnv($homeDir, $oktaOrg, $apiKeyPath);
 
 // name of fake company
 $config["name"] = "Atko Corp";
@@ -222,9 +209,7 @@ $config["regFormType"]["pwd"][] = "password";
 
 /**************** Hostname etc. ****************/
 
-// the OS home dir
-// e.g. /var/www/html
-$config["fsHome"] = $_SERVER['DOCUMENT_ROOT'];
+
 
 $config["host"] = $_SERVER["SERVER_NAME"];
 
@@ -241,16 +226,6 @@ if (($config["host"]) != "localhost") {
 // Need to add some logic here to accommodate https
 $config["host"] = "http://" . $config["host"];
 
-// check to see if the homedir is defined as document root
-// if so, we are probably on www.atkodemo.com
-// otherwise we are on localhost
-if (strpos($_SERVER['DOCUMENT_ROOT'], $config["homeDir"])) {
-	$config["homeDir"] = "";
-}
-else {
-	$config["fsHome"] .= "/" . $config["homeDir"];
-}
-
 $config["webHomeURL"] = $config["host"] . $config["webHome"];
 
 // Danger Will Robinson
@@ -258,3 +233,24 @@ $config["webHomeURL"] = $config["host"] . $config["webHome"];
 // in your Okta tenant
 
 $config["redirectURL"] = $config["host"] . $config["webHome"];
+
+function setEnv($homeDir, $oktaOrg, $apiKeyPath) {
+	global $config;
+
+	if (file_exists("/usr/local/env/tomlocalhost.txt")) {
+		// on Tom's local machine
+	}
+	else if (file_exists("/usr/local/env/atkoserver.txt")) {
+		// on the www.atkodemo.com server
+		$homeDir = "";
+	}
+	else {
+		// on a virtual machine or someplace else
+		$oktaOrg = "atkodemovm";
+		$apiKeyPath = "/usr/local/keys/atkodemovm.txt";
+	}
+
+	$config["homeDir"] = $homeDir;
+	$config["oktaOrg"] = $oktaOrg;
+	$config["apiKey"] = trim(file_get_contents($apiKeyPath));
+}
