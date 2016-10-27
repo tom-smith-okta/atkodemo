@@ -70,6 +70,11 @@ if ($config["oktaOrg"] === "tomco") {
 	$google = array("type"=>"GOOGLE", "id"=>"0oa1w8n4dlYlOLjPl1t6");
 	$idps[] = $google;
 
+	// $config["app"][]
+	$appsWhitelist = ["Salesforce.com", "401k balance"];
+	$config["appsWhitelist"] = json_encode($appsWhitelist);
+
+
 }
 else if ($config["oktaOrg"] === "atkodemovm") {
 
