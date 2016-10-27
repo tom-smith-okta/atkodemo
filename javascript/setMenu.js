@@ -21,11 +21,26 @@
 
 	            	var apps = "";
 
+	            	var appName;
+
+	            	// This could be a lot more efficient
 	            	for (var i = 0, len = data.length; i < len; i++) {
-	            		console.log("found an app: " + data[i].label);
-  						if (whitelist.indexOf(data[i].label) != -1) {
-  							apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + data[i].label + "</a></li>";
-  						}
+
+	            		appName = data[i].appName;
+
+	            		console.log("found an app: " + appName);
+
+  						for (var myAppName in whitelist) {
+							if (whitelist.hasOwnProperty(myAppName)) {
+
+    							if (myAppName == appName) {
+    								console.log("found a match between " + myAppName + " and " + appName);
+    								apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + whitelist[myAppName] + "</a></li>";
+    							}
+
+  							}
+						}
+
 					}
 
 					menu += apps;

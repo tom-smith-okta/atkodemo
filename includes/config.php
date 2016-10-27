@@ -57,9 +57,14 @@ if ($config["oktaOrg"] === "tomco") {
 	$google = array("type"=>"GOOGLE", "id"=>"0oa1w8n4dlYlOLjPl1t6");
 	$idps[] = $google;
 
-	// $config["app"][]
-	$appsWhitelist = ["Salesforce.com", "401k balance"];
+	// The list of apps that should be displayed in the UI.
+	// This prevents "junk" apps from cluttering up the user's list of apps
+	// The key is the appName from the Okta app Object (via appLinks)
+	// The value is what you want to be displayed in the UI.
+
+	$appsWhitelist["salesforce"] = "Chatter";
 	$config["appsWhitelist"] = json_encode($appsWhitelist);
+
 
 
 }
@@ -88,14 +93,16 @@ else if ($config["oktaOrg"] === "atkodemovm") {
 	$google = array("type"=>"GOOGLE", "id"=>"0oasss0hkdAGnhCzF1t6");
 	$idps[] = $google;
 
+	// The list of apps that should be displayed in the UI.
+	// This prevents "junk" apps from cluttering up the user's list of apps
+
+	// The value stored in the list is the <label> of the app
+	$appsWhitelist = ["Salesforce.com", "401k balance"];
+	$config["appsWhitelist"] = json_encode($appsWhitelist);
+
 }
 
-// The list of apps that should be displayed in the UI.
-// This prevents "junk" apps from cluttering up the user's list of apps
 
-// The value stored in the list is the <label> of the app
-$appsWhitelist = ["Salesforce.com", "401k balance"];
-$config["appsWhitelist"] = json_encode($appsWhitelist);
 
 /************************************************************************/
 
@@ -208,8 +215,6 @@ $config["regFormType"]["pwd"] = $config["regFormType"]["min"];
 $config["regFormType"]["pwd"][] = "password";
 
 /**************** Hostname etc. ****************/
-
-
 
 $config["host"] = $_SERVER["SERVER_NAME"];
 
