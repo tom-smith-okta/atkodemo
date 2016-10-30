@@ -37,19 +37,39 @@ if ($config["oktaOrg"] === "tomco") {
 	$config["clientId"] = "YYUAPHIAj3JPPO6yJans";
 
 	// atkoDemoUsersBasic
-	$config["group"]["basic"]["id"] = "00gntdlmx9Favuwhp1t6";
+	$config["regFlow"]["basic"]["groupID"] = "00gntdlmx9Favuwhp1t6"; 
+	$config["regFlow"]["basic"]["title"] = "Basic registration flow";
+	$config["regFlow"]["basic"]["desc"] = "A basic user record will be created in the Okta universal directory. The user will be authenticated immediately.";
 
 	// atkoDemoUsersSFchatter
-	$config["group"]["sfChatter"]["id"] = "00goxo1ifVuBg7YKQ1t6";
+	$config["regFlow"]["sfChatter"]["groupID"] = "00goxo1ifVuBg7YKQ1t6";
+	$config["regFlow"]["sfChatter"]["title"] = "Registration with Salesforce provisioning";
+	$config["regFlow"]["sfChatter"]["desc"] = "A user record will be created in the Okta universal directory, and the user will be provisioned to Salesforce Chatter. User will be authenticated immediately.";
+	$config["regFlow"]["sfChatter"]["shortDesc"] = "Provision a Salesforce Chatter user";
 
 	// atkoDemoUsersWithMFA
-	$config["group"]["withMFA"]["id"] = "00gnv1elhvYu03OLh1t6";
+	$config["regFlow"]["withMFA"]["groupID"] = "00gnv1elhvYu03OLh1t6";
+	$config["regFlow"]["withMFA"]["title"] = "MFA registration flow";
+	$config["regFlow"]["withMFA"]["desc"] = "A user record will be created in the Okta universal directory. An activation email will be sent to the user. The user must use a 2nd factor when they authenticate.";
+	$config["regFlow"]["withMFA"]["shortDesc"] = "User must enroll in MFA";
 
 	// atkoDemoUsersWithEmail
-	$config["group"]["withEmail"]["id"] = "00gnv4sf0vkoLWiC21t6";
+	$config["regFlow"]["withEmail"]["groupID"] = "00gnv4sf0vkoLWiC21t6";
+	$config["regFlow"]["withEmail"]["title"] = "Email verification user flow";
+	$config["regFlow"]["withEmail"]["desc"] = "A user record will be created in the Okta universal directory. The user must verify their email address before they can authenticate.";
+	$config["regFlow"]["withEmail"]["shortDesc"] = "User must verify their email address";
+
+	// atkoDemoUsersProvisional
+	$config["regFlow"]["provisional"]["groupID"] = "00guad15t26RsGWPK1t6";
+	$config["regFlow"]["provisional"]["title"] = "Provisional registration";
+	$config["regFlow"]["provisional"]["desc"] = "A user will be created in an inactive state in the Okta universal directory. An admin must review the user record and manually activate (invite) the user.";
+	$config["regFlow"]["provisional"]["shortDesc"] = "User must be approved by admin";
 
 	// atkodDemoUsersOktaAdmin
-	$config["group"]["okta"]["id"] = "00gnv0lbm756RjxT61t6";
+	$config["regFlow"]["okta"]["groupID"] = "00gnv0lbm756RjxT61t6";
+	$config["regFlow"]["okta"]["title"] = "Okta admin registration";
+	$config["regFlow"]["okta"]["desc"] = "An Okta employee can register and get admin access (read-only) to the demo tenant. An Okta email address is required. MFA is also enforced for authentication.";
+	$config["regFlow"]["okta"]["shortDesc"] = "Okta users can register as an admin";
 
 	$facebook = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");
 	$idps[] = $facebook;
@@ -64,8 +84,6 @@ if ($config["oktaOrg"] === "tomco") {
 
 	$appsWhitelist["salesforce"] = "Chatter";
 	$config["appsWhitelist"] = json_encode($appsWhitelist);
-
-
 
 }
 else if ($config["oktaOrg"] === "atkodemovm") {
@@ -102,8 +120,6 @@ else if ($config["oktaOrg"] === "atkodemovm") {
 	$config["appsWhitelist"] = json_encode($appsWhitelist);
 
 }
-
-
 
 /************************************************************************/
 
@@ -166,6 +182,8 @@ $config["setMenu"]["vars"] = array("apiHome", "appsWhitelist");
 $config["signout"]["type"] = "javascript";
 $config["signout"]["location"] = "inline";
 $config["signout"]["vars"] = array("apiHome");
+
+$config["regOptions"] = getRegOptions();
 
 // $config["indexUtils"]["type"] = "javascript";
 // $config["indexUtils"]["location"] = "inline";
@@ -259,4 +277,25 @@ function setEnv($homeDir, $oktaOrg, $apiKeyPath) {
 	$config["homeDir"] = $homeDir;
 	$config["oktaOrg"] = $oktaOrg;
 	$config["apiKey"] = trim(file_get_contents($apiKeyPath));
+}
+
+function getRegOptions() {
+	global $config;
+
+	$retVal = "";
+
+	foreach ($config["regFlow"] as $regFlowName => $values) {
+
+		$retVal .= "<li>";
+		$retVal .= "<a href = 'register.php?regType=" . $regFlowName . "'>";
+		$retVal .= "<h3>" . $values["title"] . "</h3>";
+
+		if (array_key_exists("shortDesc", $values)) {
+			$retVal .= "<p>" . $values["shortDesc"] . "</p>";
+		}
+
+		$retVal .= "</a></li>";
+
+	}
+	return $retVal;
 }

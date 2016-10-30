@@ -34,16 +34,31 @@ if ($regType == "basic" || $regType == "sfChatter") {
 	$thisUser->redirect($cookieToken);
 }
 else {
-	if ($regType == "okta") {
-		if ($thisUser->hasOktaEmailAddress()) {
-			$thisUser->setAdminRights();
+
+	$msg = "<p>Thank you for registering with us, " . $thisUser->firstName . "!</p>";
+
+	if ($regType == "provisional") {
+
+		$msg .= "<p>You will receive an activation email after your registration has been reviewed.</p>";
+
+	}
+	else {
+
+		$msg .= "<p>Please check your inbox for an activation email to complete your registration.</p>";
+
+		if ($regType == "okta") {
+			if ($thisUser->hasOktaEmailAddress()) {
+				$thisUser->setAdminRights();
+			}
 		}
+
+		$thisUser->sendActivationEmail();
+
 	}
 
-	$thisUser->sendActivationEmail();
-
 	$headerString = "Location: " . $config["webHomeURL"] . "thankYou.php?email=" . $thisUser->email;
-	$headerString .= "&firstName=" . $thisUser->firstName;
+	$headerString .= "&msg=" . $msg;
 
 	header($headerString);
+
 }

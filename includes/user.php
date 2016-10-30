@@ -67,7 +67,7 @@ class user {
 		$this->email = $user["email"];
 		$this->login = $user["email"];
 		$this->regType = $regType;
-		$this->groupID = $config["group"][$regType]["id"];
+		$this->groupID = $config["regFlow"][$regType]["groupID"];
 
 		// this is the object we will pass to the API call
 		$userData["profile"]["firstName"] = $this->firstName;
@@ -89,8 +89,6 @@ class user {
 		else { // $regType = withMFA || withEmail || okta
 			$url .= "false"; // activate=false
 		}
-
-		// $userData["groupIds"] = ["$this->groupID"];
 
 		$data = json_encode($userData);
 
