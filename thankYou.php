@@ -13,12 +13,25 @@ $thisPage->setConfigValue("email", $email);
 $thisPage->setConfigValue("msg", $_GET["msg"]);
 
 $elements = [
+	"oktaWidgetCSScore",
+	"oktaWidgetCSStheme",
+	"oktaWidgetCSSlocal",
 	"mainCSS",
-	"jquery"
+	"jquery",
+	"font-awesome",
+	"okta-signin-widget",
+	"loadWidgetBasic",
+	"checkForSession",
+	"renderWidgetBasic",
+	"setMenu",
+	"signout",
+	"skel.min",
+	"main",
+	"util"
 ];
 
 $thisPage->addElements($elements);
 
-$thisPage->loadBody("thankYou", ["name", "webHome", "logo", "email", "msg"]);
+$thisPage->loadBody("thankYou", ["name", "webHome", "logo", "email", "msg", "regOptions"]);
 
 $thisPage->display();

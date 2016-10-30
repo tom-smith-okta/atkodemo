@@ -22,7 +22,8 @@ $elements = [
 	"setMenu",
 	"skel.min",
 	"main",
-	"util"
+	"util",
+	"signout"
 ];
 
 $thisPage->addElements($elements);
