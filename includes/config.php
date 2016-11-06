@@ -21,6 +21,8 @@
 
 $config; // used as a global associative array to store all settings
 
+$config["warnings"] = [];
+
 /********** SET THE ENVIRONMENT ******************/
 // First, set the important environment variables
 
@@ -35,6 +37,8 @@ $config["apiKeyPath"] = "/usr/local/keys/atkodemovm.txt";
 setEnv();
 
 $config["apiKey"] = trim(file_get_contents($config["apiKeyPath"]));
+
+if (empty($config["apiKey"])) { $config["warnings"][] = "No API key found."; }
 
 /********** SET THE UI THEME *******************/
 
