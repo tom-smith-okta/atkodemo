@@ -193,11 +193,6 @@ $config["signout"]["type"] = "javascript";
 $config["signout"]["location"] = "inline";
 $config["signout"]["vars"] = array("apiHome");
 
-$config["regOptions"] = getRegOptions();
-
-// $config["indexUtils"]["type"] = "javascript";
-// $config["indexUtils"]["location"] = "inline";
-
 /************** Okta files *********************/
 
 $oktaWidgetBaseURL = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/" . $widgetVer;

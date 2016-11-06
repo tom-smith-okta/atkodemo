@@ -28,6 +28,8 @@ $elements = [
 
 $thisPage->addElements($elements);
 
+$thisPage->setConfigValue("regOptions", getRegOptions());
+
 $thisPage->setConfigValue("regDesc", getRegDesc($regType));
 
 $thisPage->setConfigValue("regForm", getRegForm($regType));

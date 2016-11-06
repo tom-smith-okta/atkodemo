@@ -29,6 +29,8 @@ $elements = [
 
 $thisPage->addElements($elements);
 
+$thisPage->setConfigValue("regOptions", getRegOptions());
+
 $thisPage->loadBody("index", ["webHome", "name", "logo", "topImage", "bottomImage", "mainImage", "regOptions"]);
 
 $thisPage->display();
