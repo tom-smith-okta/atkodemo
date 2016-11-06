@@ -1,15 +1,56 @@
 <?php
 
-$config; // this is an array that is used to store most values
+// If this script is being run from
+// 1) Tom's local machine
+// 2) The official www.atkodemo.com server
+// then it will just work
 
+// If this script is being run from another machine
+// then it will "just work" with the atkodemovm.okta.com
+// tenant if you store a valid API key for this tenant at
+// "/usr/local/keys/atkodemovm.txt"
+
+// If you are running this script against another okta
+// tenant then you need to set the value for
+// $config["oktaOrg"]
+// this will enable simple authentication only.
+// To enable the registration flows, you need to:
+// 1) store a valid API key at "/usr/local/keys/oktaAPI.txt"
+// or some other location
+// 2) create groups in your okta org to map to the reg flows
+
+$config; // used as a global associative array to store all settings
+
+/********** SET THE ENVIRONMENT ******************/
 // First, set the important environment variables
 
-$homeDir = "atkodemo";
-$oktaOrg = "tomco";
-$apiKeyPath = "/usr/local/keys/oktaAPI.txt";
+// The directory that this repo lives in
+// important for constructing the redirect url
+$config["homeDir"] = "atkodemo";
 
-setEnv($homeDir, $oktaOrg, $apiKeyPath);
+$config["oktaOrg"] = "atkodemovm";
 
+$config["apiKeyPath"] = "/usr/local/keys/atkodemovm.txt";
+
+setEnv();
+
+$config["apiKey"] = trim(file_get_contents($config["apiKeyPath"]));
+
+/********** SET THE UI THEME *******************/
+
+// change this setting to switch to a different
+// UI theme. 
+$config["theme"] = "default";
+
+loadTheme();
+
+function loadTheme() {
+	global $config;
+
+	include "includes/themes/" . $config["theme"] . ".php";
+}
+
+/*
 // name of fake company
 $config["name"] = "Atko Corp";
 
@@ -24,6 +65,7 @@ $config["topImage"] = "images/yosemite.jpeg";
 
 $config["bottomImage"] = "images/yellowstone.jpeg";
 // $config["bottomImage"] = "http://oauth2.atkodemo.com/images/USI/personalRiskServices.png";
+*/
 
 // Widget version
 $widgetVer = "1.7.0";
@@ -263,25 +305,20 @@ $config["webHomeURL"] = $config["host"] . $config["webHome"];
 
 $config["redirectURL"] = $config["host"] . $config["webHome"];
 
-function setEnv($homeDir, $oktaOrg, $apiKeyPath) {
+function setEnv() {
 	global $config;
 
 	if (file_exists("/usr/local/env/tomlocalhost.txt")) {
 		// on Tom's local machine
+		$config["oktaOrg"] = "tomco";
+		$config["apiKeyPath"] = "/usr/local/keys/oktaAPI.txt";
 	}
 	else if (file_exists("/usr/local/env/atkoserver.txt")) {
 		// on the www.atkodemo.com server
-		$homeDir = "";
+		$config["homeDir"] = "";
+		$config["oktaOrg"] = "tomco";
+		$config["apiKeyPath"] = "/usr/local/keys/oktaAPI.txt";
 	}
-	else {
-		// on a virtual machine or someplace else
-		$oktaOrg = "atkodemovm";
-		$apiKeyPath = "/usr/local/keys/atkodemovm.txt";
-	}
-
-	$config["homeDir"] = $homeDir;
-	$config["oktaOrg"] = $oktaOrg;
-	$config["apiKey"] = trim(file_get_contents($apiKeyPath));
 }
 
 function getRegOptions() {
