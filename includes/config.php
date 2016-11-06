@@ -44,138 +44,58 @@ $config["theme"] = "default";
 
 loadTheme();
 
-function loadTheme() {
-	global $config;
+/********* LOAD REG FLOWS AND GROUPS**********************/
 
-	include "includes/themes/" . $config["theme"] . ".php";
+
+if ($config["oktaOrg"] === "tomco" || $config["oktaOrg"] === "atkodemovm") {
+
+	include "includes/regFlows/" . $config["oktaOrg"] . ".php";
+	include "includes/regFlows/" . "regDesc.php";
+
+	// The list of apps that should be displayed in the UI.
+	// This prevents "junk" apps from cluttering up the user's list of apps
+	// The key is the appName from the Okta app Object (via appLinks)
+	// The value is what you want to be displayed in the UI.
+
+	$appsWhitelist["salesforce"] = "Chatter";
+
 }
 
-/*
-// name of fake company
-$config["name"] = "Atko Corp";
+if ($config["oktaOrg"] === "atkodemovm") {
 
-$config["logo"] = "images/logo.png";
-// $config["logo"] = "http://oauth2.atkodemo.com/images/USI/USIlogo.jpg";
+	// OIDC client ID - from Okta OIDC app
+	$config["clientId"] = "KySezizDE4ScxOlsNLsX";
 
-$config["mainImage"] = "images/picnic.jpeg";
-// $config["mainImage"] = "http://oauth2.atkodemo.com/images/USI/communityInvolvement.png";
+	// Social IDPs
+	$idps[] = array("type"=>"FACEBOOK", "id"=>"0oassj82zxJdGVjjL1t6");
+	$idps[] = array("type"=>"GOOGLE", "id"=>"0oasss0hkdAGnhCzF1t6");
+}
+else if ($config["oktaOrg"] === "tomco") {
 
-$config["topImage"] = "images/yosemite.jpeg";
-// $config["topImage"] = "http://oauth2.atkodemo.com/images/USI/retirementPlanning.png";
+	// OIDC client ID - from Okta OIDC app
+	$config["clientId"] = "YYUAPHIAj3JPPO6yJans";
 
-$config["bottomImage"] = "images/yellowstone.jpeg";
-// $config["bottomImage"] = "http://oauth2.atkodemo.com/images/USI/personalRiskServices.png";
-*/
+	// Social IDPs
+	$idps[] = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");	
+	$idps[] = array("type"=>"GOOGLE", "id"=>"0oa1w8n4dlYlOLjPl1t6");
+}
+else {
+	// Add your own values here for social auth
+
+}
+
+if (!empty($idps)) { $config["idps"] = json_encode($idps); }
+
+if (!empty($appsWhitelist)) { $config["appsWhitelist"] = json_encode($appsWhitelist); }
+
+
+/*********** END OF MAIN CONFIGURATION ***********************/
+
+/*********** BEGIN UNDERLYING CONFIGURAION ******************/
+
 
 // Widget version
 $widgetVer = "1.7.0";
-
-/********************************************/
-// GROUPS
-
-if ($config["oktaOrg"] === "tomco") {
-
-	// OIDC client ID - from your Okta OIDC app
-	$config["clientId"] = "YYUAPHIAj3JPPO6yJans";
-
-	// atkoDemoUsersBasic
-	$config["regFlow"]["basic"]["groupID"] = "00gntdlmx9Favuwhp1t6"; 
-
-	// atkoDemoUsersSFchatter
-	$config["regFlow"]["sfChatter"]["groupID"] = "00goxo1ifVuBg7YKQ1t6";
-
-	// atkoDemoUsersWithMFA
-	$config["regFlow"]["withMFA"]["groupID"] = "00gnv1elhvYu03OLh1t6";
-
-	// atkoDemoUsersWithEmail
-	$config["regFlow"]["withEmail"]["groupID"] = "00gnv4sf0vkoLWiC21t6";
-
-	// atkoDemoUsersProvisional
-	$config["regFlow"]["provisional"]["groupID"] = "00guad15t26RsGWPK1t6";
-
-	// atkodDemoUsersOktaAdmin
-	$config["regFlow"]["okta"]["groupID"] = "00gnv0lbm756RjxT61t6";
-
-	$facebook = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");
-	$idps[] = $facebook;
-
-	$google = array("type"=>"GOOGLE", "id"=>"0oa1w8n4dlYlOLjPl1t6");
-	$idps[] = $google;
-
-	// The list of apps that should be displayed in the UI.
-	// This prevents "junk" apps from cluttering up the user's list of apps
-	// The key is the appName from the Okta app Object (via appLinks)
-	// The value is what you want to be displayed in the UI.
-
-	$appsWhitelist["salesforce"] = "Chatter";
-
-}
-else if ($config["oktaOrg"] === "atkodemovm") {
-
-	$config["clientId"] = "KySezizDE4ScxOlsNLsX";
-
-	// atkoDemoUsersBasic
-	$config["regFlow"]["basic"]["groupID"] = "00gst60jvcizQe0No1t6";
-
-	// atkoDemoUsersSFchatter
-	$config["regFlow"]["sfChatter"]["groupID"] = "00gst7346E06ywPyc1t6";
-
-	// atkoDemoUsersWithMFA
-	$config["regFlow"]["withMFA"]["groupID"] = "00gst4ezhRw5g3phR1t6";
-
-	// atkoDemoUsersWithEmail
-	$config["regFlow"]["withEmail"]["groupID"] = "00gst60n94ZTQFRqn1t6";
-
-	// atkoDemoUsersProvisional
-	$config["regFlow"]["provisional"]["groupID"] = "";
-
-	// atkodDemoUsersOktaAdmin
-	$config["regFlow"]["okta"]["groupID"] = "00gst6j0n6PI0iLle1t6";
-
-	$facebook = array("type"=>"FACEBOOK", "id"=>"0oassj82zxJdGVjjL1t6");
-	$idps[] = $facebook;
-
-	$google = array("type"=>"GOOGLE", "id"=>"0oasss0hkdAGnhCzF1t6");
-	$idps[] = $google;
-
-	// The list of apps that should be displayed in the UI.
-	// This prevents "junk" apps from cluttering up the user's list of apps
-	// The key is the appName from the Okta app Object (via appLinks)
-	// The value is what you want to be displayed in the UI.
-
-	$appsWhitelist["salesforce"] = "Chatter";
-
-}
-
-$config["regFlow"]["basic"]["title"] = "Basic registration flow";
-$config["regFlow"]["basic"]["desc"] = "A basic user record will be created in the Okta universal directory. The user will be authenticated immediately.";
-
-$config["regFlow"]["sfChatter"]["title"] = "Registration with Salesforce provisioning";
-$config["regFlow"]["sfChatter"]["desc"] = "A user record will be created in the Okta universal directory, and the user will be provisioned to Salesforce Chatter. User will be authenticated immediately.";
-$config["regFlow"]["sfChatter"]["shortDesc"] = "Provision a Salesforce Chatter user";
-
-$config["regFlow"]["withMFA"]["title"] = "MFA registration flow";
-$config["regFlow"]["withMFA"]["desc"] = "A user record will be created in the Okta universal directory. An activation email will be sent to the user. The user must use a 2nd factor when they authenticate.";
-$config["regFlow"]["withMFA"]["shortDesc"] = "User must enroll in MFA";
-
-$config["regFlow"]["withEmail"]["title"] = "Email verification user flow";
-$config["regFlow"]["withEmail"]["desc"] = "A user record will be created in the Okta universal directory. The user must verify their email address before they can authenticate.";
-$config["regFlow"]["withEmail"]["shortDesc"] = "User must verify their email address";
-
-$config["regFlow"]["provisional"]["title"] = "Provisional registration";
-$config["regFlow"]["provisional"]["desc"] = "A user will be created in an inactive state in the Okta universal directory. An admin must review the user record and manually activate (invite) the user.";
-$config["regFlow"]["provisional"]["shortDesc"] = "User must be approved by admin";
-
-$config["regFlow"]["okta"]["title"] = "Okta admin registration";
-$config["regFlow"]["okta"]["desc"] = "An Okta employee can register and get admin access (read-only) to the demo tenant. An Okta email address is required. MFA is also enforced for authentication.";
-$config["regFlow"]["okta"]["shortDesc"] = "Okta users can register as an admin";
-
-$config["appsWhitelist"] = json_encode($appsWhitelist);
-
-
-/************************************************************************/
-
-$config["idps"] = json_encode($idps);
 
 // https://tomco.okta.com
 $config["oktaBaseURL"] = "https://" . $config["oktaOrg"] . ".okta.com";
@@ -304,6 +224,12 @@ $config["webHomeURL"] = $config["host"] . $config["webHome"];
 // in your Okta tenant
 
 $config["redirectURL"] = $config["host"] . $config["webHome"];
+
+function loadTheme() {
+	global $config;
+
+	include "includes/themes/" . $config["theme"] . ".php";
+}
 
 function setEnv() {
 	global $config;
