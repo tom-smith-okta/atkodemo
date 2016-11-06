@@ -36,9 +36,11 @@ $config["apiKeyPath"] = "/usr/local/keys/atkodemovm.txt";
 
 setEnv();
 
+setPaths();
+
 $config["apiKey"] = trim(file_get_contents($config["apiKeyPath"]));
 
-if (empty($config["apiKey"])) { $config["warnings"][] = "No API key found."; }
+checkAPIkey();
 
 /********** SET THE UI THEME *******************/
 
@@ -49,7 +51,6 @@ $config["theme"] = "default";
 loadTheme();
 
 /********* LOAD REG FLOWS AND GROUPS**********************/
-
 
 if ($config["oktaOrg"] === "tomco" || $config["oktaOrg"] === "atkodemovm") {
 
@@ -97,22 +98,8 @@ if (!empty($appsWhitelist)) { $config["appsWhitelist"] = json_encode($appsWhitel
 
 /*********** BEGIN UNDERLYING CONFIGURAION ******************/
 
-
 // Widget version
 $widgetVer = "1.7.0";
-
-// https://tomco.okta.com
-$config["oktaBaseURL"] = "https://" . $config["oktaOrg"] . ".okta.com";
-
-// https://tomco.okta.com/api/v1
-$config["apiHome"] = $config["oktaBaseURL"] . "/api/v1";
-
-// establishes web home relative to web root
-// /atkodemo
-$config["webHome"] = "/";
-if(!empty($config["homeDir"])) {
-	$config["webHome"] = $config["webHome"] . $config["homeDir"] . "/";
-}
 
 /************** Custom files *******************/
 
@@ -204,30 +191,78 @@ $config["regFormType"]["min"] = ["firstName", "lastName", "login", "email"];
 $config["regFormType"]["pwd"] = $config["regFormType"]["min"];
 $config["regFormType"]["pwd"][] = "password";
 
-/**************** Hostname etc. ****************/
+function checkAPIkey() {
 
-$config["host"] = $_SERVER["SERVER_NAME"];
+	global $config;
 
-if (array_key_exists("SERVER_PORT", $_SERVER)) {
-	if ($_SERVER["SERVER_PORT"] != "80") {
-		$config["host"] .= ":" . $_SERVER["SERVER_PORT"];
+	if (empty($config["apiKey"])) { $config["warnings"][] = "No API key found."; }
+	else {
+		$apiKey = $config["apiKey"];
+
+		// $apiKey .= "x";
+
+		$curl = curl_init();
+
+		$url = $config["apiHome"] . "/meta/schemas/user/default";
+
+		curl_setopt_array($curl, array(
+			CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_URL => $url
+		));
+
+		$jsonResult = curl_exec($curl);
+
+		$assocArray = json_decode($jsonResult, TRUE);
+
+		if ($assocArray["id"]) { $config["apiKeyIsValid"] = TRUE; }
+		else {
+			$config["apiKeyIsValid"] = FALSE;
+			$config["warnings"][] = $jsonResult;
+		}
 	}
 }
 
-if (($config["host"]) != "localhost") {
-	error_reporting(0); // turn off error reporting for "production" sites
+function setPaths() {
+	global $config;
+
+	// https://tomco.okta.com
+	$config["oktaBaseURL"] = "https://" . $config["oktaOrg"] . ".okta.com";
+
+	// https://tomco.okta.com/api/v1
+	$config["apiHome"] = $config["oktaBaseURL"] . "/api/v1";
+
+	// establishes web home relative to web root
+	// /atkodemo
+	$config["webHome"] = "/";
+	if(!empty($config["homeDir"])) {
+		$config["webHome"] = $config["webHome"] . $config["homeDir"] . "/";
+	}
+
+	$config["host"] = $_SERVER["SERVER_NAME"];
+
+	if (array_key_exists("SERVER_PORT", $_SERVER)) {
+		if ($_SERVER["SERVER_PORT"] != "80") {
+			$config["host"] .= ":" . $_SERVER["SERVER_PORT"];
+		}
+	}
+
+	if (($config["host"]) != "localhost") {
+		error_reporting(0); // turn off error reporting for "production" sites
+	}
+
+	// Need to add some logic here to accommodate https
+	$config["host"] = "http://" . $config["host"];
+
+	$config["webHomeURL"] = $config["host"] . $config["webHome"];
+
+	// Danger Will Robinson
+	// This value needs to match a value in the Redirect URIs list
+	// in your Okta tenant
+
+	$config["redirectURL"] = $config["host"] . $config["webHome"];
+
 }
-
-// Need to add some logic here to accommodate https
-$config["host"] = "http://" . $config["host"];
-
-$config["webHomeURL"] = $config["host"] . $config["webHome"];
-
-// Danger Will Robinson
-// This value needs to match a value in the Redirect URIs list
-// in your Okta tenant
-
-$config["redirectURL"] = $config["host"] . $config["webHome"];
 
 function loadTheme() {
 	global $config;
