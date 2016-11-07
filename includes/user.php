@@ -75,7 +75,7 @@ class user {
 		$userData["profile"]["email"] = $this->email;
 		$userData["profile"]["login"] = $this->login;
 
-		echo "<p>the user data is: " . json_encode($userData);
+		// echo "<p>the user data is: " . json_encode($userData);
 
 		$url = $config["apiHome"] . "/users?activate=";
 
@@ -92,7 +92,7 @@ class user {
 
 		$data = json_encode($userData);
 
-		echo $data;
+		// echo $data;
 
 		$apiKey = $config["apiKey"];
 
@@ -111,7 +111,7 @@ class user {
 
 		$jsonResult = curl_exec($curl);
 
-		echo "<p> the json result is: " . $jsonResult;
+		// echo "<p> the json result is: " . $jsonResult;
 
 		$result = json_decode($jsonResult, TRUE);
 

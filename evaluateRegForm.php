@@ -2,9 +2,9 @@
 
 include "includes/includes.php";
 
-echo "the post is: ";
+// echo "the post is: ";
 
-echo json_encode($_POST);
+// echo json_encode($_POST);
 
 if (array_key_exists("flowType", $_POST)) {
 	$regType = $_POST["flowType"];
@@ -21,9 +21,9 @@ foreach ($_POST as $fieldName => $value) {
 	}
 }
 
-echo "<p>";
+// echo "<p>";
 
-echo "<p>the user object is: " . json_encode($user);
+// echo "<p>the user object is: " . json_encode($user);
 
 $thisUser = new user($regType, $user);
 
