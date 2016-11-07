@@ -75,7 +75,7 @@ class user {
 		$userData["profile"]["email"] = $this->email;
 		$userData["profile"]["login"] = $this->login;
 
-		// echo "<p>the user data is: " . json_encode($userData);
+		echo "<p>the user data is: " . json_encode($userData);
 
 		$url = $config["apiHome"] . "/users?activate=";
 
@@ -92,9 +92,15 @@ class user {
 
 		$data = json_encode($userData);
 
-		// echo $data;
+		echo $data;
+
+		$apiKey = $config["apiKey"];
 
 		$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+    		CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json")
+		));
 
 		curl_setopt_array($curl, array(
 			CURLOPT_POST => TRUE,
@@ -103,9 +109,11 @@ class user {
 	    	CURLOPT_POSTFIELDS => $data
 		));
 
-		$errorMsg = "<p>Sorry, something went wrong with trying to create this user.";
+		$jsonResult = curl_exec($curl);
 
-		$result = sendCurlRequest($curl, $errorMsg);
+		echo "<p> the json result is: " . $jsonResult;
+
+		$result = json_decode($jsonResult, TRUE);
 
 		$this->userID = $result["id"];
 
