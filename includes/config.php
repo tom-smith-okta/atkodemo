@@ -60,8 +60,8 @@ loadTheme();
 
 if ($config["oktaOrg"] === "tomco" || $config["oktaOrg"] === "atkodemovm") {
 
-	include "includes/regFlows/" . $config["oktaOrg"] . ".php";
-	include "includes/regFlows/" . "regDesc.php";
+	include $config["includes"] . "/regFlows/" . $config["oktaOrg"] . ".php";
+	include $config["includes"] . "/regFlows/" . "regDesc.php";
 
 	// The list of apps that should be displayed in the UI.
 	// This prevents "junk" apps from cluttering up the user's list of apps
@@ -255,6 +255,8 @@ function setPaths() {
 
 	$config["fsHome"] = $_SERVER["DOCUMENT_ROOT"] . $config["webHome"];
 
+	$config["includes"] = $config["fsHome"] . "includes";
+
 	$config["host"] = $_SERVER["SERVER_NAME"];
 
 	if (($config["host"]) != "localhost") {
@@ -283,7 +285,7 @@ function setPaths() {
 function loadTheme() {
 	global $config;
 
-	include "includes/themes/" . $config["theme"] . ".php";
+	include $config["includes"] . "/themes/" . $config["theme"] . ".php";
 }
 
 function setEnv() {
