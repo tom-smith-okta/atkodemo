@@ -38,7 +38,13 @@ setEnv();
 
 setPaths();
 
-$config["apiKey"] = trim(file_get_contents($config["apiKeyPath"]));
+if (file_exists($config["apiKeyPath"])) {
+	$config["apiKey"] = trim(file_get_contents($config["apiKeyPath"]));
+}
+else {
+	$config["warnings"][] = "The file " . $config["apiKeyPath"] . " does not exist.";  
+}
+
 
 checkAPIkey();
 
@@ -198,8 +204,6 @@ function checkAPIkey() {
 	if (empty($config["apiKey"])) { $config["warnings"][] = "No API key found."; }
 	else {
 		$apiKey = $config["apiKey"];
-
-		// $apiKey .= "x";
 
 		$curl = curl_init();
 
