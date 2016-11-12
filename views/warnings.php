@@ -4,4 +4,8 @@ include "../includes/includes.php";
 
 echo "<p>warnings:</p>";
 
-echo json_encode($config["warnings"]);
+foreach ($config["warnings"] as $warning) {
+	echo "<p>" . $warning . "</p>";
+}
+
+// echo json_encode($config["warnings"]);
