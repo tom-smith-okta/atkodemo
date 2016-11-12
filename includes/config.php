@@ -211,7 +211,10 @@ function checkAPIkey() {
 
 	global $config;
 
-	if (empty($config["apiKey"])) { $config["warnings"][] = "No API key found."; }
+	if (empty($config["apiKey"])) {
+		$config["warnings"][] = "No API key found.";
+		$config["warnings"][] = "User registration is not possible without an API key.";
+	}
 	else {
 		$apiKey = $config["apiKey"];
 
@@ -233,6 +236,7 @@ function checkAPIkey() {
 		else {
 			$config["apiKeyIsValid"] = FALSE;
 			$config["warnings"][] = $jsonResult;
+			$config["warnings"][] = "User registration is not possible without an API key.";
 		}
 	}
 }
