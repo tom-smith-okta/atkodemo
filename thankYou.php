@@ -32,8 +32,6 @@ $elements = [
 
 $thisPage->addElements($elements);
 
-$thisPage->setConfigValue("regOptions", getRegOptions());
-
 $thisPage->loadBody("thankYou", ["name", "webHome", "logo", "email", "msg", "regOptions"]);
 
 $thisPage->display();

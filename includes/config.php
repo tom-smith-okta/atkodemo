@@ -152,6 +152,16 @@ $config["signout"]["type"] = "javascript";
 $config["signout"]["location"] = "inline";
 $config["signout"]["vars"] = array("apiHome");
 
+$config["regOptions"] = getRegOptions();
+
+// Leave this at the bottom bc this function decides whether to
+// display a warning icon in the UI. This decision is based on
+// whether any warnings have accumulated in the $config["warnings"]
+// object.
+$config["menu"] = getMenu();
+
+
+
 /************** Okta files *********************/
 
 $oktaWidgetBaseURL = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/" . $widgetVer;
@@ -243,6 +253,8 @@ function setPaths() {
 		$config["webHome"] = $config["webHome"] . $config["homeDir"] . "/";
 	}
 
+	$config["fsHome"] = $_SERVER["DOCUMENT_ROOT"] . $config["webHome"];
+
 	$config["host"] = $_SERVER["SERVER_NAME"];
 
 	if (array_key_exists("SERVER_PORT", $_SERVER)) {
@@ -308,5 +320,21 @@ function getRegOptions() {
 		$retVal .= "</a></li>";
 
 	}
+	return $retVal;
+}
+
+function getMenu() {
+	global $config;
+
+	$url = $config["fsHome"] . "html/menu.html";
+
+	$retVal = file_get_contents($url);
+
+	if (!empty($config["warnings"])) {
+		$warnings = file_get_contents($config["fsHome"] . "html/warnings.html");
+
+		$retVal = $warnings . $retVal;
+	}
+
 	return $retVal;
 }

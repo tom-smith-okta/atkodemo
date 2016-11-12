@@ -24,13 +24,12 @@ $elements = [
 	"skel.min",
 	"main",
 	"util",
-	"setMenu"
+	"setMenu",
+	"menu"
 ];
 
 $thisPage->addElements($elements);
 
-$thisPage->setConfigValue("regOptions", getRegOptions());
-
-$thisPage->loadBody("index", ["webHome", "name", "logo", "topImage", "bottomImage", "mainImage", "regOptions"]);
+$thisPage->loadBody("index", ["webHome", "name", "logo", "topImage", "bottomImage", "mainImage", "regOptions", "menu"]);
 
 $thisPage->display();

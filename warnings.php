@@ -1,6 +1,6 @@
 <?php
 
-include "includes/includes.php";
+include "../includes/includes.php";
 
 $thisPage = new htmlPage($config);
 

@@ -28,13 +28,11 @@ $elements = [
 
 $thisPage->addElements($elements);
 
-$thisPage->setConfigValue("regOptions", getRegOptions());
-
 $thisPage->setConfigValue("regDesc", getRegDesc($regType));
 
 $thisPage->setConfigValue("regForm", getRegForm($regType));
 
-$thisPage->loadBody("register", ["name", "webHome", "logo", "regForm", "regDesc", "regOptions"]);
+$thisPage->loadBody("register", ["name", "webHome", "logo", "regForm", "regDesc", "regOptions", "menu"]);
 
 $thisPage->display();
 

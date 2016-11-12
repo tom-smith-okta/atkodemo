@@ -28,8 +28,6 @@ $elements = [
 
 $thisPage->addElements($elements);
 
-$thisPage->setConfigValue("regOptions", getRegOptions());
-
-$thisPage->loadBody("login", ["webHome", "name", "regOptions"]);
+$thisPage->loadBody("login", ["webHome", "name", "regOptions", "menu"]);
 
 $thisPage->display();
