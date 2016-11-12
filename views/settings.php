@@ -1,11 +1,17 @@
 <?php
 
-include "includes/includes.php";
+include "../includes/includes.php";
 
 $thisPage = new htmlPage($config);
 
 // let's not show our api key in the browser.
-$config["apiKey"] = substr($config["apiKey"], 0, 5) . "...";
+
+if ($config["apiKey"]) {
+	$config["apiKey"] = substr($config["apiKey"], 0, 5) . "...";
+}
+else {
+	$config["apiKey"] = "NONE";
+}
 
 foreach ($config as $key => $value) {
 

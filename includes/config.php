@@ -328,14 +328,20 @@ function getRegOptions() {
 function getMenu() {
 	global $config;
 
-	$url = $config["fsHome"] . "html/menu.html";
+	$settings = $config["fsHome"] . "html/settings.html";
 
-	$retVal = file_get_contents($url);
+	$retVal = file_get_contents($settings);
 
 	if (!empty($config["warnings"])) {
-		$warnings = file_get_contents($config["fsHome"] . "html/warnings.html");
+		$warnings = $config["fsHome"] . "html/warnings.html";
 
-		$retVal = $warnings . $retVal;
+		$retVal .= file_get_contents($warnings);
+	}
+
+	if ($config["apiKeyIsValid"]) {
+		$regOptions = $config["fsHome"] . "html/regOptions.html";
+
+		$retVal .= file_get_contents($regOptions);		
 	}
 
 	return $retVal;
