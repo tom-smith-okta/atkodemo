@@ -257,14 +257,14 @@ function setPaths() {
 
 	$config["host"] = $_SERVER["SERVER_NAME"];
 
+	if (($config["host"]) != "localhost") {
+		error_reporting(0); // turn off error reporting for "production" sites
+	}
+
 	if (array_key_exists("SERVER_PORT", $_SERVER)) {
 		if ($_SERVER["SERVER_PORT"] != "80") {
 			$config["host"] .= ":" . $_SERVER["SERVER_PORT"];
 		}
-	}
-
-	if (($config["host"]) != "localhost") {
-		error_reporting(0); // turn off error reporting for "production" sites
 	}
 
 	// Need to add some logic here to accommodate https

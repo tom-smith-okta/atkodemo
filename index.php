@@ -24,8 +24,7 @@ $elements = [
 	"skel.min",
 	"main",
 	"util",
-	"setMenu",
-	"menu"
+	"setMenu"
 ];
 
 $thisPage->addElements($elements);
