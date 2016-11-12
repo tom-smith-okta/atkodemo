@@ -67,7 +67,8 @@
 				menu += "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in (OIDC)</a></li>";				
 			}
 			menu += "<li><a href = 'login.php'>Log in (basic)</a></li>";
-			menu += "<li><a href = '#menu'>Registration options</a></li>";
+			// menu += "<li><a href = '#menu'>Registration options</a></li>";
+			menu += "%regOptionsLink%";
 		}
 
 		$("#authLinks").html(menu);

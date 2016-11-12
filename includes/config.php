@@ -125,6 +125,14 @@ $config["util"]["type"] = "javascript";
 $config["util"]["location"] = "local";
 
 // Okta Widget and session elements
+
+$config["regOptionsLink"] = "";
+
+// Display the "registration options link" only if there is a valid API key
+if ($config["apiKeyIsValid"]) {
+	$config["regOptionsLink"] = "<li><a href = '#menu'>Registration options</a></li>";
+}
+
 $config["renderWidgetBasic"]["type"] = "javascript";
 $config["renderWidgetBasic"]["location"] = "inline";
 $config["renderWidgetBasic"]["vars"] = array("redirectURL");
@@ -146,7 +154,7 @@ $config["loadWidgetOIDC"]["vars"] = array("oktaBaseURL", "logo", "redirectURL", 
 
 $config["setMenu"]["type"] = "javascript";
 $config["setMenu"]["location"] = "inline";
-$config["setMenu"]["vars"] = array("apiHome", "appsWhitelist");
+$config["setMenu"]["vars"] = array("apiHome", "appsWhitelist", "regOptionsLink");
 
 $config["signout"]["type"] = "javascript";
 $config["signout"]["location"] = "inline";
