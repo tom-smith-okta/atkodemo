@@ -90,13 +90,15 @@ class htmlPage {
 
 		$content = file_get_contents($filePath);
 
-		foreach ($this->config[$elementName]["vars"] as $var) {
+		if (is_array($this->config[$elementName]["vars"])) {
+			foreach ($this->config[$elementName]["vars"] as $var) {
 
-			$bullseye = "%" . $var . "%";
-			$arrow = $this->config[$var];
+				$bullseye = "%" . $var . "%";
+				$arrow = $this->config[$var];
 
-			$content = str_replace($bullseye, $arrow, $content);
+				$content = str_replace($bullseye, $arrow, $content);
 
+			}			
 		}
 
 		return $content;
