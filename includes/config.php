@@ -24,7 +24,14 @@ $config; // used as a global associative array to store all settings
 $config["warnings"] = [];
 
 /********** SET THE ENVIRONMENT ******************/
-// First, set the important environment variables
+// First, figure out where the script is running
+// 1) tom's local machine
+// 2) www.atkodemo.com
+// 3) atkodemo docker container
+// 4) unknown
+
+setEnv();
+
 
 // The directory that this repo lives in
 // important for constructing the redirect url
@@ -34,7 +41,6 @@ $config["oktaOrg"] = "atkodemovm";
 
 $config["apiKeyPath"] = "/usr/local/keys/atkodemovm.txt";
 
-setEnv();
 
 setPaths();
 
@@ -44,7 +50,6 @@ if (file_exists($config["apiKeyPath"])) {
 else {
 	$config["warnings"][] = "The file " . $config["apiKeyPath"] . " does not exist.";  
 }
-
 
 checkAPIkey();
 
@@ -162,6 +167,8 @@ $config["signout"]["vars"] = array("apiHome");
 
 $config["regOptions"] = getRegOptions();
 
+$config["serverSettings"] = getServerSettings();
+
 // Leave this at the bottom bc this function decides whether to
 // display a warning icon in the UI. This decision is based on
 // whether any warnings have accumulated in the $config["warnings"]
@@ -192,7 +199,7 @@ $config["oktaWidgetCSStheme"]["url"] = $oktaWidgetBaseURL . "/css/okta-theme.css
 // Okta customizable CSS - local
 $config["oktaWidgetCSSlocal"]["type"] = "css";
 $config["oktaWidgetCSSlocal"]["location"] = "inline";
-$config["oktaWidgetCSSlocal"]["vars"] = array("bgImage"); 
+// $config["oktaWidgetCSSlocal"]["vars"] = array("bgImage"); 
 
 /***************** Design stuff ******************/
 $config["mainCSS"]["type"] = "css";
@@ -214,6 +221,23 @@ $config["regFormType"]["min"] = ["firstName", "lastName", "login", "email"];
 
 $config["regFormType"]["pwd"] = $config["regFormType"]["min"];
 $config["regFormType"]["pwd"][] = "password";
+
+$config["defaultVals"] = [
+	"oktaWidgetCSScore",
+	"oktaWidgetCSStheme",
+	"oktaWidgetCSSlocal",
+	"mainCSS",
+	"font-awesome",
+	"jquery",
+	"okta-signin-widget",
+	"loadWidgetBasic",
+	"checkForSession",
+	"setMenu",
+	"skel.min",
+	"main",
+	"util",
+	"signout"
+];
 
 function checkAPIkey() {
 
@@ -305,14 +329,27 @@ function setEnv() {
 
 	if (file_exists("/usr/local/env/tomlocalhost.txt")) {
 		// on Tom's local machine
+		$config["env"] = "tom";
+		$config["envLong"] = "Tom's local machine";
 		$config["oktaOrg"] = "tomco";
 		$config["apiKeyPath"] = "/usr/local/keys/oktaAPI.txt";
 	}
 	else if (file_exists("/usr/local/env/atkoserver.txt")) {
 		// on the www.atkodemo.com server
+		$config["env"] = "atkodemo";
+		$config["envLong"] = "Public site: www.atkodemo.com";
 		$config["homeDir"] = "";
 		$config["oktaOrg"] = "tomco";
 		$config["apiKeyPath"] = "/usr/local/keys/oktaAPI.txt";
+	}
+	else if (file_exists("/var/www/html/dockerContainer.txt")) {
+		// probably in the atkodemo docker container
+		$config["env"] = "docker";
+		$config["envLong"] = "Atkodemo docker container";
+	}
+	else {
+		$config["env"] = "unknown";
+		$config["envLong"] = "unknown";
 	}
 }
 
@@ -357,4 +394,36 @@ function getMenu() {
 	}
 
 	return $retVal;
+}
+
+function getServerSettings() {
+	global $config;
+
+	$retVal = "";
+
+	$settings = ["oktaOrg", "envLong", "apiKey", "apiKeyIsValid", "clientId"];
+
+	foreach ($settings as $setting) {
+		$retVal .= "<p>" . $setting . ": ";
+
+		if ($setting === "apiKey") {
+			$value = showAPIkey();
+		}
+		else { $value = $config[$setting]; }
+
+		$retVal .= $value . "</p>";
+	}
+
+	return $retVal;
+}
+
+function showAPIkey() {
+	global $config;
+
+	if ($config["apiKey"]) {
+		return substr($config["apiKey"], 0, 5) . "...";
+	}
+	else {
+		return "NONE";
+	}
 }

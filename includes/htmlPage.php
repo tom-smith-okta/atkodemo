@@ -31,12 +31,12 @@ class htmlPage {
 
 		if ($location == "local") {
 			$ext = $this->elements[$type]["ext"]; // either ".js" or ".css"
-			$filePath = $type . "/" . $elementName . $ext;
+			$filePath = $this->config["webHome"] . $type . "/" . $elementName . $ext;
 			$content = str_replace("%PATH%", $filePath, $this->elements[$type]["tag"]);
 		}
 		else if ($location == "inline") {
 			$ext = $this->elements[$type]["ext"]; // either ".js" or ".css"
-			$filePath = $type . "/" . $elementName . $ext;
+			$filePath = $this->config["fsHome"] . $type . "/" . $elementName . $ext;
 			$content = $this->replaceVars($filePath, $elementName);
 		}
 		else { // $location = "remote"
@@ -54,14 +54,13 @@ class htmlPage {
 	}
 
 	function loadBody($name, $vars = []) {
-		$body = file_get_contents("html/template.html");
+		$body = file_get_contents($this->config["fsHome"] . "html/template.html");
 
 		$filePath = "html/" . $name . ".html";
 
-		// $main = file_get_contents(filename)
-		// $body = file_get_contents($filePath);
+		// $main = file_get_contents($filePath);
 
-		$main = file_get_contents($filePath);
+		$main = file_get_contents($this->config["fsHome"] . $filePath);
 
 		$body = str_replace("%main%", $main, $body);
 
