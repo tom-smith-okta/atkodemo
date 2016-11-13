@@ -23,82 +23,51 @@ $config; // used as a global associative array to store all settings
 
 $config["warnings"] = [];
 
-/********** SET THE ENVIRONMENT ******************/
+/********** GET THE ENVIRONMENT ******************/
 // First, figure out where the script is running
 // 1) tom's local machine
 // 2) www.atkodemo.com
 // 3) atkodemo docker container
 // 4) unknown
 
-setEnv();
+// You can create your own site profile in the /sites directory
+// and load it here
 
+// $site = "mysite"; /sites/mysite/
 
-// The directory that this repo lives in
-// important for constructing the redirect url
-$config["homeDir"] = "atkodemo";
+$config["site"] = getLocalEnv();
 
-$config["oktaOrg"] = "atkodemovm";
+$config["siteDesc"] = getSiteDesc($config["site"]);
 
-$config["apiKeyPath"] = "/usr/local/keys/atkodemovm.txt";
+function getSiteDesc($siteName) {
+	global $config;
 
+	
+}
 
-setPaths();
+$config["homeDir"] = getHomeDir($config["site"]);
 
-if (file_exists($config["apiKeyPath"])) {
+setLocalPaths($config["homeDir"]);
+
+loadSite($config["site"]);
+
+setRemotePaths();
+
+lookForAPIkey();
+
+function lookForAPIkey() {
+	global $config;
+
+	if (file_exists($config["apiKeyPath"])) {
 	$config["apiKey"] = trim(file_get_contents($config["apiKeyPath"]));
+	}
+	else {
+		$config["warnings"][] = "The file " . $config["apiKeyPath"] . " does not exist.";  
+	}
 }
-else {
-	$config["warnings"][] = "The file " . $config["apiKeyPath"] . " does not exist.";  
-}
+
 
 checkAPIkey();
-
-/********** SET THE UI THEME *******************/
-
-// change this setting to switch to a different
-// UI theme. 
-$config["theme"] = "default";
-
-loadTheme();
-
-/********* LOAD REG FLOWS AND GROUPS**********************/
-
-if ($config["oktaOrg"] === "tomco" || $config["oktaOrg"] === "atkodemovm") {
-
-	include $config["includes"] . "/regFlows/" . $config["oktaOrg"] . ".php";
-	include $config["includes"] . "/regFlows/" . "regDesc.php";
-
-	// The list of apps that should be displayed in the UI.
-	// This prevents "junk" apps from cluttering up the user's list of apps
-	// The key is the appName from the Okta app Object (via appLinks)
-	// The value is what you want to be displayed in the UI.
-
-	$appsWhitelist["salesforce"] = "Chatter";
-
-}
-
-if ($config["oktaOrg"] === "atkodemovm") {
-
-	// OIDC client ID - from Okta OIDC app
-	$config["clientId"] = "KySezizDE4ScxOlsNLsX";
-
-	// Social IDPs
-	$idps[] = array("type"=>"FACEBOOK", "id"=>"0oassj82zxJdGVjjL1t6");
-	$idps[] = array("type"=>"GOOGLE", "id"=>"0oasss0hkdAGnhCzF1t6");
-}
-else if ($config["oktaOrg"] === "tomco") {
-
-	// OIDC client ID - from Okta OIDC app
-	$config["clientId"] = "YYUAPHIAj3JPPO6yJans";
-
-	// Social IDPs
-	$idps[] = array("type"=>"FACEBOOK", "id"=>"0oa1w1pmezuPUbhoE1t6");	
-	$idps[] = array("type"=>"GOOGLE", "id"=>"0oa1w8n4dlYlOLjPl1t6");
-}
-else {
-	// Add your own values here for social auth
-
-}
 
 if (!empty($idps)) { $config["idps"] = json_encode($idps); }
 
@@ -273,7 +242,42 @@ function checkAPIkey() {
 	}
 }
 
-function setPaths() {
+function getHomeDir($site) {
+	if ($site === "atkodemo") {
+		return "";
+	}
+	else { return "atkodemo"; }
+}
+
+function loadSite($site) {
+
+	global $config;
+
+	$sitePath = $config["fsHome"] . "/sites/" . $site; 
+
+	include $sitePath . "/config.php";
+
+	if (file_exists($sitePath . "/groups.php")) {
+		include $sitePath . "/groups.php";
+	}
+
+	if (file_exists($sitePath . "/theme.php")) {
+		include $sitePath . "/theme.php";
+	}
+	else {
+		include $config["fsHome"] . "/sites/default/theme.php";
+	}
+
+	if (file_exists($sitePath . "/regDesc.php")) {
+		include $sitePath . "regDesc.php";
+	}
+	else {
+		include $config["fsHome"] . "/sites/default/regDesc.php";
+	}
+
+}
+
+function setRemotePaths() {
 	global $config;
 
 	// https://tomco.okta.com
@@ -282,46 +286,25 @@ function setPaths() {
 	// https://tomco.okta.com/api/v1
 	$config["apiHome"] = $config["oktaBaseURL"] . "/api/v1";
 
-	// establishes web home relative to web root
-	// /atkodemo
-	$config["webHome"] = "/";
-	if(!empty($config["homeDir"])) {
-		$config["webHome"] = $config["webHome"] . $config["homeDir"] . "/";
-	}
-
-	$config["fsHome"] = $_SERVER["DOCUMENT_ROOT"] . $config["webHome"];
-
-	$config["includes"] = $config["fsHome"] . "includes";
-
-	$config["host"] = $_SERVER["SERVER_NAME"];
-
-	if (($config["host"]) != "localhost") {
-		error_reporting(0); // turn off error reporting for "production" sites
-	}
-
-	if (array_key_exists("SERVER_PORT", $_SERVER)) {
-		if ($_SERVER["SERVER_PORT"] != "80") {
-			$config["host"] .= ":" . $_SERVER["SERVER_PORT"];
-		}
-	}
-
-	// Need to add some logic here to accommodate https
-	$config["host"] = "http://" . $config["host"];
-
-	$config["webHomeURL"] = $config["host"] . $config["webHome"];
-
-	// Danger Will Robinson
-	// This value needs to match a value in the Redirect URIs list
-	// in your Okta tenant
-
-	$config["redirectURL"] = $config["host"] . $config["webHome"];
-
 }
 
-function loadTheme() {
-	global $config;
-
-	include $config["includes"] . "/themes/" . $config["theme"] . ".php";
+function getLocalEnv() {
+	if (file_exists("/usr/local/env/tomlocalhost.txt")) {
+		// on Tom's local machine
+		return "tom";
+	}
+	else if (file_exists("/usr/local/env/atkoserver.txt")) {
+		// on the www.atkodemo.com server
+		return "atkodemo";
+	}
+	else if (file_exists("/var/www/html/dockerContainer.txt")) {
+		// probably in the atkodemo docker container
+		return "docker";
+	}
+	else {
+		// somewhere in the wild; cool.
+		return "unknown";
+	}
 }
 
 function setEnv() {
@@ -352,6 +335,45 @@ function setEnv() {
 		$config["envLong"] = "unknown";
 	}
 }
+
+function setLocalPaths($homeDir) {
+	global $config;
+
+	// establishes web home relative to web root
+	// /atkodemo
+	$config["webHome"] = "/";
+	if(!empty($homeDir)) {
+		$config["webHome"] = $config["webHome"] . $homeDir . "/";
+	}
+
+	$config["fsHome"] = $_SERVER["DOCUMENT_ROOT"] . $config["webHome"];
+
+	$config["includes"] = $config["fsHome"] . "includes";
+
+	$config["host"] = $_SERVER["SERVER_NAME"];
+
+	if (($config["host"]) != "localhost") {
+		error_reporting(0); // turn off error reporting for "production" sites
+	}
+
+	if (array_key_exists("SERVER_PORT", $_SERVER)) {
+		if ($_SERVER["SERVER_PORT"] != "80") {
+			$config["host"] .= ":" . $_SERVER["SERVER_PORT"];
+		}
+	}
+
+	// Need to add some logic here to accommodate https
+	$config["host"] = "http://" . $config["host"];
+
+	$config["webHomeURL"] = $config["host"] . $config["webHome"];
+
+	// Danger Will Robinson
+	// This value needs to match a value in the Redirect URIs list
+	// in your Okta tenant
+
+	$config["redirectURL"] = $config["host"] . $config["webHome"];
+}
+
 
 function getRegOptions() {
 	global $config;
