@@ -1,0 +1,20 @@
+{
+	"basic": [{
+		"groupID": "00gntdlmx9Favuwhp1t6"
+	}],
+	"sfChatter": [{
+		"groupID": "00goxo1ifVuBg7YKQ1t6"
+	}],
+	"withMFA": [{
+		"groupID": "00gnv1elhvYu03OLh1t6"
+	}],
+	"withEmail": [{
+		"groupID": "00gnv4sf0vkoLWiC21t6"
+	}],
+	"provisional": [{
+		"groupID": "00guad15t26RsGWPK1t6"
+	}],
+	"okta": [{
+		"groupID": "00gnv0lbm756RjxT61t6"
+	}]
+}
