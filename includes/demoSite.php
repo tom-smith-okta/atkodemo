@@ -10,6 +10,26 @@ class demoSite {
 	function getHomeDir() { return $this->homeDir; }
 	function getName() { return $this->name; }
 
+	function getRegOptions() {
+		$retVal = "";
+
+		foreach ($this->regDesc as $regFlowName => $values) {
+
+			$retVal .= "<li>";
+			$retVal .= "<a href = 'register.php?regType=" . $regFlowName . "'>";
+			$retVal .= "<h3>" . $values["title"] . "</h3>";
+
+			if (array_key_exists("shortDesc", $values)) {
+				$retVal .= "<p>" . $values["shortDesc"] . "</p>";
+			}
+
+			$retVal .= "</a></li>";
+
+		}
+		return $retVal;
+
+	}
+
 	function load() {
 
 		$siteToLoad = $this->getSiteToLoad();
@@ -18,9 +38,7 @@ class demoSite {
 
 		$this->configFile = $this->configHome . "/config.php";
 
-		$configFiles = ["config", "groups", "theme", "regDesc"];
-
-		// $configFiles = ["config"];
+		$configFiles = ["mainConfig", "groups", "theme", "regDesc"];
 
 		foreach ($configFiles as $fileName) {
 
@@ -28,7 +46,64 @@ class demoSite {
 
 		}
 
-		// echo json_encode($this->config);
+		$this->setRemotePaths();
+
+		$this->lookForAPIkey();
+
+		$this->apiKeyIsValid = $this->checkAPIkey();
+
+		if (!empty($this->idps)) { $this->idps = json_encode($this->idps); }
+
+		if (!empty($this->appsWhitelist)) { $this->appsWhitelist = json_encode($this->appsWhitelist); }
+	}
+
+	private function checkAPIkey() {
+
+		if (empty($this->apiKey)) {
+			$config["warnings"][] = "No API key found.";
+			$config["warnings"][] = "User registration is not possible without an API key.";
+		}
+		else {
+			$apiKey = $this->apiKey;
+
+			$curl = curl_init();
+
+			$url = $this->apiHome . "/meta/schemas/user/default";
+
+			curl_setopt_array($curl, array(
+				CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
+				CURLOPT_RETURNTRANSFER => TRUE,
+				CURLOPT_URL => $url
+			));
+
+			$jsonResult = curl_exec($curl);
+
+			$assocArray = json_decode($jsonResult, TRUE);
+
+			if ($assocArray["id"]) { return TRUE; }
+			else {
+				$config["apiKeyIsValid"] = FALSE;
+				$config["warnings"][] = $jsonResult;
+				$config["warnings"][] = "User registration is not possible without an API key.";
+			}
+		}
+	}
+
+	private function lookForAPIkey() {
+
+		$apiKeyPath = $this->mainConfig["apiKeyPath"];
+
+		if (file_exists($apiKeyPath)) {
+			$this->apiKey = trim(file_get_contents($apiKeyPath));
+		}
+		else {
+			$this->warnings[] = "The file " . $apiKeyPath . " does not exist.";
+		}
+	}
+
+	private function setRemotePaths() {
+		$this->oktaBaseURL = "https://" . $this->mainConfig["oktaOrg"] . ".okta.com";
+		$this->apiHome = $this->oktaBaseURL . "/api/v1";
 	}
 
 	private function getSiteToLoad() {
@@ -53,15 +128,15 @@ class demoSite {
 	}
 
 	function loadConfigFile($fileName) {
-		$fileName = $fileName . ".json";
+		$fullFileName = $fileName . ".json";
 
-		$filePath = $this->configHome . "/" . $fileName;
+		$filePath = $this->configHome . "/" . $fullFileName;
 
 		if (!file_exists($filePath)) {
-			$filePath = $this->defaultHome . "/" . $fileName;
+			$filePath = $this->defaultHome . "/" . $fullFileName;
 		}
 
-		$json = file_get_contents($filePath);
+		$json = trim(file_get_contents($filePath));
 
 		echo "<p>the file path is: " . $filePath;
 		echo "<p>";
@@ -69,11 +144,22 @@ class demoSite {
 
 		$arr = json_decode($json, TRUE);
 
-		foreach ($arr as $key => $value) {
+		// echo "<p>The assoc array is: " . "<pre>" . var_dump($arr) . "</pre></p>";
 
-			$this->config[$key] = $value;
+		// $arr = json_decode($json);
 
-		}
+		$this->$fileName = $arr;
+
+		// $temp["basic"]["title"] = "basic reg title";
+		// $temp["basic"]["desc"] = "basic description";
+		// $temp["basic"]["shortDesc"] = "basic short desc";
+
+		// $temp["mfa"]["title"] = "mfa reg title";
+		// $temp["mfa"]["desc"] = "mfa description";
+		// $temp["mfa"]["shortDesc"] = "mfa short desc";
+
+		// echo "<p>this is what the json should look like: ";
+		// echo json_encode($temp);
 	}
 
 	function setDesc($siteDesc) {

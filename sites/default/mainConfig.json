@@ -2,12 +2,11 @@
 	"oktaOrg": "atkodemovm",
 	"apiKeyPath": "/usr/local/keys/atkodemovm.txt",
 	"clientId": "KySezizDE4ScxOlsNLsX",
-	"appsWhitelist": [{
+	"appsWhitelist": {
 		"salesforce": "Chatter"
-	}],
-	"idps": [{
-		"FACEBOOK": "0oassj82zxJdGVjjL1t6"
-	}, {
+	},
+	"idps": {
+		"FACEBOOK": "0oassj82zxJdGVjjL1t6",
 		"GOOGLE": "0oasss0hkdAGnhCzF1t6"
-	}]
+	}
 }

@@ -1,42 +1,31 @@
 {
-	"basic": [{
-		"title": "Basic registration flow"
-	}, {
+	"basic": {
+		"title": "Basic registration flow",
 		"desc": "A basic user record will be created in the Okta universal directory. The user will be authenticated immediately."
-	}],
-	"sfChatter": [{
-		"title": "Registration with Salesforce provisioning"
-	}, {
-		"desc": "A user record will be created in the Okta universal directory, and the user will be provisioned to Salesforce Chatter. User will be authenticated immediately."
-	}, {
+	},
+	"sfChatter": {
+		"title": "Registration with Salesforce provisioning",
+		"desc": "A user record will be created in the Okta universal directory, and the user will be provisioned to Salesforce Chatter. User will be authenticated immediately.",
 		"shortDesc": "Provision a Salesforce Chatter user"
-	}],
-	"withMFA": [{
-		"title": "MFA Registration flow"
-	}, {
-		"desc": "A user record will be created in the Okta universal directory. An activation email will be sent to the user. The user must use a 2nd factor when they authenticate."
-	}, {
+	},
+	"withMFA": {
+		"title": "MFA Registration flow",
+		"desc": "A user record will be created in the Okta universal directory. An activation email will be sent to the user. The user must use a 2nd factor when they authenticate.",
 		"shortDesc": "User must enroll in MFA"
-	}],
-	"withEmail": [{
-		"title": "Email verification user flow"
-	}, {
-		"desc": "A user record will be created in the Okta universal directory. The user must verify their email address before they can authenticate."
-	}, {
+	},
+	"withEmail": {
+		"title": "Email verification user flow",
+		"desc": "A user record will be created in the Okta universal directory. The user must verify their email address before they can authenticate.",
 		"shortDesc": "User must verify their email address"
-	}],
-	"provisional": [{
-		"title": "Provisional registration"
-	}, {
-		"desc": "A user will be created in an inactive state in the Okta universal directory. An admin must review the user record and manually activate (invite) the user."
-	}, {
+	},
+	"provisional": {
+		"title": "Provisional registration",
+		"desc": "A user will be created in an inactive state in the Okta universal directory. An admin must review the user record and manually activate (invite) the user.",
 		"shortDesc": "User must be approved by admin"
-	}],
-	"okta": [{
-		"title": "Okta admin registration"
-	}, {
-		"desc": "An Okta employee can register and get admin access (read-only) to the demo tenant. An Okta email address is required. MFA is also enforced for authentication."
-	}, {
+	},
+	"okta": {
+		"title": "Okta admin registration",
+		"desc": "An Okta employee can register and get admin access (read-only) to the demo tenant. An Okta email address is required. MFA is also enforced for authentication.",
 		"shortDesc": "Okta users can register as an admin"
-	}]
+	}
 }

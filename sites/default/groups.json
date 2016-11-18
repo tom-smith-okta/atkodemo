@@ -1,20 +1,20 @@
 {
-	"basic": [{
+	"basic": {
 		"groupID": "00gst60jvcizQe0No1t6"
-	}],
-	"sfChatter": [{
+	},
+	"sfChatter": {
 		"groupID": "00gst7346E06ywPyc1t6"
-	}],
-	"withMFA": [{
+	},
+	"withMFA": {
 		"groupID": "00gst4ezhRw5g3phR1t6"
-	}],
-	"withEmail": [{
+	},
+	"withEmail": {
 		"groupID": "00gst60n94ZTQFRqn1t6"
-	}],
-	"provisional": [{
+	},
+	"provisional": {
 		"groupID": ""
-	}],
-	"okta": [{
+	},
+	"okta": {
 		"groupID": "00gst6j0n6PI0iLle1t6"
-	}]
+	}
 }
