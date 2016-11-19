@@ -1,18 +1,59 @@
 <?php
 
+$homeDir = getHomeDir();
+
+setIncludePaths();
+
+include "includes.php";
+
 $config["warnings"] = [];
 
-$thisSite = new demoSite();
+$siteToLoad = getSite();
 
-/*********** Env Settings ***************/
+echo "<p>the site to load is: " . $siteToLoad;
 
-// set the home directory relative to the web
-// root of the server. Override this only if 
-// you are serving the site from somewhere
-// other than /[webRoot]/atkodemo/
-// default value is "atkodemo"
-$homeDir = "";
-$thisSite->setHomeDir($homeDir);
+$thisSite = new demoSite($siteToLoad, $homeDir);
+
+exit;
+
+
+/********* Function defs *********************/
+
+function getHomeDir() {
+	$dirPathArr = explode("/", dirname(getcwd()));
+	return end($dirPathArr);
+}
+
+function setIncludePaths() {
+
+	$includePath = dirName(getcwd()) . "/includes";
+
+	set_include_path(get_include_path() . PATH_SEPARATOR . $includePath);
+	set_include_path(get_include_path() . PATH_SEPARATOR . $includePath . "/config");
+
+}
+
+function getSite() {
+
+	$json = file_get_contents("sitePaths.json", FILE_USE_INCLUDE_PATH);
+
+	$sitePaths = json_decode($json, TRUE);
+
+	foreach ($sitePaths as $name => $path) {
+		if (file_exists($path)) { return $name; }
+	}
+
+	// Need to put some error-checking here
+	$json = file_get_contents("siteToLoad.json", FILE_USE_INCLUDE_PATH);
+
+	$siteNameArr = json_decode($json, TRUE);
+
+	return $siteNameArr["siteToLoad"];
+
+}
+
+//////////////////////////////////////////
+
 
 $thisSite->setLocalPaths();
 
@@ -228,12 +269,12 @@ function checkAPIkey() {
 	}
 }
 
-function getHomeDir($site) {
-	if ($site === "atkodemo") {
-		return "";
-	}
-	else { return "atkodemo"; }
-}
+// function getHomeDir($site) {
+// 	if ($site === "atkodemo") {
+// 		return "";
+// 	}
+// 	else { return "atkodemo"; }
+// }
 
 function loadSite($site) {
 

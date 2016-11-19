@@ -2,7 +2,12 @@
 
 class demoSite {
 
-	function __construct() {
+	function __construct($siteName, $homeDir) {
+
+		$this->siteName = $siteName;
+		$this->homeDir = $homeDir;
+
+		$this->setLocalPaths();
 
 	}
 
