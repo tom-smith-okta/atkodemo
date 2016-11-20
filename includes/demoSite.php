@@ -20,7 +20,8 @@ class demoSite {
 		$this->checkAPIkey();
 
 		if ($this->apiKeyIsValid()) {
-			$this->getRegFlows();
+			$this->regFlows = $this->getJSON("regFlows.json");
+			$this->groupIDs = $this->getJSON("groupIDs.json");
 		}
 
 	}
@@ -75,6 +76,40 @@ class demoSite {
 
 	}
 
+	// private function getGroupIDs() {
+	// 	if (file_exists())
+	// }
+
+	private function getJSON($fileName) {
+		if (file_exists($this->sitePath . $fileName)) { $dir = $this->sitePath; }
+		else { $dir = $this->defaultPath; }
+
+		return json_decode(file_get_contents($dir . $fileName));
+	}
+
+	function getRegFlows() {
+
+		if (file_exists($this->sitePath . "regFlows.json")) { $dir = $this->sitePath; }
+		else { $dir = $this->defaultPath; }
+
+
+		// foreach ($this->regFlows as $regFlowName => $values) {
+
+		// 	$retVal .= "<li>";
+		// 	$retVal .= "<a href = 'register.php?regType=" . $regFlowName . "'>";
+		// 	$retVal .= "<h3>" . $values["title"] . "</h3>";
+
+		// 	if (array_key_exists("shortDesc", $values)) {
+		// 		$retVal .= "<p>" . $values["shortDesc"] . "</p>";
+		// 	}
+
+		// 	$retVal .= "</a></li>";
+
+		// }
+		// return $retVal;
+
+	}
+
 	private function loadConfigFiles() {
 
 		$this->sitePath = "../sites/" . $this->siteName;
@@ -107,29 +142,6 @@ class demoSite {
 		echo $output;
 	}
 
-	function getRegFlows() {
-
-		if (file_exists($this->sitePath . "regFlows.json")) { $dir = $this->sitePath; }
-		else { $dir = $this->defaultPath; }
-
-		$this->regFlows = json_decode(file_get_contents($dir . "regFlows.json"));
-
-		// foreach ($this->regFlows as $regFlowName => $values) {
-
-		// 	$retVal .= "<li>";
-		// 	$retVal .= "<a href = 'register.php?regType=" . $regFlowName . "'>";
-		// 	$retVal .= "<h3>" . $values["title"] . "</h3>";
-
-		// 	if (array_key_exists("shortDesc", $values)) {
-		// 		$retVal .= "<p>" . $values["shortDesc"] . "</p>";
-		// 	}
-
-		// 	$retVal .= "</a></li>";
-
-		// }
-		// return $retVal;
-
-	}
 
 	function load() {
 

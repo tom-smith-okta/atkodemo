@@ -29,6 +29,9 @@
 	"regFlows": {
 		"required": "FALSE"
 	},
+	"groupIDs": {
+		"required": "FALSE"
+	},
 	"clientId": {
 		"required": "FOR OIDC"
 	},
