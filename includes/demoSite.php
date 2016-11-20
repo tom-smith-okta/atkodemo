@@ -7,8 +7,46 @@ class demoSite {
 		$this->siteName = $siteName;
 		$this->homeDir = $homeDir;
 
-		$this->setLocalPaths();
+		$reqs = file_get_contents("siteSettings.json", FILE_USE_INCLUDE_PATH);
 
+		// echo $reqs;
+
+		$this->reqs = json_decode($reqs, TRUE);
+
+		// echo "<pre>" . print_r($this->reqs) . "</pre>";
+
+		$this->loadConfigFiles();
+
+	}
+
+	private function loadConfigFiles() {
+
+		$this->sitePath = "../sites/" . $this->siteName;
+
+		$this->mainConfig = json_decode(file_get_contents($this->sitePath . "/main.json"));
+
+		foreach ($this->mainConfig as $key => $value) {
+			$this->$key = $value;
+		}
+
+		foreach ($this->reqs as $key => $values) {
+			if ($values["required"] == "TRUE" && empty($this->$key)) {
+				$this->$key = $values["default"];
+			}
+		}
+	}
+
+	public function showSettings() {
+		$output = "";
+
+		foreach ($this->reqs as $key => $values) {
+			$output .= "<p>param: " . $key;
+			$output .= "<p>" . json_encode($values);
+			$output .= "<p>" . $this->$key;
+			$output .= "<hr>";
+		}
+
+		echo $output;
 	}
 
 	// function getDesc() { return $this->desc; }
@@ -190,25 +228,6 @@ class demoSite {
 	function setName($siteName) {
 		if (empty($siteName)) { $this->name = $this->getLocalEnv(); }
 		else { $this->name = $siteName; }
-	}
-
-	private function getLocalEnv() {
-		if (file_exists("/usr/local/env/tomlocalhost.txt")) {
-			// on Tom's local machine
-			return "tom";
-		}
-		else if (file_exists("/usr/local/env/atkoserver.txt")) {
-			// on the www.atkodemo.com server
-			return "atkodemo";
-		}
-		else if (file_exists("/var/www/html/dockerContainer.txt")) {
-			// probably in the atkodemo docker container
-			return "docker";
-		}
-		else {
-			// somewhere in the wild; cool.
-			return "unknown";
-		}
 	}
 
 	function setLocalPaths() {

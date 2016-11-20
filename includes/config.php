@@ -14,6 +14,8 @@ echo "<p>the site to load is: " . $siteToLoad;
 
 $thisSite = new demoSite($siteToLoad, $homeDir);
 
+$thisSite->showSettings();
+
 exit;
 
 
