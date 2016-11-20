@@ -10,8 +10,6 @@ $config["warnings"] = [];
 
 $siteToLoad = getSite();
 
-echo "<p>the site to load is: " . $siteToLoad;
-
 $thisSite = new demoSite($siteToLoad, $homeDir);
 
 $thisSite->showSettings();
@@ -27,12 +25,10 @@ function getHomeDir() {
 }
 
 function setIncludePaths() {
-
 	$includePath = dirName(getcwd()) . "/includes";
 
 	set_include_path(get_include_path() . PATH_SEPARATOR . $includePath);
 	set_include_path(get_include_path() . PATH_SEPARATOR . $includePath . "/config");
-
 }
 
 function getSite() {

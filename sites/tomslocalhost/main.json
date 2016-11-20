@@ -1,12 +1,12 @@
 {
-	"oktaOrg": "atkodemovm",
-	"apiKeyPath": "/usr/local/keys/atkodemovm.txt",
-	"clientId": "KySezizDE4ScxOlsNLsX",
+	"oktaOrg": "tomco",
+	"clientId": "YYUAPHIAj3JPPO6yJans",
+	"apiKeyPath": "/usr/local/keys/oktaAPI.txt",
 	"appsWhitelist": {
 		"salesforce": "Chatter"
 	},
 	"idps": {
-		"FACEBOOK": "0oassj82zxJdGVjjL1t6",
-		"GOOGLE": "0oasss0hkdAGnhCzF1t6"
+		"FACEBOOK": "0oa1w1pmezuPUbhoE1t6",
+		"GOOGLE": "0oa1w8n4dlYlOLjPl1t6"
 	}
 }

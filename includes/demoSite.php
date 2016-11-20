@@ -9,13 +9,63 @@ class demoSite {
 
 		$reqs = file_get_contents("siteSettings.json", FILE_USE_INCLUDE_PATH);
 
-		// echo $reqs;
-
 		$this->reqs = json_decode($reqs, TRUE);
 
-		// echo "<pre>" . print_r($this->reqs) . "</pre>";
-
 		$this->loadConfigFiles();
+
+		$this->setRemotePaths();
+
+		$this->checkAPIkey();
+
+	}
+
+	private function checkAPIkey() {
+
+		if (empty($this->apiKey) && $this->apiKeyPath) {
+			$this->apiKey = $this->getAPIkey();
+		}
+
+		if ($this->apiKey) {
+			$this->apiKeyIsValid = $this->apiKeyIsValid();
+		}
+	}
+
+	private function apiKeyIsValid() {
+
+		$curl = curl_init();
+
+		$url = $this->apiHome . "/meta/schemas/user/default";
+
+		$apiKey = $this->apiKey;
+
+		curl_setopt_array($curl, array(
+			CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
+			CURLOPT_RETURNTRANSFER => TRUE,
+			CURLOPT_URL => $url
+		));
+
+		$jsonResult = curl_exec($curl);
+
+		$assocArray = json_decode($jsonResult, TRUE);
+
+		if ($assocArray["id"]) { return TRUE; }
+		else {
+			$this->warnings[] = $jsonResult;
+			$this->warnings[] = "User registration is not possible without an API key.";
+			return FALSE;
+		}
+	}
+
+	private function getAPIkey() {
+
+		$apiKeyPath = $this->apiKeyPath;
+
+		if (file_exists($apiKeyPath)) {
+			return trim(file_get_contents($apiKeyPath));
+		}
+		else {
+			$this->warnings[] = "The file " . $apiKeyPath . " does not exist.";
+		}
 
 	}
 
@@ -40,18 +90,16 @@ class demoSite {
 		$output = "";
 
 		foreach ($this->reqs as $key => $values) {
-			$output .= "<p>param: " . $key;
+			$output .= "<p><b>" . $key . "</b></p>";
 			$output .= "<p>" . json_encode($values);
-			$output .= "<p>" . $this->$key;
+			$output .= "<p>";
+			if ($this->$key) { $output .= json_encode($this->$key); }
+			else { $output .= "[empty]"; }
 			$output .= "<hr>";
 		}
 
 		echo $output;
 	}
-
-	// function getDesc() { return $this->desc; }
-	function getHomeDir() { return $this->homeDir; }
-	function getName() { return $this->name; }
 
 	function getRegOptions() {
 		$retVal = "";
@@ -100,52 +148,8 @@ class demoSite {
 		if (!empty($this->appsWhitelist)) { $this->appsWhitelist = json_encode($this->appsWhitelist); }
 	}
 
-	private function checkAPIkey() {
-
-		if (empty($this->apiKey)) {
-			$config["warnings"][] = "No API key found.";
-			$config["warnings"][] = "User registration is not possible without an API key.";
-		}
-		else {
-			$apiKey = $this->apiKey;
-
-			$curl = curl_init();
-
-			$url = $this->apiHome . "/meta/schemas/user/default";
-
-			curl_setopt_array($curl, array(
-				CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
-				CURLOPT_RETURNTRANSFER => TRUE,
-				CURLOPT_URL => $url
-			));
-
-			$jsonResult = curl_exec($curl);
-
-			$assocArray = json_decode($jsonResult, TRUE);
-
-			if ($assocArray["id"]) { return TRUE; }
-			else {
-				$config["apiKeyIsValid"] = FALSE;
-				$config["warnings"][] = $jsonResult;
-				$config["warnings"][] = "User registration is not possible without an API key.";
-			}
-		}
-	}
-
-	private function lookForAPIkey() {
-
-		$apiKeyPath = $this->mainConfig["apiKeyPath"];
-
-		if (file_exists($apiKeyPath)) {
-			$this->apiKey = trim(file_get_contents($apiKeyPath));
-		}
-		else {
-			$this->warnings[] = "The file " . $apiKeyPath . " does not exist.";
-		}
-	}
-
 	private function setRemotePaths() {
-		$this->oktaBaseURL = "https://" . $this->mainConfig["oktaOrg"] . ".okta.com";
+		$this->oktaBaseURL = "https://" . $this->oktaOrg . ".okta.com";
 		$this->apiHome = $this->oktaBaseURL . "/api/v1";
 	}
 

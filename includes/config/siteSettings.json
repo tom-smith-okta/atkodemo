@@ -1,20 +1,38 @@
 {
 	"siteName": {
 		"required": "TRUE",
-		"example": "tomslocalhost",
-		"default": "atkodemovm",
 		"desc": "internal label for site"
 	},
 	"homeDir": {
 		"required": "TRUE",
-		"example": "atkodemo",
 		"default": "atkodemo",
 		"desc": "home directory for the repo"
 	},
 	"webHome": {
 		"required": "TRUE",
-		"example": "atkodemo",
 		"default": "atkodemo",
 		"desc": "home directory relative to web home. Usually the same as homeDir."
+	},
+	"oktaOrg": {
+		"required": "TRUE",
+		"desc": "name of okta tenant"
+	},
+	"apiKeyPath": {
+		"required": "FALSE"
+	},
+	"apiKey": {
+		"required": "FOR REGISTRATION"
+	},
+	"apiKeyIsValid": {
+		"required": "FALSE"
+	},
+	"clientId": {
+		"required": "FOR OIDC"
+	},
+	"appsWhitelist": {
+		"required": "FALSE"
+	},
+	"idps": {
+		"required": "FALSE"
 	}
 }
