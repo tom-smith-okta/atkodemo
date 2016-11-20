@@ -13,21 +13,16 @@ class demoSite {
 
 		$this->loadConfigFiles();
 
+		$this->defaultPath = "../sites/default/";
+
 		$this->setRemotePaths();
 
 		$this->checkAPIkey();
 
-	}
-
-	private function checkAPIkey() {
-
-		if (empty($this->apiKey) && $this->apiKeyPath) {
-			$this->apiKey = $this->getAPIkey();
+		if ($this->apiKeyIsValid()) {
+			$this->getRegFlows();
 		}
 
-		if ($this->apiKey) {
-			$this->apiKeyIsValid = $this->apiKeyIsValid();
-		}
 	}
 
 	private function apiKeyIsValid() {
@@ -53,6 +48,17 @@ class demoSite {
 			$this->warnings[] = $jsonResult;
 			$this->warnings[] = "User registration is not possible without an API key.";
 			return FALSE;
+		}
+	}
+
+	private function checkAPIkey() {
+
+		if (empty($this->apiKey) && $this->apiKeyPath) {
+			$this->apiKey = $this->getAPIkey();
+		}
+
+		if ($this->apiKey) {
+			$this->apiKeyIsValid = $this->apiKeyIsValid();
 		}
 	}
 
@@ -101,23 +107,27 @@ class demoSite {
 		echo $output;
 	}
 
-	function getRegOptions() {
-		$retVal = "";
+	function getRegFlows() {
 
-		foreach ($this->regDesc as $regFlowName => $values) {
+		if (file_exists($this->sitePath . "regFlows.json")) { $dir = $this->sitePath; }
+		else { $dir = $this->defaultPath; }
 
-			$retVal .= "<li>";
-			$retVal .= "<a href = 'register.php?regType=" . $regFlowName . "'>";
-			$retVal .= "<h3>" . $values["title"] . "</h3>";
+		$this->regFlows = json_decode(file_get_contents($dir . "regFlows.json"));
 
-			if (array_key_exists("shortDesc", $values)) {
-				$retVal .= "<p>" . $values["shortDesc"] . "</p>";
-			}
+		// foreach ($this->regFlows as $regFlowName => $values) {
 
-			$retVal .= "</a></li>";
+		// 	$retVal .= "<li>";
+		// 	$retVal .= "<a href = 'register.php?regType=" . $regFlowName . "'>";
+		// 	$retVal .= "<h3>" . $values["title"] . "</h3>";
 
-		}
-		return $retVal;
+		// 	if (array_key_exists("shortDesc", $values)) {
+		// 		$retVal .= "<p>" . $values["shortDesc"] . "</p>";
+		// 	}
+
+		// 	$retVal .= "</a></li>";
+
+		// }
+		// return $retVal;
 
 	}
 
