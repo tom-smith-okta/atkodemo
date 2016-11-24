@@ -1,0 +1,326 @@
+<head>
+	<meta charset='utf-8' />
+	<meta name='viewport' content='width=device-width, initial-scale=1' />
+
+	<!-- ******* TITLE OF PAGE ******** -->
+
+	<title>%name% - Home</title>
+
+	<!-- ******* CSS *******************-->		
+	
+	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/%widgetVer%/css/okta-sign-in.min.css'/>
+
+		
+	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/%widgetVer%/css/okta-theme.css'/>
+		
+	<style>
+	  #container {
+	    z-index: 101;
+	    position: absolute;
+	    top: 60px;
+	    left: 20px;
+	  }
+	  
+	  #container #okta-login-container .button {
+	    color: #ffffff;
+	    background-color: #3a3f44;
+	    border-color: #3a3f44;
+	    background-image: -webkit-linear-gradient(#484e55, #3a3f44 60%, #313539);
+	    background-image: -o-linear-gradient(#484e55, #3a3f44 60%, #313539);
+	    background-image: -webkit-gradient(linear, left top, left bottom, from(#484e55), color-stop(60%, #3a3f44), to(#313539));
+	    background-image: linear-gradient(#484e55, #3a3f44 60%, #313539);
+	    background-repeat: no-repeat;
+	    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff484e55', endColorstr='#ff313539', GradientType=0);
+	    -webkit-filter: none;
+	    filter: none;
+	  }
+	</style>
+
+		
+	<link rel = 'stylesheet' href = 'css/mainCSS.css'/>
+
+	<!-- ******* JAVASCRIPT *******************-->		
+	
+	<script src = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
+
+		
+	<script src = 'https://use.fontawesome.com/dc4e4e9270.js'></script>
+
+		
+	<script src = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.7.0/js/okta-sign-in.min.js'></script>
+
+		
+<script>
+
+
+$("#widget").hide();
+
+var oktaSignIn = new OktaSignIn({
+	baseUrl: 'https://tomco.okta.com',
+	logo: 'http://oauth2.atkodemo.com/images/atkodemo/themes/default/logo.png',
+	features: {
+		multiOptionalFactorEnroll: true,
+		smsRecovery: true
+	},
+  
+	// OIDC options
+	clientId: 'YYUAPHIAj3JPPO6yJans',
+	redirectUri: 'http://www.atkodemo.com/',
+
+	authScheme: 'OAUTH2',
+	authParams: {
+		responseType: 'id_token',
+		responseMode: 'okta_post_message',
+		scopes: [
+			'openid',
+			'email',
+			'profile',
+			'address',
+			'phone'
+		]
+	},
+	idpDisplay: 'PRIMARY',
+
+	idps: [{"type":"FACEBOOK","id":"0oa1w1pmezuPUbhoE1t6"},{"type":"GOOGLE","id":"0oa1w8n4dlYlOLjPl1t6"}]
+});
+
+</script>
+
+		
+<script>
+
+// function checkForSession() {
+/************************************/
+// Check for an Okta session
+// and update menu accordingly
+/************************************/
+
+oktaSignIn.session.exists(function (exists) {
+	if (exists) {
+		console.log("there is an active session.");
+		console.log("---------------------------");
+
+		// getting the fname from the server instead of local storage
+		// to accomodate the use-case where a new user registers and
+		// then gets redirected to this page. There's probably a better
+		// way.
+		oktaSignIn.session.get(function (res) {
+  			$.ajax({
+	            type: "GET",
+	            dataType: 'json',
+	            url: "https://tomco.okta.com/api/v1/users/" + res.userId,
+
+	            xhrFields: {
+	                withCredentials: true
+	            },
+	            success: function (data) {
+
+	            	console.dir(data);
+
+	            	console.log("the given_name is: " + data.profile.firstName);
+
+	                localStorage.setItem("given_name", data.profile.firstName);
+
+	                setMenu("authenticated", data.id);
+
+	            },
+	            error: function (textStatus, errorThrown) {
+	                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+	                console.log(errorThrown);
+	            },
+	            async: true
+        	});
+  		});
+	}
+	else {
+		console.log("there is not an active session.");
+		console.log("-------------------------------");
+		setMenu("anon");
+	}
+});
+
+// }
+
+</script>
+
+		
+<script>
+
+function renderWidgetOIDC() {
+
+    $("#oktaWidget").hide();
+
+	oktaSignIn.renderEl(
+		{ el: '#oktaWidget'},
+	  	function (res) {
+
+	  		console.log("the res.status is: " + res.status);
+
+	  		if (res.status == "SUCCESS") {
+
+	  			$("#oktaWidget").hide();
+	  			
+	  			console.log("authentication successful.");
+	  			console.log("user now has an active session.");
+	  			console.log("id_token:" + res.idToken);
+	  			console.log("claims:");
+	  			console.dir(res.claims);
+
+	  			localStorage.setItem("given_name", res.claims.given_name);
+
+	  			setMenu("authenticated", res.claims.sub);
+
+	  		}
+	  		else {
+	  			console.log("the user was not authenticated.");
+	  			console.log("the error is: " + res.status);
+	  		}
+		}
+	);
+}
+
+function showWidget() {
+
+    $("#oktaWidget").show();
+
+    $("#login").attr("onclick", "hideWidget()");
+
+}
+
+function hideWidget() {
+	$("#oktaWidget").hide();
+
+	$("#login").attr("onclick", "showWidget()");
+
+}
+
+window.onload = function() {
+	getDate();
+	renderWidgetOIDC();
+}
+
+</script>
+
+		
+<script>
+
+function signout() {
+
+	console.log("attempting to sign out...");
+
+    $.ajax({
+        type: "DELETE",
+        dataType: 'json',
+        url: "https://tomco.okta.com/api/v1/sessions/me",
+
+        xhrFields: {
+            withCredentials: true
+        },
+        success: function (data) {
+            console.log('success deleting session');
+            sessionStorage.removeItem('sessionToken');
+        },
+        error: function (textStatus, errorThrown) {
+            console.log('error deleting session: ' + JSON.stringify(textStatus));
+            console.log(errorThrown);
+        },
+        async: true
+    });
+
+	setMenu("anon");
+}
+
+</script>
+
+		
+<script src = 'javascript/dates.js'></script>
+
+		
+<script src = 'javascript/skel.min.js'></script>
+
+		
+<script src = 'javascript/main.js'></script>
+
+		
+<script src = 'javascript/util.js'></script>
+
+		
+<script>
+
+	function setMenu(authState, userID) {
+
+		var menu = "";
+
+		if (authState == "authenticated") {
+			menu = "<li><a href = '#' onclick = 'signout()'>Log out</a></li>";
+		
+			$.ajax({
+	            type: "GET",
+	            dataType: 'json',
+	            url: "https://tomco.okta.com/api/v1/users/" + userID + "/appLinks",
+
+	            xhrFields: {
+	                withCredentials: true
+	            },
+	            success: function (data) {
+
+	            	var whitelist = {"salesforce":"Chatter"};
+
+	            	var apps = "";
+
+	            	var appName;
+
+	            	// This could be a lot more efficient
+	            	for (var i = 0, len = data.length; i < len; i++) {
+
+	            		appName = data[i].appName;
+
+	            		console.log("found an app: " + appName);
+
+  						for (var myAppName in whitelist) {
+							if (whitelist.hasOwnProperty(myAppName)) {
+
+    							if (myAppName == appName) {
+    								console.log("found a match between " + myAppName + " and " + appName);
+    								apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + whitelist[myAppName] + "</a></li>";
+    							}
+
+  							}
+						}
+
+					}
+
+					menu += apps;
+
+					$("#authLinks").html(menu);
+ 
+	            },
+	            error: function (textStatus, errorThrown) {
+	                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+	                console.log(errorThrown);
+	            },
+	            async: true
+        	});
+
+			if (localStorage.getItem("given_name")) {
+				menu += "<li><a href='#'>Welcome, " + localStorage.getItem("given_name") + "!</a></li>";
+			}
+
+		}
+		else {
+			if (window.location.href.indexOf("login.php") > 0 || window.location.href.indexOf("register.php") > 0) {
+			}
+			else {
+				menu += "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in (OIDC)</a></li>";				
+			}
+			menu += "<li><a href = 'login.php'>Log in (basic)</a></li>";
+			menu += "<li><a href = '#menu'>Registration options</a></li>";
+		}
+
+		$("#authLinks").html(menu);
+
+	}
+
+</script>
+
+	</head>

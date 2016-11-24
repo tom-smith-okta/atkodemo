@@ -1,0 +1,5 @@
+{
+	"tomsLocalhost": "/usr/local/env/tomlocalhost.txt",
+	"atkodemoWebServer": "/usr/local/env/atkoserver.txt",
+	"dockerContainer": "/var/www/html/dockerContainer.txt"
+}

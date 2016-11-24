@@ -2,26 +2,46 @@
 
 class demoSite {
 
-	function __construct($siteName, $homeDir) {
+	function __construct($homeDir, $host) {
 
-		$this->siteName = $siteName;
 		$this->homeDir = $homeDir;
 
-		$reqs = file_get_contents("siteSettings.json", FILE_USE_INCLUDE_PATH);
+		$this->host = $host;
 
-		$this->reqs = json_decode($reqs, TRUE);
-
-		$this->loadConfigFiles();
+		$this->sitesHome = "../sites/";
 
 		$this->defaultPath = "../sites/default/";
+
+		$this->metaData = file_get_contents("metadata.json", FILE_USE_INCLUDE_PATH);
+
+		$this->metaData = json_decode($this->metaData, TRUE);
+
+		foreach($this->metaData as $key => $value) {
+
+			$this->configFiles[] = $key;
+
+		}
+
+		$this->importantSettings = array_merge($this->configFiles, [ "homeDir", "host", "oktaOrg", "apiKeyPath", "apiKey", "apiKeyIsValid", "clientId", "appsWhitelist", "idps"]);
+
+	}
+
+	function setSite($siteName) {
+		
+		$this->siteName = $siteName;
+
+		$this->sitePath = $this->sitesHome . $this->siteName . "/";
+
+		// $isRequired
+		$this->loadConfigFiles(TRUE);
 
 		$this->setRemotePaths();
 
 		$this->checkAPIkey();
 
 		if ($this->apiKeyIsValid()) {
-			$this->regFlows = $this->getJSON("regFlows.json");
-			$this->groupIDs = $this->getJSON("groupIDs.json");
+			$this->getSettings("regFlows");
+			$this->getSettings("groupIDs");
 		}
 
 	}
@@ -76,67 +96,80 @@ class demoSite {
 
 	}
 
-	// private function getGroupIDs() {
-	// 	if (file_exists())
-	// }
+	private function getFile($configFile) {
 
-	private function getJSON($fileName) {
-		if (file_exists($this->sitePath . $fileName)) { $dir = $this->sitePath; }
-		else { $dir = $this->defaultPath; }
+		$fileName = $configFile . ".json";
 
-		return json_decode(file_get_contents($dir . $fileName));
-	}
+		if (file_exists($this->sitePath . $fileName)) {
+			$dir = $this->sitePath;
+		}
+		else {
 
-	function getRegFlows() {
+			$dir = $this->defaultPath;
+		}
 
-		if (file_exists($this->sitePath . "regFlows.json")) { $dir = $this->sitePath; }
-		else { $dir = $this->defaultPath; }
+		$path = $dir . $fileName;
 
+		$this->$configFile = $path; // save the $path for error-checking purposes
 
-		// foreach ($this->regFlows as $regFlowName => $values) {
+		$settings = json_decode(file_get_contents($path), TRUE);
 
-		// 	$retVal .= "<li>";
-		// 	$retVal .= "<a href = 'register.php?regType=" . $regFlowName . "'>";
-		// 	$retVal .= "<h3>" . $values["title"] . "</h3>";
+		foreach ($settings as $key => $value) {
 
-		// 	if (array_key_exists("shortDesc", $values)) {
-		// 		$retVal .= "<p>" . $values["shortDesc"] . "</p>";
-		// 	}
-
-		// 	$retVal .= "</a></li>";
-
-		// }
-		// return $retVal;
-
-	}
-
-	private function loadConfigFiles() {
-
-		$this->sitePath = "../sites/" . $this->siteName;
-
-		$this->mainConfig = json_decode(file_get_contents($this->sitePath . "/main.json"));
-
-		foreach ($this->mainConfig as $key => $value) {
 			$this->$key = $value;
 		}
 
-		foreach ($this->reqs as $key => $values) {
-			if ($values["required"] == "TRUE" && empty($this->$key)) {
-				$this->$key = $values["default"];
+	}
+
+	// Reads json config files and stores the settings in $this object
+	// If the config file is not in the site directory, then the json
+	// file will be loaded from the default directory.
+	private function getSettings($configFile) {
+
+		if ($this->metaData[$configFile]["required"] == "TRUE") {
+			$this->getFile($configFile);
+		}
+		else {
+			$dependency = $this->metaData[$configFile]["dependency"];
+			if ($this->$dependency) {
+				$this->getFile($configFile);
+			}
+			else {
+				$this->$configFile = "none";
+			}
+		}
+	}
+
+	private function loadConfigFiles($isRequired) {
+
+		foreach ($this->configFiles as $configFile) {
+			if ($this->metaData[$configFile]["required"] == $isRequired) {
+				$this->getSettings($configFile);
 			}
 		}
 	}
 
 	public function showSettings() {
-		$output = "";
+		$output = "<p><b>Settings</b></p>";
 
-		foreach ($this->reqs as $key => $values) {
-			$output .= "<p><b>" . $key . "</b></p>";
-			$output .= "<p>" . json_encode($values);
-			$output .= "<p>";
-			if ($this->$key) { $output .= json_encode($this->$key); }
-			else { $output .= "[empty]"; }
-			$output .= "<hr>";
+		foreach ($this->importantSettings as $key) {
+
+
+			$output .= "<p><b>" . $key . "</b>: ";
+
+			// echo "<p><b>" . $key . "</b>: ";
+
+			// echo print_r($this->$key);
+
+			// echo "<p>object type: " . gettype($this->$key);
+
+			if (is_array($this->$key)) {
+				$output .= json_encode($this->$key);
+			}
+			else {
+				$output .= $this->$key;
+			}
+
 		}
 
 		echo $output;

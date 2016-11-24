@@ -1,0 +1,66 @@
+{
+	"dates": {
+		"type": "javascript",
+		"location": "local"
+	},
+	"mainJS": {
+		"type": "javascript",
+		"location": "local"
+	},
+	"skel.min": {
+		"type": "javascript",
+		"location": "local"
+	},
+	"util": {
+		"type": "javascript",
+		"location": "local"
+	},
+	"renderWidgetBasic": {
+		"type": "javascript",
+		"location": "inline",
+		"vars": [ "redirectURL" ] 
+	},
+	"renderWidgetOIDC": {
+		"type": "javascript",
+		"location": "inline"
+	},
+	"checkForSession": {
+		"type": "javascript",
+		"location": "inline",
+		"vars": [ "apiHome" ]
+	},
+	"loadWidgetBasic": {
+		"type": "javascript",
+		"location": "inline",
+		"vars": ["oktaBaseURL", "logo", "redirectURL"]
+	},
+	"loadWidgetOIDC": {
+		"type": "javascript",
+		"location": "inline",
+		"vars": ["oktaBaseURL", "logo", "redirectURL", "clientId", "idps"]
+	},
+	"setMenu": {
+		"type": "javascript",
+		"location": "inline",
+		"vars": ["apiHome", "appsWhitelist", "regOptionsLink"]
+	},
+	"signout": {
+		"type": "javascript",
+		"location": "inline",
+		"vars": ["apiHome"]
+	},
+	"mainCSS": {
+		"type": "css",
+		"location": "local"
+	},
+	"jquery": {
+		"type": "javascript",
+		"location": "remote",
+		"url": "https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"
+	},
+	"font-awesome": {
+		"type": "javascript",
+		"location": "remote",
+		"url": "https://use.fontawesome.com/dc4e4e9270.js"
+	}
+}

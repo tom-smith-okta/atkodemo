@@ -1,6 +1,7 @@
 {
 	"oktaOrg": "atkodemovm",
 	"apiKeyPath": "/usr/local/keys/atkodemovm.txt",
+	"apiKey": "",
 	"clientId": "KySezizDE4ScxOlsNLsX",
 	"appsWhitelist": {
 		"salesforce": "Chatter"

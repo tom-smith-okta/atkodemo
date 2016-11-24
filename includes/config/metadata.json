@@ -1,0 +1,28 @@
+{
+	"main": {
+		"required": "TRUE",
+		"desc": ""
+	},
+	"theme": {
+		"required": "TRUE",
+		"desc": ""
+	},
+	"oktaSettings": {
+		"required": "TRUE",
+		"desc": ""
+	},
+	"regFlows": {
+		"required": "FALSE",
+		"dependency": "apiKeyIsValid",
+		"desc": ""
+	},
+	"groupIDs": {
+		"required": "FALSE",
+		"dependency": "apiKeyIsValid",
+		"desc": ""
+	},
+	"ui": {
+		"required": "TRUE",
+		"desc": ""
+	} 
+}

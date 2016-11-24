@@ -1,0 +1,19 @@
+{
+	"widgetVer": "1.7.0",
+	"oktaWidgetBaseURL": "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/",
+	"okta-signin-widget": {
+		"type": "javascript",
+		"location": "remote",
+		"url": "/js/okta-sign-in.min.js"
+	},
+	"oktaWidgetCSScore": {
+		"type": "css",
+		"location": "remote",
+		"url": "/css/okta-sign-in.min.css"
+	},
+	"oktaWidgetCSStheme": {
+		"type": "css",
+		"location": "remote",
+		"url": "/css/okta-theme.css"
+	}
+}
