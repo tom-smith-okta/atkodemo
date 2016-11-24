@@ -32,17 +32,18 @@ class demoSite {
 
 		$this->sitePath = $this->sitesHome . $this->siteName . "/";
 
-		// $isRequired
-		$this->loadConfigFiles(TRUE);
+		// load just the essentials first
+		// $isRequired = TRUE
+		$this->loadConfigFiles("TRUE");
 
 		$this->setRemotePaths();
 
 		$this->checkAPIkey();
 
-		if ($this->apiKeyIsValid()) {
-			$this->getSettings("regFlows");
-			$this->getSettings("groupIDs");
-		}
+		// if ($this->apiKeyIsValid()) {
+		// 	$this->getSettings("regFlows");
+		// 	$this->getSettings("groupIDs");
+		// }
 
 	}
 
@@ -131,7 +132,9 @@ class demoSite {
 		}
 		else {
 			$dependency = $this->metaData[$configFile]["dependency"];
-			if ($this->$dependency) {
+
+			echo "<p>the value of apiKeyIsValid is: " . $this->apiKeyIsValid;
+			if ($this->{'$dependency'}) {
 				$this->getFile($configFile);
 			}
 			else {
@@ -143,7 +146,9 @@ class demoSite {
 	private function loadConfigFiles($isRequired) {
 
 		foreach ($this->configFiles as $configFile) {
-			if ($this->metaData[$configFile]["required"] == $isRequired) {
+			if ($this->metaData[$configFile]["required"] === $isRequired) {
+				echo "<p>the value of $isRequired is: " . $isRequired;
+				echo "<p>loading " . $configFile;
 				$this->getSettings($configFile);
 			}
 		}
@@ -154,22 +159,20 @@ class demoSite {
 
 		foreach ($this->importantSettings as $key) {
 
-
 			$output .= "<p><b>" . $key . "</b>: ";
 
-			// echo "<p><b>" . $key . "</b>: ";
+			if (isset($this->$key)) {
 
-			// echo print_r($this->$key);
-
-			// echo "<p>object type: " . gettype($this->$key);
-
-			if (is_array($this->$key)) {
-				$output .= json_encode($this->$key);
+				if (is_array($this->$key)) {
+					$output .= json_encode($this->$key);
+				}
+				else {
+					$output .= $this->$key;
+				}
 			}
 			else {
-				$output .= $this->$key;
+				$output .= "[none]";
 			}
-
 		}
 
 		echo $output;
