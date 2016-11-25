@@ -12,6 +12,12 @@ class demoSite {
 
 		$this->defaultPath = "../sites/default/";
 
+		$this->webHome = "/";
+
+		if(!empty($this->homeDir)) {
+			$this->webHome = $this->webHome . $homeDir . "/";
+		}
+
 		$this->metaData = file_get_contents("metadata.json", FILE_USE_INCLUDE_PATH);
 
 		$this->metaData = json_decode($this->metaData, TRUE);
@@ -26,6 +32,19 @@ class demoSite {
 
 	}
 
+	function loadJSON($varName) {
+		$json = file_get_contents($varName . ".json", FILE_USE_INCLUDE_PATH);
+
+		$arr = json_decode($json, TRUE);
+
+		foreach($arr as $value) {
+			$this->$varName = $arr[$varName];
+
+		}
+
+		echo "<p>the loaded var is: " . json_encode($this->$varName);
+	}
+
 	function setSite($siteName) {
 		
 		$this->siteName = $siteName;
@@ -34,13 +53,39 @@ class demoSite {
 
 		// load just the essentials first
 		// $isRequired = TRUE
-		$this->loadConfigFiles("TRUE");
+		$this->loadConfigFiles(TRUE);
 
 		$this->setRemotePaths();
 
 		$this->checkAPIkey();
 
-		$this->loadConfigFiles("FALSE");
+		$this->loadConfigFiles(FALSE);
+
+		$this->setSiteStatus();
+
+		$this->setMenu();
+
+	}
+
+	private function setMenu() {
+
+		$this->menu = '<li class = "menu"><a class="fa-folder" href="#sites">Sites</a></li>';
+
+	}
+
+	function setSiteStatus() {
+
+		$this->status["authentiation"] = FALSE;
+		$this->status["registration"] = FALSE;
+		$this->status["regWithMFA"] = FALSE;
+		$this->status["OIDC"] = FALSE;
+		$this->status["socialLogin"] = FALSE;
+
+		if ($this->oktaOrg) { $this->status["authentiation"] = TRUE; }
+		if ($this->apiKeyIsValid) { $this->status["registration"] = TRUE; }
+		if ($this->MFAgroupID) { $this->status["regWithMFA"] = TRUE; }
+		if ($this->clientId) { $this->status["OIDC"] = TRUE; }
+		if ($this->status["OIDC"] && $this->idps) { $this->status["socialLogin"] = TRUE; }
 
 	}
 
@@ -114,6 +159,7 @@ class demoSite {
 
 		foreach ($settings as $key => $value) {
 
+			// echo "<p>" . $key . ": " . $value;
 			$this->$key = $value;
 		}
 
@@ -124,7 +170,7 @@ class demoSite {
 	// file will be loaded from the default directory.
 	private function getSettings($configFile) {
 
-		if ($this->metaData[$configFile]["required"] == "TRUE") {
+		if ($this->metaData[$configFile]["required"]) {
 			$this->getFile($configFile);
 		}
 		else {
@@ -146,6 +192,53 @@ class demoSite {
 				$this->getSettings($configFile);
 			}
 		}
+	}
+
+	public function showPage() {
+		$head = file_get_contents("../html/head.html");
+
+		$head = $this->replaceElements($head);
+
+		$body = file_get_contents("../html/body.html");
+
+		$body = $this->replaceElements($body);
+
+		echo "<html>" . $head . $body . "</html>";
+	}
+
+	private function replaceElements($thisString) {
+
+		$delimiter = "%";
+
+		$arr = explode($delimiter, $thisString);
+
+		foreach($arr as $element) {
+			if (substr($element, 0, 2) == "--") {
+				$target = "%" . $element . "%";
+
+				$nameArr = explode("--", $element);
+
+				$name = $nameArr[1];
+
+				$thisString = str_replace($target, $this->$name, $thisString);
+
+			}
+		}
+
+		return $thisString;
+	}
+
+
+	private function insertElements($thisString, $array) {
+
+		foreach ($array as $element) {
+			$target = "%" . $element . "%";
+
+			$thisString = str_replace($target, $this->$element, $thisString);
+		}
+
+		return $thisString;
+
 	}
 
 	public function showSettings() {

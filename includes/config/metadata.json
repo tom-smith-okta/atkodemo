@@ -1,24 +1,24 @@
 {
 	"main": {
-		"required": "TRUE",
+		"required": true,
 		"desc": ""
 	},
 	"theme": {
-		"required": "TRUE",
+		"required": true,
 		"desc": ""
 	},
 	"regFlows": {
-		"required": "FALSE",
+		"required": true,
 		"dependency": "apiKeyIsValid",
 		"desc": ""
 	},
 	"groupIDs": {
-		"required": "FALSE",
+		"required": true,
 		"dependency": "apiKeyIsValid",
 		"desc": ""
 	},
 	"ui": {
-		"required": "TRUE",
+		"required": true,
 		"desc": ""
 	} 
 }

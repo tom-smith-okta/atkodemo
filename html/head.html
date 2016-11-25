@@ -4,13 +4,13 @@
 
 	<!-- ******* TITLE OF PAGE ******** -->
 
-	<title>%name% - Home</title>
+	<title>%--name--% - Home</title>
 
 	<!-- ******* CSS *******************-->		
 	
-	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/%widgetVer%/css/okta-sign-in.min.css'/>
+	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/%--widgetVer--%/css/okta-sign-in.min.css'/>
 
-	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/%widgetVer%/css/okta-theme.css'/>
+	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/%--widgetVer--%/css/okta-theme.css'/>
 		
 	<style>
 	  #container {
@@ -40,9 +40,8 @@
 
 	<!-- ******* JAVASCRIPT *******************-->		
 	
-	<script src = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
+	<script src = '../javascript/jquery/jquery.min.js'></script>
 
-		
 	<script src = 'https://use.fontawesome.com/dc4e4e9270.js'></script>
 
 	<script src = '../javascript/dates.js'></script>
@@ -50,138 +49,108 @@
 	<script src = '../javascript/skel.min.js'></script>
 
 	<script src = '../javascript/main.js'></script>
+
+	<script src = '../javascript/util.js'></script>
 				
-	<script src = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/%widgetVer%/js/okta-sign-in.min.js'></script>
+	<script src = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/%--widgetVer--%/js/okta-sign-in.min.js'></script>
 
 		
-<script>
+	<script>
 
+	// %--oktaSignIn--%
 
-$("#widget").hide();
+	</script>
 
-var oktaSignIn = new OktaSignIn({
-	baseUrl: 'https://tomco.okta.com',
-	logo: 'http://oauth2.atkodemo.com/images/atkodemo/themes/default/logo.png',
-	features: {
-		multiOptionalFactorEnroll: true,
-		smsRecovery: true
-	},
-  
-	// OIDC options
-	clientId: 'YYUAPHIAj3JPPO6yJans',
-	redirectUri: 'http://www.atkodemo.com/',
+		
+	<script>
 
-	authScheme: 'OAUTH2',
-	authParams: {
-		responseType: 'id_token',
-		responseMode: 'okta_post_message',
-		scopes: [
-			'openid',
-			'email',
-			'profile',
-			'address',
-			'phone'
-		]
-	},
-	idpDisplay: 'PRIMARY',
+	// function checkForSession() {
+	/************************************/
+	// Check for an Okta session
+	// and update menu accordingly
+	/************************************/
 
-	idps: [{"type":"FACEBOOK","id":"0oa1w1pmezuPUbhoE1t6"},{"type":"GOOGLE","id":"0oa1w8n4dlYlOLjPl1t6"}]
-});
+	// oktaSignIn.session.exists(function (exists) {
+	// 	if (exists) {
+	// 		console.log("there is an active session.");
+	// 		console.log("---------------------------");
+
+	// 		// getting the fname from the server instead of local storage
+	// 		// to accomodate the use-case where a new user registers and
+	// 		// then gets redirected to this page. There's probably a better
+	// 		// way.
+	// 		oktaSignIn.session.get(function (res) {
+	//   			$.ajax({
+	// 	            type: "GET",
+	// 	            dataType: 'json',
+	// 	            url: "https://%--oktaOrg--%.okta.com/api/v1/users/" + res.userId,
+
+	// 	            xhrFields: {
+	// 	                withCredentials: true
+	// 	            },
+	// 	            success: function (data) {
+
+	// 	            	console.dir(data);
+
+	// 	            	console.log("the given_name is: " + data.profile.firstName);
+
+	// 	                localStorage.setItem("given_name", data.profile.firstName);
+
+	// 	                setMenu("authenticated", data.id);
+
+	// 	            },
+	// 	            error: function (textStatus, errorThrown) {
+	// 	                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+	// 	                console.log(errorThrown);
+	// 	            },
+	// 	            async: true
+	//         	});
+	//   		});
+	// 	}
+	// 	else {
+	// 		console.log("there is not an active session.");
+	// 		console.log("-------------------------------");
+	// 		setMenu("anon");
+	// 	}
+	// });
 
 </script>
 
 		
 <script>
 
-// function checkForSession() {
-/************************************/
-// Check for an Okta session
-// and update menu accordingly
-/************************************/
+// function renderWidgetOIDC() {
 
-oktaSignIn.session.exists(function (exists) {
-	if (exists) {
-		console.log("there is an active session.");
-		console.log("---------------------------");
+//     $("#oktaWidget").hide();
 
-		// getting the fname from the server instead of local storage
-		// to accomodate the use-case where a new user registers and
-		// then gets redirected to this page. There's probably a better
-		// way.
-		oktaSignIn.session.get(function (res) {
-  			$.ajax({
-	            type: "GET",
-	            dataType: 'json',
-	            url: "https://tomco.okta.com/api/v1/users/" + res.userId,
+// 	oktaSignIn.renderEl(
+// 		{ el: '#oktaWidget'},
+// 	  	function (res) {
 
-	            xhrFields: {
-	                withCredentials: true
-	            },
-	            success: function (data) {
+// 	  		console.log("the res.status is: " + res.status);
 
-	            	console.dir(data);
+// 	  		if (res.status == "SUCCESS") {
 
-	            	console.log("the given_name is: " + data.profile.firstName);
-
-	                localStorage.setItem("given_name", data.profile.firstName);
-
-	                setMenu("authenticated", data.id);
-
-	            },
-	            error: function (textStatus, errorThrown) {
-	                console.log('error retrieving session: ' + JSON.stringify(textStatus));
-	                console.log(errorThrown);
-	            },
-	            async: true
-        	});
-  		});
-	}
-	else {
-		console.log("there is not an active session.");
-		console.log("-------------------------------");
-		setMenu("anon");
-	}
-});
-
-// }
-
-</script>
-
-		
-<script>
-
-function renderWidgetOIDC() {
-
-    $("#oktaWidget").hide();
-
-	oktaSignIn.renderEl(
-		{ el: '#oktaWidget'},
-	  	function (res) {
-
-	  		console.log("the res.status is: " + res.status);
-
-	  		if (res.status == "SUCCESS") {
-
-	  			$("#oktaWidget").hide();
+// 	  			$("#oktaWidget").hide();
 	  			
-	  			console.log("authentication successful.");
-	  			console.log("user now has an active session.");
-	  			console.log("id_token:" + res.idToken);
-	  			console.log("claims:");
-	  			console.dir(res.claims);
+// 	  			console.log("authentication successful.");
+// 	  			console.log("user now has an active session.");
+// 	  			console.log("id_token:" + res.idToken);
+// 	  			console.log("claims:");
+// 	  			console.dir(res.claims);
 
-	  			localStorage.setItem("given_name", res.claims.given_name);
+// 	  			localStorage.setItem("given_name", res.claims.given_name);
 
-	  			setMenu("authenticated", res.claims.sub);
+// 	  			setMenu("authenticated", res.claims.sub);
 
-	  		}
-	  		else {
-	  			console.log("the user was not authenticated.");
-	  			console.log("the error is: " + res.status);
-	  		}
-		}
-	);
-}
+// 	  		}
+// 	  		else {
+// 	  			console.log("the user was not authenticated.");
+// 	  			console.log("the error is: " + res.status);
+// 	  		}
+// 		}
+// 	);
+// }
 
 function showWidget() {
 
@@ -200,131 +169,131 @@ function hideWidget() {
 
 window.onload = function() {
 	getDate();
-	renderWidgetOIDC();
+	// renderWidgetOIDC();
 }
 
 </script>
 
 		
-<script>
+	<script>
 
-function signout() {
+	function signout() {
 
-	console.log("attempting to sign out...");
+		console.log("attempting to sign out...");
 
-    $.ajax({
-        type: "DELETE",
-        dataType: 'json',
-        url: "https://tomco.okta.com/api/v1/sessions/me",
+	    $.ajax({
+	        type: "DELETE",
+	        dataType: 'json',
+	        url: "https://%--oktaOrg--%.okta.com/api/v1/sessions/me",
 
-        xhrFields: {
-            withCredentials: true
-        },
-        success: function (data) {
-            console.log('success deleting session');
-            sessionStorage.removeItem('sessionToken');
-        },
-        error: function (textStatus, errorThrown) {
-            console.log('error deleting session: ' + JSON.stringify(textStatus));
-            console.log(errorThrown);
-        },
-        async: true
-    });
+	        xhrFields: {
+	            withCredentials: true
+	        },
+	        success: function (data) {
+	            console.log('success deleting session');
+	            sessionStorage.removeItem('sessionToken');
+	        },
+	        error: function (textStatus, errorThrown) {
+	            console.log('error deleting session: ' + JSON.stringify(textStatus));
+	            console.log(errorThrown);
+	        },
+	        async: true
+	    });
 
-	setMenu("anon");
-}
-
-</script>
-
-		
-<script src = 'javascript/dates.js'></script>
-
-		
-<script src = 'javascript/skel.min.js'></script>
-
-		
-<script src = 'javascript/main.js'></script>
-
-		
-<script src = 'javascript/util.js'></script>
-
-		
-<script>
-
-	function setMenu(authState, userID) {
-
-		var menu = "";
-
-		if (authState == "authenticated") {
-			menu = "<li><a href = '#' onclick = 'signout()'>Log out</a></li>";
-		
-			$.ajax({
-	            type: "GET",
-	            dataType: 'json',
-	            url: "https://tomco.okta.com/api/v1/users/" + userID + "/appLinks",
-
-	            xhrFields: {
-	                withCredentials: true
-	            },
-	            success: function (data) {
-
-	            	var whitelist = {"salesforce":"Chatter"};
-
-	            	var apps = "";
-
-	            	var appName;
-
-	            	// This could be a lot more efficient
-	            	for (var i = 0, len = data.length; i < len; i++) {
-
-	            		appName = data[i].appName;
-
-	            		console.log("found an app: " + appName);
-
-  						for (var myAppName in whitelist) {
-							if (whitelist.hasOwnProperty(myAppName)) {
-
-    							if (myAppName == appName) {
-    								console.log("found a match between " + myAppName + " and " + appName);
-    								apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + whitelist[myAppName] + "</a></li>";
-    							}
-
-  							}
-						}
-
-					}
-
-					menu += apps;
-
-					$("#authLinks").html(menu);
- 
-	            },
-	            error: function (textStatus, errorThrown) {
-	                console.log('error retrieving session: ' + JSON.stringify(textStatus));
-	                console.log(errorThrown);
-	            },
-	            async: true
-        	});
-
-			if (localStorage.getItem("given_name")) {
-				menu += "<li><a href='#'>Welcome, " + localStorage.getItem("given_name") + "!</a></li>";
-			}
-
-		}
-		else {
-			if (window.location.href.indexOf("login.php") > 0 || window.location.href.indexOf("register.php") > 0) {
-			}
-			else {
-				menu += "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in (OIDC)</a></li>";				
-			}
-			menu += "<li><a href = 'login.php'>Log in (basic)</a></li>";
-			menu += "<li><a href = '#menu'>Registration options</a></li>";
-		}
-
-		$("#authLinks").html(menu);
-
+		setMenu("anon");
 	}
 
-</script>
+	</script>
 
-	</head>
+		
+	<script src = '../javascript/dates.js'></script>
+
+			
+	<script src = '../javascript/skel.min.js'></script>
+
+			
+	<script src = '../javascript/main.js'></script>
+
+			
+	<script src = '../javascript/util.js'></script>
+
+		
+	<script>
+
+		function setMenu(authState, userID) {
+
+			var menu = "";
+
+			if (authState == "authenticated") {
+				menu = "<li><a href = '#' onclick = 'signout()'>Log out</a></li>";
+			
+				$.ajax({
+		            type: "GET",
+		            dataType: 'json',
+		            url: "https://--%oktaOrg--%.okta.com/api/v1/users/" + userID + "/appLinks",
+
+		            xhrFields: {
+		                withCredentials: true
+		            },
+		            success: function (data) {
+
+		            	// var whitelist = %--whitelist--%;
+
+		            	var apps = "";
+
+		            	var appName;
+
+		            	// This could be a lot more efficient
+		            	for (var i = 0, len = data.length; i < len; i++) {
+
+		            		appName = data[i].appName;
+
+		            		console.log("found an app: " + appName);
+
+	  						for (var myAppName in whitelist) {
+								if (whitelist.hasOwnProperty(myAppName)) {
+
+	    							if (myAppName == appName) {
+	    								console.log("found a match between " + myAppName + " and " + appName);
+	    								apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + whitelist[myAppName] + "</a></li>";
+	    							}
+
+	  							}
+							}
+
+						}
+
+						menu += apps;
+
+						$("#authLinks").html(menu);
+	 
+		            },
+		            error: function (textStatus, errorThrown) {
+		                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+		                console.log(errorThrown);
+		            },
+		            async: true
+	        	});
+
+				if (localStorage.getItem("given_name")) {
+					menu += "<li><a href='#'>Welcome, " + localStorage.getItem("given_name") + "!</a></li>";
+				}
+
+			}
+			else {
+				if (window.location.href.indexOf("login.php") > 0 || window.location.href.indexOf("register.php") > 0) {
+				}
+				else {
+					menu += "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in (OIDC)</a></li>";				
+				}
+				menu += "<li><a href = 'login.php'>Log in (basic)</a></li>";
+				menu += "<li><a href = '#menu'>Registration options</a></li>";
+			}
+
+			$("#authLinks").html(menu);
+
+		}
+
+	</script>
+
+</head>

@@ -15,20 +15,13 @@ include "includes.php";
 // 4) other 
 $host = getHost();
 
-$thisSite = new demoSite($homeDir, $host);
-
 // Get the name of the site that should be loaded
 // based on $host or the value of /sites/siteToLoad.json
 $siteToLoad = getSite($host);
 
+$thisSite = new demoSite($homeDir, $host);
+
 $thisSite->setSite($siteToLoad);
-
-echo $thisSite->showSettings();
-
-// echo json_encode($thisSite, JSON_PRETTY_PRINT);
-
-exit;
-
 
 /********* Function defs *********************/
 
@@ -80,23 +73,23 @@ function setIncludePaths() {
 $config["regOptionsLink"] = "";
 
 // Display the "registration options link" only if there is a valid API key
-if ($thisSite->apiKeyIsValid) {
-	$config["regOptionsLink"] = "<li><a href = '#menu'>Registration options</a></li>";
-}
+// if ($thisSite->apiKeyIsValid) {
+// 	$config["regOptionsLink"] = "<li><a href = '#menu'>Registration options</a></li>";
+// }
 
 // $config["regOptions"] = getRegOptions();
 
-$a = $thisSite->getRegOptions();
+// $a = $thisSite->getRegOptions();
 
-echo "<p>" . $a;
+// echo "<p>" . $a;
 
-$config["serverSettings"] = getServerSettings();
+// $config["serverSettings"] = getServerSettings();
 
 // Leave this at the bottom bc this function decides whether to
 // display a warning icon in the UI. This decision is based on
 // whether any warnings have accumulated in the $config["warnings"]
 // object.
-$config["menu"] = getMenu();
+// $config["menu"] = getMenu();
 
 /************** Okta files *********************/
 
