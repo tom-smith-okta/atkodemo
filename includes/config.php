@@ -73,27 +73,7 @@ function setIncludePaths() {
 
 // $thisSite->setLocalPaths();
 
-/*********** BEGIN UNDERLYING CONFIGURAION ******************/
-
-// Widget version
-// $widgetVer = "1.7.0";
-
 /************** Custom files *******************/
-
-// A little hack to keep the dates current on the
-// home page articles
-// $config["dates"]["type"] = "javascript";
-// $config["dates"]["location"] = "local";
-
-// // UI elements from HTML5up
-// $config["main"]["type"] = "javascript";
-// $config["main"]["location"] = "local";
-
-// $config["skel.min"]["type"] = "javascript";
-// $config["skel.min"]["location"] = "local";
-
-// $config["util"]["type"] = "javascript";
-// $config["util"]["location"] = "local";
 
 // Okta Widget and session elements
 
@@ -120,43 +100,6 @@ $config["menu"] = getMenu();
 
 /************** Okta files *********************/
 
-// $oktaWidgetBaseURL = "https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/" . $widgetVer;
-
-// // Okta widget
-// $config["okta-signin-widget"]["type"] = "javascript";
-// $config["okta-signin-widget"]["location"] = "remote";
-// $config["okta-signin-widget"]["url"] = $oktaWidgetBaseURL . "/js/okta-sign-in.min.js";
-
-// // Okta core CSS
-// $config["oktaWidgetCSScore"]["type"] = "css";
-// $config["oktaWidgetCSScore"]["location"] = "remote";
-// $config["oktaWidgetCSScore"]["url"] = $oktaWidgetBaseURL . "/css/okta-sign-in.min.css";
-
-// // Okta customizable CSS - remote
-// $config["oktaWidgetCSStheme"]["type"] = "css";
-// $config["oktaWidgetCSStheme"]["location"] = "remote";
-// $config["oktaWidgetCSStheme"]["url"] = $oktaWidgetBaseURL . "/css/okta-theme.css";
-
-// // Okta customizable CSS - local
-// $config["oktaWidgetCSSlocal"]["type"] = "css";
-// $config["oktaWidgetCSSlocal"]["location"] = "inline";
-// $config["oktaWidgetCSSlocal"]["vars"] = array("bgImage"); 
-
-/***************** Design stuff ******************/
-$config["mainCSS"]["type"] = "css";
-$config["mainCSS"]["location"] = "local";
-
-/***************** Utilities *********************/
-
-// jquery
-$config["jquery"]["type"] = "javascript";
-$config["jquery"]["location"] = "remote";
-$config["jquery"]["url"] = "https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js";
-
-$config["font-awesome"]["type"] = "javascript";
-$config["font-awesome"]["location"] = "remote";
-$config["font-awesome"]["url"] = "https://use.fontawesome.com/dc4e4e9270.js";
-
 /*************** Registration forms *************/
 $config["regFormType"]["min"] = ["firstName", "lastName", "login", "email"];
 
@@ -179,75 +122,6 @@ $config["defaultVals"] = [
 	"util",
 	"signout"
 ];
-
-
-// function loadSite($site) {
-
-// 	global $config;
-
-// 	$sitePath = $config["fsHome"] . "/sites/" . $site; 
-
-// 	include $sitePath . "/config.php";
-
-// 	if (file_exists($sitePath . "/groups.php")) {
-// 		include $sitePath . "/groups.php";
-// 	}
-
-// 	if (file_exists($sitePath . "/theme.php")) {
-// 		include $sitePath . "/theme.php";
-// 	}
-// 	else {
-// 		include $config["fsHome"] . "/sites/default/theme.php";
-// 	}
-
-// 	if (file_exists($sitePath . "/regDesc.php")) {
-// 		include $sitePath . "regDesc.php";
-// 	}
-// 	else {
-// 		include $config["fsHome"] . "/sites/default/regDesc.php";
-// 	}
-
-// }
-
-// function setRemotePaths() {
-// 	global $config;
-
-// 	// https://tomco.okta.com
-// 	$config["oktaBaseURL"] = "https://" . $config["oktaOrg"] . ".okta.com";
-
-// 	// https://tomco.okta.com/api/v1
-// 	$config["apiHome"] = $config["oktaBaseURL"] . "/api/v1";
-
-// }
-
-// function setEnv() {
-// 	global $config;
-
-// 	if (file_exists("/usr/local/env/tomlocalhost.txt")) {
-// 		// on Tom's local machine
-// 		$config["env"] = "tom";
-// 		$config["envLong"] = "Tom's local machine";
-// 		$config["oktaOrg"] = "tomco";
-// 		$config["apiKeyPath"] = "/usr/local/keys/oktaAPI.txt";
-// 	}
-// 	else if (file_exists("/usr/local/env/atkoserver.txt")) {
-// 		// on the www.atkodemo.com server
-// 		$config["env"] = "atkodemo";
-// 		$config["envLong"] = "Public site: www.atkodemo.com";
-// 		$config["homeDir"] = "";
-// 		$config["oktaOrg"] = "tomco";
-// 		$config["apiKeyPath"] = "/usr/local/keys/oktaAPI.txt";
-// 	}
-// 	else if (file_exists("/var/www/html/dockerContainer.txt")) {
-// 		// probably in the atkodemo docker container
-// 		$config["env"] = "docker";
-// 		$config["envLong"] = "Atkodemo docker container";
-// 	}
-// 	else {
-// 		$config["env"] = "unknown";
-// 		$config["envLong"] = "unknown";
-// 	}
-// }
 
 // function setLocalPaths($homeDir) {
 // 	global $config;
@@ -331,34 +205,34 @@ function getMenu() {
 	return $retVal;
 }
 
-function getServerSettings() {
-	global $config;
+// function getServerSettings() {
+// 	global $config;
 
-	$retVal = "";
+// 	$retVal = "";
 
-	$settings = ["oktaOrg", "envLong", "apiKey", "apiKeyIsValid", "clientId"];
+// 	$settings = ["oktaOrg", "envLong", "apiKey", "apiKeyIsValid", "clientId"];
 
-	foreach ($settings as $setting) {
-		$retVal .= "<p>" . $setting . ": ";
+// 	foreach ($settings as $setting) {
+// 		$retVal .= "<p>" . $setting . ": ";
 
-		if ($setting === "apiKey") {
-			$value = showAPIkey();
-		}
-		else { $value = $config[$setting]; }
+// 		if ($setting === "apiKey") {
+// 			$value = showAPIkey();
+// 		}
+// 		else { $value = $config[$setting]; }
 
-		$retVal .= $value . "</p>";
-	}
+// 		$retVal .= $value . "</p>";
+// 	}
 
-	return $retVal;
-}
+// 	return $retVal;
+// }
 
-function showAPIkey() {
-	global $config;
+// function showAPIkey() {
+// 	global $config;
 
-	if ($config["apiKey"]) {
-		return substr($config["apiKey"], 0, 5) . "...";
-	}
-	else {
-		return "NONE";
-	}
-}
+// 	if ($config["apiKey"]) {
+// 		return substr($config["apiKey"], 0, 5) . "...";
+// 	}
+// 	else {
+// 		return "NONE";
+// 	}
+// }

@@ -40,10 +40,7 @@ class demoSite {
 
 		$this->checkAPIkey();
 
-		// if ($this->apiKeyIsValid()) {
-		// 	$this->getSettings("regFlows");
-		// 	$this->getSettings("groupIDs");
-		// }
+		$this->loadConfigFiles("FALSE");
 
 	}
 
@@ -133,8 +130,7 @@ class demoSite {
 		else {
 			$dependency = $this->metaData[$configFile]["dependency"];
 
-			echo "<p>the value of apiKeyIsValid is: " . $this->apiKeyIsValid;
-			if ($this->{'$dependency'}) {
+			if ($this->$dependency) {
 				$this->getFile($configFile);
 			}
 			else {
@@ -147,8 +143,6 @@ class demoSite {
 
 		foreach ($this->configFiles as $configFile) {
 			if ($this->metaData[$configFile]["required"] === $isRequired) {
-				echo "<p>the value of $isRequired is: " . $isRequired;
-				echo "<p>loading " . $configFile;
 				$this->getSettings($configFile);
 			}
 		}

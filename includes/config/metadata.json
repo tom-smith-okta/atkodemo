@@ -7,10 +7,6 @@
 		"required": "TRUE",
 		"desc": ""
 	},
-	"oktaSettings": {
-		"required": "TRUE",
-		"desc": ""
-	},
 	"regFlows": {
 		"required": "FALSE",
 		"dependency": "apiKeyIsValid",
