@@ -42,7 +42,7 @@ class demoSite {
 
 		}
 
-		echo "<p>the loaded var is: " . json_encode($this->$varName);
+		// echo "<p>the loaded var is: " . json_encode($this->$varName);
 	}
 
 	function setSite($siteName) {
@@ -59,29 +59,93 @@ class demoSite {
 
 		$this->checkAPIkey();
 
+		// load the optional config files
 		$this->loadConfigFiles(FALSE);
 
 		$this->setSiteStatus();
 
-		$this->setMenu();
+		$this->setOktaWidget();
+
+		$this->setMenus();
 
 	}
 
-	private function setMenu() {
+	private function setOktaWidget() {
+		if ($this->status["OIDC"]) {
 
-		$this->menu = '<li class = "menu"><a class="fa-folder" href="#sites">Sites</a></li>';
+			$this->oktaSignIn = file_get_contents("../javascript/loadWidgetOIDC.js");
+
+			$this->oktaSignIn = $this->replaceElements($this->oktaSignIn);
+
+		}
+	}
+
+	private function setMenus() {
+
+		$this->menu = '<li class = "menu"><a class="fa-info-circle" href="status.php">Sites</a></li>';
+
+		$this->loginAndReg = "";
+
+		if ($this->status["authentication"]) {
+
+			if ($this->status["OIDC"]) {
+
+				$this->loginAndReg .= "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in</a></li>";
+			}
+			else {
+				$this->loginAndReg .= "<li><a href = 'login.php'>Log in</a></li>";
+			}
+		}
+
+		if ($this->status["registration"]) {
+			$this->loginAndReg .= "<li><a href = '#menu'>Registration options</a></li>";
+		}
+
+	}
+
+	private function getHTML($pageName) {
+
+		$html = "";
+
+		if ($pageName === "status") {
+
+			$html .= "<table border = '1'>\n";
+			$html .= "<tr><td>Site</td><td>Okta org</td><td>Auth</td><td>Reg</td><td>reg w/MFA</td><td>OIDC</td><td>Social</td></tr>";
+			$html .= "<tr>";
+			$html .= "<td>" . $this->siteName . "</td>";
+			$html .= "<td>" . $this->oktaOrg . "</td>";
+			$html .= "<td>" . $this->getIcon("authentication") . "</td>";
+			$html .= "<td>" . $this->getIcon("registration") . "</td>";
+			$html .= "<td>" . $this->getIcon("regWithMFA") . "</td>";
+			$html .= "<td>" . $this->getIcon("OIDC") . "</td>";
+			$html .= "<td>" . $this->getIcon("socialLogin") . "</td>";
+			$html .= "</tr>";
+			$html .= "</table>";
+		}
+
+		return $html;
+
+	}
+
+	private function getIcon($param) {
+
+		// if ($this->$param) { return "<a class = 'fa-check-square-o'></a>"; }
+		// else { return "<a class = 'fa-times'></a>"; }
+
+		if ($this->status[$param]) { return "yes"; }
+		else { return "no"; }
 
 	}
 
 	function setSiteStatus() {
 
-		$this->status["authentiation"] = FALSE;
+		$this->status["authentication"] = FALSE;
 		$this->status["registration"] = FALSE;
 		$this->status["regWithMFA"] = FALSE;
 		$this->status["OIDC"] = FALSE;
 		$this->status["socialLogin"] = FALSE;
 
-		if ($this->oktaOrg) { $this->status["authentiation"] = TRUE; }
+		if ($this->oktaOrg) { $this->status["authentication"] = TRUE; }
 		if ($this->apiKeyIsValid) { $this->status["registration"] = TRUE; }
 		if ($this->MFAgroupID) { $this->status["regWithMFA"] = TRUE; }
 		if ($this->clientId) { $this->status["OIDC"] = TRUE; }
@@ -194,10 +258,14 @@ class demoSite {
 		}
 	}
 
-	public function showPage() {
+	public function showPage($pageName) {
 		$head = file_get_contents("../html/head.html");
 
 		$head = $this->replaceElements($head);
+
+		// $this->bodyMain = file_get_contents("../html/" . $pageName . ".html");
+
+		$this->bodyMain = $this->getHTML($pageName);
 
 		$body = file_get_contents("../html/body.html");
 
@@ -296,6 +364,22 @@ class demoSite {
 	private function setRemotePaths() {
 		$this->oktaBaseURL = "https://" . $this->oktaOrg . ".okta.com";
 		$this->apiHome = $this->oktaBaseURL . "/api/v1";
+
+
+// 	// Need to add some logic here to accommodate https
+// 	$config["host"] = "http://" . $config["host"];
+
+// 	$config["webHomeURL"] = $config["host"] . $config["webHome"];
+
+// 	// Danger Will Robinson
+// 	// This value needs to match a value in the Redirect URIs list
+// 	// in your Okta tenant
+
+// 	$config["redirectURL"] = $config["host"] . $config["webHome"];
+// }
+
+		
+		$this->redirectUri = 
 	}
 
 	private function getSiteToLoad() {

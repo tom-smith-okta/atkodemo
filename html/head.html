@@ -54,65 +54,60 @@
 				
 	<script src = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/%--widgetVer--%/js/okta-sign-in.min.js'></script>
 
+	%--oktaSignIn--%
 		
 	<script>
 
-	// %--oktaSignIn--%
-
-	</script>
-
-		
-	<script>
-
-	// function checkForSession() {
+	function checkForSession() {
 	/************************************/
 	// Check for an Okta session
 	// and update menu accordingly
 	/************************************/
 
-	// oktaSignIn.session.exists(function (exists) {
-	// 	if (exists) {
-	// 		console.log("there is an active session.");
-	// 		console.log("---------------------------");
+		oktaSignIn.session.exists(function (exists) {
+			if (exists) {
+				console.log("there is an active session.");
+				console.log("---------------------------");
 
-	// 		// getting the fname from the server instead of local storage
-	// 		// to accomodate the use-case where a new user registers and
-	// 		// then gets redirected to this page. There's probably a better
-	// 		// way.
-	// 		oktaSignIn.session.get(function (res) {
-	//   			$.ajax({
-	// 	            type: "GET",
-	// 	            dataType: 'json',
-	// 	            url: "https://%--oktaOrg--%.okta.com/api/v1/users/" + res.userId,
+				// getting the fname from the server instead of local storage
+				// to accomodate the use-case where a new user registers and
+				// then gets redirected to this page. There's probably a better
+				// way.
+				oktaSignIn.session.get(function (res) {
+		  			$.ajax({
+			            type: "GET",
+			            dataType: 'json',
+			            url: "https://%--oktaOrg--%.okta.com/api/v1/users/" + res.userId,
 
-	// 	            xhrFields: {
-	// 	                withCredentials: true
-	// 	            },
-	// 	            success: function (data) {
+			            xhrFields: {
+			                withCredentials: true
+			            },
+			            success: function (data) {
 
-	// 	            	console.dir(data);
+			            	console.dir(data);
 
-	// 	            	console.log("the given_name is: " + data.profile.firstName);
+			            	console.log("the given_name is: " + data.profile.firstName);
 
-	// 	                localStorage.setItem("given_name", data.profile.firstName);
+			                localStorage.setItem("given_name", data.profile.firstName);
 
-	// 	                setMenu("authenticated", data.id);
+			                setMenu("authenticated", data.id);
 
-	// 	            },
-	// 	            error: function (textStatus, errorThrown) {
-	// 	                console.log('error retrieving session: ' + JSON.stringify(textStatus));
-	// 	                console.log(errorThrown);
-	// 	            },
-	// 	            async: true
-	//         	});
-	//   		});
-	// 	}
-	// 	else {
-	// 		console.log("there is not an active session.");
-	// 		console.log("-------------------------------");
-	// 		setMenu("anon");
-	// 	}
-	// });
+			            },
+			            error: function (textStatus, errorThrown) {
+			                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+			                console.log(errorThrown);
+			            },
+			            async: true
+		        	});
+		  		});
+			}
+			else {
+				console.log("there is not an active session.");
+				console.log("-------------------------------");
+				setMenu("anon");
+			}
+		});
+	}
 
 </script>
 
@@ -220,79 +215,75 @@ window.onload = function() {
 		
 	<script>
 
-		function setMenu(authState, userID) {
+	function setMenu(authState, userID) {
 
-			var menu = "";
+		var menu = "";
 
-			if (authState == "authenticated") {
-				menu = "<li><a href = '#' onclick = 'signout()'>Log out</a></li>";
-			
-				$.ajax({
-		            type: "GET",
-		            dataType: 'json',
-		            url: "https://--%oktaOrg--%.okta.com/api/v1/users/" + userID + "/appLinks",
+		if (authState == "authenticated") {
+			menu = "<li><a href = '#' onclick = 'signout()'>Log out</a></li>";
+		
+			$.ajax({
+	            type: "GET",
+	            dataType: 'json',
+	            url: "https://--%oktaOrg--%.okta.com/api/v1/users/" + userID + "/appLinks",
 
-		            xhrFields: {
-		                withCredentials: true
-		            },
-		            success: function (data) {
+	            xhrFields: {
+	                withCredentials: true
+	            },
+	            success: function (data) {
 
-		            	// var whitelist = %--whitelist--%;
+	            	// var whitelist = %--whitelist--%;
 
-		            	var apps = "";
+	            	var apps = "";
 
-		            	var appName;
+	            	var appName;
 
-		            	// This could be a lot more efficient
-		            	for (var i = 0, len = data.length; i < len; i++) {
+	            	// This could be a lot more efficient
+	            	for (var i = 0, len = data.length; i < len; i++) {
 
-		            		appName = data[i].appName;
+	            		appName = data[i].appName;
 
-		            		console.log("found an app: " + appName);
+	            		console.log("found an app: " + appName);
 
-	  						for (var myAppName in whitelist) {
-								if (whitelist.hasOwnProperty(myAppName)) {
+  						for (var myAppName in whitelist) {
+							if (whitelist.hasOwnProperty(myAppName)) {
 
-	    							if (myAppName == appName) {
-	    								console.log("found a match between " + myAppName + " and " + appName);
-	    								apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + whitelist[myAppName] + "</a></li>";
-	    							}
+    							if (myAppName == appName) {
+    								console.log("found a match between " + myAppName + " and " + appName);
+    								apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + whitelist[myAppName] + "</a></li>";
+    							}
 
-	  							}
-							}
-
+  							}
 						}
 
-						menu += apps;
+					}
 
-						$("#authLinks").html(menu);
-	 
-		            },
-		            error: function (textStatus, errorThrown) {
-		                console.log('error retrieving session: ' + JSON.stringify(textStatus));
-		                console.log(errorThrown);
-		            },
-		            async: true
-	        	});
+					menu += apps;
 
-				if (localStorage.getItem("given_name")) {
-					menu += "<li><a href='#'>Welcome, " + localStorage.getItem("given_name") + "!</a></li>";
-				}
+					$("#authLinks").html(menu);
+ 
+	            },
+	            error: function (textStatus, errorThrown) {
+	                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+	                console.log(errorThrown);
+	            },
+	            async: true
+        	});
 
+			if (localStorage.getItem("given_name")) {
+				menu += "<li><a href='#'>Welcome, " + localStorage.getItem("given_name") + "!</a></li>";
 			}
-			else {
-				if (window.location.href.indexOf("login.php") > 0 || window.location.href.indexOf("register.php") > 0) {
-				}
-				else {
-					menu += "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in (OIDC)</a></li>";				
-				}
-				menu += "<li><a href = 'login.php'>Log in (basic)</a></li>";
-				menu += "<li><a href = '#menu'>Registration options</a></li>";
-			}
-
-			$("#authLinks").html(menu);
 
 		}
+		else {
+
+			menu += "%--loginAndReg--%";
+			
+		}
+
+		$("#authLinks").html(menu);
+
+	}
 
 	</script>
 
