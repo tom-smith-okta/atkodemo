@@ -17,7 +17,7 @@
 	            },
 	            success: function (data) {
 
-	            	var whitelist = %appsWhitelist%;
+	            	var whitelist = %--appsWhitelist--%;
 
 	            	var apps = "";
 

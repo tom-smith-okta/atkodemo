@@ -1,8 +1,5 @@
 <?php
 
-// find the script's parent directory
-$homeDir = getHomeDir();
-
 setIncludePaths();
 
 include "includes.php";
@@ -13,34 +10,37 @@ include "includes.php";
 // 2) the www.atkodemo.com web server
 // 3) a docker container
 // 4) other 
-$host = getHost();
+$env = getEnvironment();
+
+// find the script's parent directory
+$homeDir = getHomeDir();
+
+$thisSite = new demoSite($env, $homeDir);
 
 // Get the name of the site that should be loaded
 // based on $host or the value of /sites/siteToLoad.json
-$siteToLoad = getSite($host);
-
-$thisSite = new demoSite($homeDir, $host);
+$siteToLoad = getSite($env);
 
 $thisSite->setSite($siteToLoad);
 
 /********* Function defs *********************/
 
-// fixes the script's place in the filesystem
-function getHomeDir() {
-	$dirPathArr = explode("/", dirname(getcwd()));
-	return end($dirPathArr);
-}
+function getEnvironment() {
+	$json = file_get_contents("envMarkers.json", FILE_USE_INCLUDE_PATH);
 
-function getHost() {
-	$json = file_get_contents("hostMarkers.json", FILE_USE_INCLUDE_PATH);
+	$envMarkers = json_decode($json, TRUE);
 
-	$hostMarkers = json_decode($json, TRUE);
-
-	foreach ($hostMarkers as $name => $path) {
+	foreach ($envMarkers as $name => $path) {
 		if (file_exists($path)) { return $name; }
 	}
 
 	return "unknown";
+}
+
+// fixes the script's place in the filesystem
+function getHomeDir() {
+	$dirPathArr = explode("/", dirname(getcwd()));
+	return end($dirPathArr);
 }
 
 function getSite($host) {

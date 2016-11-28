@@ -1,17 +1,18 @@
+<html>
 <head>
 	<meta charset='utf-8' />
 	<meta name='viewport' content='width=device-width, initial-scale=1' />
 
 	<!-- ******* TITLE OF PAGE ******** -->
 
-	<title>%--name--% - Home</title>
+	<title>Atko Corp - Home</title>
 
 	<!-- ******* CSS *******************-->
 	
-	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/%--widgetVer--%/css/okta-sign-in.min.css'/>
+	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.7.0/css/okta-sign-in.min.css'/>
 
-	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/%--widgetVer--%/css/okta-theme.css'/>
-
+	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.7.0/css/okta-theme.css'/>
+		
 	<style>
 	  #container {
 	    z-index: 101;
@@ -43,7 +44,7 @@
 
 	<script src = 'https://use.fontawesome.com/dc4e4e9270.js'></script>
 
-	<script src = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/%--widgetVer--%/js/okta-sign-in.min.js'></script>
+	<script src = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.7.0/js/okta-sign-in.min.js'></script>
 
 	<script src = '../javascript/dates.js'></script>
 
@@ -53,13 +54,103 @@
 
 	<script src = '../javascript/util.js'></script>
 				
+
 	<!-- *** Initialize the Okta widget ***** -->
 
-	%--oktaSignIn--%
+	<script>
+
+	$("#widget").hide();
+
+	var oktaSignIn = new OktaSignIn({
+		baseUrl: 'https://tomco.okta.com',
+		logo: 'logo.png',
+		features: {
+			multiOptionalFactorEnroll: true,
+			smsRecovery: true
+		},
+	  
+		// OIDC options
+		clientId: 'YYUAPHIAj3JPPO6yJans',
+		redirectUri: 'http://localhost:8888/atkodemo/views/index.php',
+
+		authScheme: 'OAUTH2',
+		authParams: {
+			responseType: 'id_token',
+			responseMode: 'okta_post_message',
+			scopes: [
+				'openid',
+				'email',
+				'profile',
+				'address',
+				'phone'
+			]
+		},
+
+		idpDisplay: 'PRIMARY',
+		idps: [{"type":"FACEBOOK","id":"0oa1w1pmezuPUbhoE1t6"},{"type":"GOOGLE","id":"0oa1w8n4dlYlOLjPl1t6"}]
+
+	});
+
+	</script>
 
 	<!-- *** Render the Okta widget ***** -->
 
-	%--renderWidget--%
+	<script>
+
+	function renderWidgetOIDC() {
+
+	    $("#oktaWidget").hide();
+
+		oktaSignIn.renderEl(
+			{ el: '#oktaWidget'},
+		  	function (res) {
+
+		  		console.log("the res.status is: " + res.status);
+
+		  		if (res.status == "SUCCESS") {
+
+		  			$("#oktaWidget").hide();
+		  			
+		  			console.log("authentication successful.");
+		  			console.log("user now has an active session.");
+		  			console.log("id_token:" + res.idToken);
+		  			console.log("claims:");
+		  			console.dir(res.claims);
+
+		  			localStorage.setItem("given_name", res.claims.given_name);
+
+		  			setMenu("authenticated", res.claims.sub);
+
+		  		}
+		  		else {
+		  			console.log("the user was not authenticated.");
+		  			console.log("the error is: " + res.status);
+		  		}
+			}
+		);
+	}
+
+	function showWidget() {
+
+	    $("#oktaWidget").show();
+
+	    $("#login").attr("onclick", "hideWidget()");
+
+	}
+
+	function hideWidget() {
+		$("#oktaWidget").hide();
+
+		$("#login").attr("onclick", "showWidget()");
+
+	}
+
+	window.onload = function() {
+		getDate();
+		renderWidgetOIDC();
+	}
+
+	</script>
 		
 	<script>
 
@@ -82,7 +173,7 @@
 	  			$.ajax({
 		            type: "GET",
 		            dataType: 'json',
-		            url: "https://%--oktaOrg--%.okta.com/api/v1/users/" + res.userId,
+		            url: "https://tomco.okta.com/api/v1/users/" + res.userId,
 
 		            xhrFields: {
 		                withCredentials: true
@@ -124,7 +215,7 @@
 	    $.ajax({
 	        type: "DELETE",
 	        dataType: 'json',
-	        url: "https://%--oktaOrg--%.okta.com/api/v1/sessions/me",
+	        url: "https://tomco.okta.com/api/v1/sessions/me",
 
 	        xhrFields: {
 	            withCredentials: true
@@ -170,16 +261,14 @@
 			$.ajax({
 	            type: "GET",
 	            dataType: 'json',
-	            url: "https://%--oktaOrg--%.okta.com/api/v1/users/" + userID + "/appLinks",
+	            url: "https://tomco.okta.com/api/v1/users/" + userID + "/appLinks",
 
 	            xhrFields: {
 	                withCredentials: true
 	            },
 	            success: function (data) {
 
-	            	%--appsJS--%
-
-	            	// var whitelist = %--appsWhitelist--%;
+	            	var whitelist = Array;
 
 	            	var apps = "";
 
@@ -224,7 +313,7 @@
 		}
 		else {
 
-			menu += "%--loginAndReg--%";
+			menu += "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in</a></li><li><a href = '#menu'>Registration options</a></li>";
 			
 		}
 
@@ -234,4 +323,52 @@
 
 	</script>
 
-</head>
+</head><body>
+<!-- Wrapper -->
+<div id="wrapper">
+
+	<!-- Header -->
+
+	<header id="header">
+
+		<h1><a href="/atkodemo/">Atko Corp</a></h1>
+
+		<nav class="links">
+			<ul id = "authLinks"></ul>
+		</nav>
+
+		<nav class="main">
+			<ul>
+ 			<li class = "menu"><a class="fa-info-circle" href="status.php">Sites</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<!-- Menu -->
+	<section id="menu">
+
+		<!-- Links -->
+		<section>
+			<ul class="links">
+				<li>
+					<a href="index.php">
+						<h3>Home</h3>
+					</a>
+				</li>
+				<li>
+					<a href="login.php">
+						<h3>Log in: basic</h3>
+					</a>
+				</li>
+
+				
+
+			</ul>
+		</section>
+
+	</section>
+
+
+	<!-- Main -->
+</body>
+</html>

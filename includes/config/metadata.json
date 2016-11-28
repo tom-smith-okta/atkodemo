@@ -8,17 +8,13 @@
 		"desc": ""
 	},
 	"regFlows": {
-		"required": true,
+		"required": false,
 		"dependency": "apiKeyIsValid",
 		"desc": ""
 	},
 	"groupIDs": {
-		"required": true,
+		"required": false,
 		"dependency": "apiKeyIsValid",
 		"desc": ""
-	},
-	"ui": {
-		"required": true,
-		"desc": ""
-	} 
+	}
 }

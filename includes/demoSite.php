@@ -2,11 +2,11 @@
 
 class demoSite {
 
-	function __construct($homeDir, $host) {
+	function __construct($env, $homeDir) {
+
+		$this->env = $env;
 
 		$this->homeDir = $homeDir;
-
-		$this->host = $host;
 
 		$this->sitesHome = "../sites/";
 
@@ -41,8 +41,6 @@ class demoSite {
 			$this->$varName = $arr[$varName];
 
 		}
-
-		// echo "<p>the loaded var is: " . json_encode($this->$varName);
 	}
 
 	function setSite($siteName) {
@@ -71,13 +69,32 @@ class demoSite {
 	}
 
 	private function setOktaWidget() {
+
+		$this->redirectUri = $this->getRedirectURI();
+
 		if ($this->status["OIDC"]) {
 
 			$this->oktaSignIn = file_get_contents("../javascript/loadWidgetOIDC.js");
 
-			$this->oktaSignIn = $this->replaceElements($this->oktaSignIn);
+			$this->renderWidget = file_get_contents("../javascript/renderWidgetOIDC.js");
 
+			$this->widgetInBody = "<div id = 'container>\n\t\t<div id = 'oktaWidget'></div>\n\t</div>";
+
+			if ($this->status["socialLogin"]) {
+				$this->idpJS = "idpDisplay: 'PRIMARY',\n\t\t";
+				$this->idpJS .= "idps: " . json_encode($this->idps);
+			}
+			else { $this->idpJS = ""; }
 		}
+
+		$this->oktaSignIn = $this->replaceElements($this->oktaSignIn);
+
+	}
+
+	private function getPrefix() {
+		if ($this->isSecure()) { $prefix = "https://"; }
+		else { $prefix = "http://"; }
+		return $prefix;
 	}
 
 	private function setMenus() {
@@ -90,7 +107,8 @@ class demoSite {
 
 			if ($this->status["OIDC"]) {
 
-				$this->loginAndReg .= "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in</a></li>";
+				$this->loginAndReg .= "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in (OIDC)</a></li>";
+
 			}
 			else {
 				$this->loginAndReg .= "<li><a href = 'login.php'>Log in</a></li>";
@@ -123,6 +141,23 @@ class demoSite {
 			$html .= "</table>";
 		}
 
+		else if ($pageName === "allSettings") {
+
+			foreach ($this as $key => $value) {
+
+				// if ($key["isHTML"] || $key["isJS"]) {}
+				if ($key == "oktaSignIn" || $key == "renderWidget" || $key == "menu" || $key == "loginAndReg" || $key == "widgetInBody") {}
+				else {
+					$html .= "<p><b>" . $key . "</b>: ";
+
+					if (is_array($this->$key)) {
+						$html .= json_encode($this->$key);
+					}
+					else { $html .= $this->$key; }					
+				}
+			}
+		}
+
 		return $html;
 
 	}
@@ -143,6 +178,9 @@ class demoSite {
 		$this->status["registration"] = FALSE;
 		$this->status["regWithMFA"] = FALSE;
 		$this->status["OIDC"] = FALSE;
+
+		// if ($this->status["OIDC"]) { echo "<p>the status is False but true."; }
+		// 	else { echo "<p>the status is correctlry false."; }
 		$this->status["socialLogin"] = FALSE;
 
 		if ($this->oktaOrg) { $this->status["authentication"] = TRUE; }
@@ -267,11 +305,13 @@ class demoSite {
 
 		$this->bodyMain = $this->getHTML($pageName);
 
+		// $this->bodyMain["isHTML"] = TRUE;
+
 		$body = file_get_contents("../html/body.html");
 
 		$body = $this->replaceElements($body);
 
-		echo "<html>" . $head . $body . "</html>";
+		echo "<!DOCTYPE HTML>\n<html>\n" . $head . $body . "\n</html>";
 	}
 
 	private function replaceElements($thisString) {
@@ -288,6 +328,8 @@ class demoSite {
 
 				$name = $nameArr[1];
 
+				// echo "<p>the element is: " . $element;
+				// echo "<p>the name is: " . $name;
 				$thisString = str_replace($target, $this->$name, $thisString);
 
 			}
@@ -358,7 +400,14 @@ class demoSite {
 
 		if (!empty($this->idps)) { $this->idps = json_encode($this->idps); }
 
-		if (!empty($this->appsWhitelist)) { $this->appsWhitelist = json_encode($this->appsWhitelist); }
+		if (!empty($this->appsWhitelist)) {
+
+			$this->appsWhitelist = json_encode($this->appsWhitelist);
+
+	            	// var whitelist = %--appsWhitelist--%;
+
+
+			$this->appsJS = "var whitelist = " . $this->appsWhitelist . ";"; }
 	}
 
 	private function setRemotePaths() {
@@ -379,7 +428,13 @@ class demoSite {
 // }
 
 		
-		$this->redirectUri = 
+		// $this->redirectUri = 
+	}
+
+	private function isSecure() {
+		return
+		    (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+		    || $_SERVER['SERVER_PORT'] == 443;		
 	}
 
 	private function getSiteToLoad() {
@@ -494,26 +549,23 @@ class demoSite {
 		$this->defaultHome = $this->sitesHome . "default";
 	}
 
-	private function getWebHomeURL() {
+	private function getRedirectURI() {
 
 		// http or https
 		if ($this->isSecure()) { $protocol = "https"; }
 		else { $protocol = "http"; }
 
-		$webHomeURL = $protocol . "://" . $_SERVER["SERVER_NAME"];
+		$redirectURI = $protocol . "://" . $_SERVER["SERVER_NAME"];
 
 		// add the port to the hostname if appropriate
 		if (array_key_exists("SERVER_PORT", $_SERVER)) {
 			if ($_SERVER["SERVER_PORT"] == "80") {}
-			else { $webHomeURL .= ":" . $_SERVER["SERVER_PORT"]; }
+			else { $redirectURI .= ":" . $_SERVER["SERVER_PORT"]; }
 		}
 
-		return $webHomeURL;
+		$redirectURI .= $this->webHome . "views/index.php";
+
+		return $redirectURI;
 
 	}
-
-	private function isSecure() {
-		return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
-	}
-
 }
