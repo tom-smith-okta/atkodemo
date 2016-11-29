@@ -1,10 +1,7 @@
 {
-	"_comment": "if you leave the imageDir value empty you must supply absolute URLs",
-	"_comment": "if you supply a value for imagedDir it will be prefixed to all image names",
 	"name": "Atko Corp", 
-	"imageDir": "http://oauth2.atkodemo.com/images/atkodemo/themes/default/",
-	"logo": "logo.png",
-	"mainImage": "picnic.jpeg",
-	"topImage": "yosemite.jpeg",
-	"bottomImage": "yellowstone.jpeg"
+	"logo": "http://oauth2.atkodemo.com/images/atkodemo/themes/default/logo.png",
+	"mainImage": "http://oauth2.atkodemo.com/images/atkodemo/themes/default/picnic.jpeg",
+	"topImage": "http://oauth2.atkodemo.com/images/atkodemo/themes/default/yosemite.jpeg",
+	"bottomImage": "http://oauth2.atkodemo.com/images/atkodemo/themes/default/yellowstone.jpeg"
 }

@@ -328,8 +328,6 @@ class demoSite {
 
 				$name = $nameArr[1];
 
-				// echo "<p>the element is: " . $element;
-				// echo "<p>the name is: " . $name;
 				$thisString = str_replace($target, $this->$name, $thisString);
 
 			}
