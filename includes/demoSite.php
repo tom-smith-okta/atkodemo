@@ -60,6 +60,12 @@ class demoSite {
 		// load the optional config files
 		$this->loadConfigFiles(FALSE);
 
+		if (!empty($this->appsWhitelist)) {
+
+			$this->appsWhitelist = json_encode($this->appsWhitelist);
+
+		}
+
 		$this->setSiteStatus();
 
 		$this->setOktaWidget();
@@ -178,9 +184,6 @@ class demoSite {
 		$this->status["registration"] = FALSE;
 		$this->status["regWithMFA"] = FALSE;
 		$this->status["OIDC"] = FALSE;
-
-		// if ($this->status["OIDC"]) { echo "<p>the status is False but true."; }
-		// 	else { echo "<p>the status is correctlry false."; }
 		$this->status["socialLogin"] = FALSE;
 
 		if ($this->oktaOrg) { $this->status["authentication"] = TRUE; }
@@ -261,7 +264,6 @@ class demoSite {
 
 		foreach ($settings as $key => $value) {
 
-			// echo "<p>" . $key . ": " . $value;
 			$this->$key = $value;
 		}
 
@@ -398,14 +400,9 @@ class demoSite {
 
 		if (!empty($this->idps)) { $this->idps = json_encode($this->idps); }
 
-		if (!empty($this->appsWhitelist)) {
-
-			$this->appsWhitelist = json_encode($this->appsWhitelist);
-
-	            	// var whitelist = %--appsWhitelist--%;
+		echo "<p>HELLO";
 
 
-			$this->appsJS = "var whitelist = " . $this->appsWhitelist . ";"; }
 	}
 
 	private function setRemotePaths() {
