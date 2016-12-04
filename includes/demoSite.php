@@ -28,9 +28,30 @@ class demoSite {
 
 		}
 
+		$this->capabilities = ["authentication", "registration", "regWithMFA", "OIDC", "socialLogin", "appsWhitelist", "regWithMFA", "appProvisioning"];
+
 		$this->importantSettings = array_merge($this->configFiles, [ "homeDir", "host", "oktaOrg", "apiKeyPath", "apiKey", "apiKeyIsValid", "clientId", "appsWhitelist", "idps"]);
 
 	}
+
+	private function getRegOptions() {
+
+		foreach ($config["regFlow"] as $regFlowName => $values) {
+
+			$retVal .= "<li>";
+			$retVal .= "<a href = 'register.php?regType=" . $regFlowName . "'>";
+			$retVal .= "<h3>" . $values["title"] . "</h3>";
+
+			if (array_key_exists("shortDesc", $values)) {
+				$retVal .= "<p>" . $values["shortDesc"] . "</p>";
+			}
+
+			$retVal .= "</a></li>";
+
+		}
+		return $retVal;
+	}
+
 
 	function loadJSON($varName) {
 		$json = file_get_contents($varName . ".json", FILE_USE_INCLUDE_PATH);
@@ -71,9 +92,9 @@ class demoSite {
 			// do something else
 		}
 
-
-
 		$this->setOktaWidget();
+
+		$this->setRegOptions();
 
 		$this->setMenus();
 
@@ -100,6 +121,31 @@ class demoSite {
 
 		$this->oktaSignIn = $this->replaceElements($this->oktaSignIn);
 
+	}
+
+	private function setRegOptions() {
+
+		$this->regOptions = "";
+
+		if ($this->status["registration"] === TRUE) {
+
+			$retVal = "";
+
+			foreach ($this->regFlows as $key => $values) {
+
+				$retVal .= "<li>";
+				$retVal .= "<a href = 'register.php?regType=" . $values["title"] . "'>";
+				$retVal .= "<h3>" . $values["title"] . "</h3>";
+
+				if (array_key_exists("shortDesc", $values)) {
+					$retVal .= "<p>" . $values["shortDesc"] . "</p>";
+				}
+
+				$retVal .= "</a></li>";
+
+			}
+			$this->regOptions = $retVal;
+		}
 	}
 
 	private function getPrefix() {
@@ -185,17 +231,23 @@ class demoSite {
 
 	function setSiteStatus() {
 
-		$this->status["authentication"] = FALSE;
-		$this->status["registration"] = FALSE;
-		$this->status["regWithMFA"] = FALSE;
-		$this->status["OIDC"] = FALSE;
-		$this->status["socialLogin"] = FALSE;
-		$this->status["appsWhitelist"] = FALSE;
+		foreach ($this->capabilities as $capability) {
+			$this->status[$capability] = FALSE;
+		}
 
 		if ($this->oktaOrg) { $this->status["authentication"] = TRUE; }
-		if ($this->apiKeyIsValid) { $this->status["registration"] = TRUE; }
 
-		if (isset($this->withMFA)) { $this->status["regWithMFA"] = TRUE; }
+		if ($this->apiKeyIsValid) {
+			$this->status["registration"] = TRUE;
+
+			if (isset($this->regFlows["withMFA"]["groupID"])) { 
+				$this->status["regWithMFA"] = TRUE;
+			}
+			if (isset($this->regFlows["appProvisioning"]["groupID"])) {
+				$this->status["appProvisioning"] = TRUE;
+			}
+
+		}
 
 		if ($this->clientId) { $this->status["OIDC"] = TRUE; }
 		if ($this->status["OIDC"] && $this->idps) { $this->status["socialLogin"] = TRUE; }
@@ -313,11 +365,7 @@ class demoSite {
 
 		$head = $this->replaceElements($head);
 
-		// $this->bodyMain = file_get_contents("../html/" . $pageName . ".html");
-
 		$this->bodyMain = $this->getHTML($pageName);
-
-		// $this->bodyMain["isHTML"] = TRUE;
 
 		$body = file_get_contents("../html/body.html");
 

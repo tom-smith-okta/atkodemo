@@ -11,10 +11,5 @@
 		"required": false,
 		"dependency": "apiKeyIsValid",
 		"desc": ""
-	},
-	"groupIDs": {
-		"required": false,
-		"dependency": "apiKeyIsValid",
-		"desc": ""
 	}
 }
