@@ -60,13 +60,18 @@ class demoSite {
 		// load the optional config files
 		$this->loadConfigFiles(FALSE);
 
-		if (!empty($this->appsWhitelist)) {
+		// check to see which capabilities are ready
+		// and which are not
+		$this->setSiteStatus();
 
+		if ($this->status["appsWhitelist"]) {
 			$this->appsWhitelist = json_encode($this->appsWhitelist);
-
+		}
+		else {
+			// do something else
 		}
 
-		$this->setSiteStatus();
+
 
 		$this->setOktaWidget();
 
@@ -185,12 +190,17 @@ class demoSite {
 		$this->status["regWithMFA"] = FALSE;
 		$this->status["OIDC"] = FALSE;
 		$this->status["socialLogin"] = FALSE;
+		$this->status["appsWhitelist"] = FALSE;
 
 		if ($this->oktaOrg) { $this->status["authentication"] = TRUE; }
 		if ($this->apiKeyIsValid) { $this->status["registration"] = TRUE; }
-		if ($this->MFAgroupID) { $this->status["regWithMFA"] = TRUE; }
+
+		if (isset($this->withMFA)) { $this->status["regWithMFA"] = TRUE; }
+
 		if ($this->clientId) { $this->status["OIDC"] = TRUE; }
 		if ($this->status["OIDC"] && $this->idps) { $this->status["socialLogin"] = TRUE; }
+
+		if (!empty($this->appsWhitelist)) { $this->status["appsWhitelist"] = TRUE; }
 
 	}
 
