@@ -52,7 +52,6 @@ class demoSite {
 		return $retVal;
 	}
 
-
 	function loadJSON($varName) {
 		$json = file_get_contents($varName . ".json", FILE_USE_INCLUDE_PATH);
 
@@ -218,7 +217,12 @@ class demoSite {
 		else {
 
 			$filePath = "../html/" . $pageName . ".html";
-			return file_get_contents($filePath);
+
+			$html = file_get_contents($filePath);
+
+			$html = $this->replaceElements($html);
+
+			// return $html;
 		}
 
 		return $html;
@@ -381,6 +385,8 @@ class demoSite {
 	}
 
 	private function replaceElements($thisString) {
+		/* Looks for all %--elements--% in the input string and replaces
+		them with $this->element */
 
 		$delimiter = "%";
 
