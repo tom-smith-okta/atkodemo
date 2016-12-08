@@ -183,16 +183,18 @@ class demoSite {
 
 		if ($pageName === "status") {
 
+			$html .= "<h1>Site status</h1>";
 			$html .= "<table border = '1'>\n";
-			$html .= "<tr><td>Site</td><td>Okta org</td><td>Auth</td><td>Reg</td><td>reg w/MFA</td><td>OIDC</td><td>Social</td></tr>";
+			$html .= "<tr><td>Site</td><td>env</td><td>Okta org</td><td align = 'center'>AuthN</td><td align = 'center'>Reg</td><td align = 'center'>reg w/MFA</td><td align = 'center'>OIDC</td><td align = 'center'>Social</td></tr>";
 			$html .= "<tr>";
 			$html .= "<td>" . $this->siteName . "</td>";
+			$html .= "<td>" . $this->env . "</td>";
 			$html .= "<td>" . $this->oktaOrg . "</td>";
-			$html .= "<td>" . $this->getIcon("authentication") . "</td>";
-			$html .= "<td>" . $this->getIcon("registration") . "</td>";
-			$html .= "<td>" . $this->getIcon("regWithMFA") . "</td>";
-			$html .= "<td>" . $this->getIcon("OIDC") . "</td>";
-			$html .= "<td>" . $this->getIcon("socialLogin") . "</td>";
+			$html .= "<td align = 'center'>" . $this->getIcon("authentication") . "</td>";
+			$html .= "<td align = 'center'>" . $this->getIcon("registration") . "</td>";
+			$html .= "<td align = 'center'>" . $this->getIcon("regWithMFA") . "</td>";
+			$html .= "<td align = 'center'>" . $this->getIcon("OIDC") . "</td>";
+			$html .= "<td align = 'center'>" . $this->getIcon("socialLogin") . "</td>";
 			$html .= "</tr>";
 			$html .= "</table>";
 		}
@@ -201,7 +203,7 @@ class demoSite {
 
 			foreach ($this as $key => $value) {
 
-				// if ($key["isHTML"] || $key["isJS"]) {}
+				// Need to clean this up
 				if ($key == "oktaSignIn" || $key == "renderWidget" || $key == "menu" || $key == "loginAndReg" || $key == "widgetInBody") {}
 				else {
 					$html .= "<p><b>" . $key . "</b>: ";
@@ -222,7 +224,6 @@ class demoSite {
 
 			$html = $this->replaceElements($html);
 
-			// return $html;
 		}
 
 		return $html;
@@ -231,12 +232,8 @@ class demoSite {
 
 	private function getIcon($param) {
 
-		// if ($this->$param) { return "<a class = 'fa-check-square-o'></a>"; }
-		// else { return "<a class = 'fa-times'></a>"; }
-
-		if ($this->status[$param]) { return "yes"; }
-		else { return "no"; }
-
+		if ($this->status[$param]) { return "<i class='fa fa-check' aria-hidden='true' style='color:LimeGreen'></i>"; }
+		else { return "<i class='fa fa-close' aria-hidden='true' style='color:Red'></i>"; }
 	}
 
 	function setSiteStatus() {
