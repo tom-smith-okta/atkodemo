@@ -155,7 +155,9 @@ class demoSite {
 
 	private function setMenus() {
 
-		$this->menu = '<li class = "menu"><a class="fa-info-circle" href="status.php">Sites</a></li>';
+		$this->menu = '<li class = "menu"><a class="fa-server" href="status.php">Site Status</a></li>';
+
+		$this->menu .= '<li class = "menu"><a class="fa-info-circle" href="allSettings.php">Settings</a></li>';
 
 		$this->loginAndReg = "";
 
@@ -204,14 +206,22 @@ class demoSite {
 			foreach ($this as $key => $value) {
 
 				// Need to clean this up
+				// these values are HTML and they bork up the display page
 				if ($key == "oktaSignIn" || $key == "renderWidget" || $key == "menu" || $key == "loginAndReg" || $key == "widgetInBody") {}
 				else {
 					$html .= "<p><b>" . $key . "</b>: ";
 
-					if (is_array($this->$key)) {
-						$html .= json_encode($this->$key);
+					if ($key === "apiKey") {
+						$html .= $this->showAPIkey();
 					}
-					else { $html .= $this->$key; }					
+					else {
+						if (is_array($this->$key)) {
+							$html .= json_encode($this->$key);
+						}
+						else {
+							$html .= $this->$key;
+						}
+					}
 				}
 			}
 		}
@@ -260,6 +270,15 @@ class demoSite {
 		if ($this->status["OIDC"] && $this->idps) { $this->status["socialLogin"] = TRUE; }
 
 		if (!empty($this->appsWhitelist)) { $this->status["appsWhitelist"] = TRUE; }
+
+	}
+
+	private function showAPIkey() {
+
+		if ($this->apiKey) {
+			return substr($this->apiKey, 0, 5) . "...";
+		}
+		else { return "NONE"; }
 
 	}
 
