@@ -215,6 +215,12 @@ class demoSite {
 			}
 		}
 
+		else {
+
+			$filePath = "../html/" . $pageName . ".html";
+			return file_get_contents($filePath);
+		}
+
 		return $html;
 
 	}
@@ -371,7 +377,7 @@ class demoSite {
 
 		$body = $this->replaceElements($body);
 
-		echo "<!DOCTYPE HTML>\n<html>\n" . $head . $body . "\n</html>";
+		echo "<!DOCTYPE HTML>\n<html>\n" . $head . "\n\n" . $body . "\n</html>";
 	}
 
 	private function replaceElements($thisString) {
