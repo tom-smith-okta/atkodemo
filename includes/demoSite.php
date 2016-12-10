@@ -4,23 +4,11 @@ class demoSite {
 
 	function __construct($env, $homeDir) {
 
-		$this->env = $env;
+		$this->env = $env; // name of the local server environment
 
-		$this->homeDir = $homeDir;
+		$this->setLocalPaths($homeDir);
 
-		$this->sitesHome = "../sites/";
-
-		$this->defaultPath = "../sites/default/";
-
-		$this->webHome = "/";
-
-		if(!empty($this->homeDir)) {
-			$this->webHome = $this->webHome . $homeDir . "/";
-		}
-
-		$this->metaData = file_get_contents("metadata.json", FILE_USE_INCLUDE_PATH);
-
-		$this->metaData = json_decode($this->metaData, TRUE);
+		$this->metaData = $this->getConfig("metadata");
 
 		foreach($this->metaData as $key => $value) {
 
@@ -34,36 +22,29 @@ class demoSite {
 
 	}
 
-	private function getRegOptions() {
-
-		foreach ($config["regFlow"] as $regFlowName => $values) {
-
-			$retVal .= "<li>";
-			$retVal .= "<a href = 'register.php?regType=" . $regFlowName . "'>";
-			$retVal .= "<h3>" . $values["title"] . "</h3>";
-
-			if (array_key_exists("shortDesc", $values)) {
-				$retVal .= "<p>" . $values["shortDesc"] . "</p>";
-			}
-
-			$retVal .= "</a></li>";
-
-		}
-		return $retVal;
-	}
-
-	function loadJSON($varName) {
+	private function getConfig($varName) {
 		$json = file_get_contents($varName . ".json", FILE_USE_INCLUDE_PATH);
 
-		$arr = json_decode($json, TRUE);
-
-		foreach($arr as $value) {
-			$this->$varName = $arr[$varName];
-
-		}
+		$assocArray = json_decode($json, TRUE);
+		return $assocArray;
 	}
 
-	function setSite($siteName) {
+	private function setLocalPaths($homeDir) {
+
+		$this->homeDir = $homeDir;
+
+		$this->sitesHome = "../sites/";
+
+		$this->defaultPath = "../sites/default/";
+
+		$this->webHome = "/";
+
+		if(!empty($this->homeDir)) {
+			$this->webHome = $this->webHome . $homeDir . "/";
+		}		
+	}
+
+	public function setSite($siteName) {
 		
 		$this->siteName = $siteName;
 
@@ -155,9 +136,9 @@ class demoSite {
 
 	private function setMenus() {
 
-		// $this->menu = '<li class = "menu"><a class="fa-server" href="status.php">Site Status</a></li>' . "\n\t\t\t";
+		$this->menu = '<li class = "menu"><a class="fa-server" href="status.php">Site Status</a></li>' . "\n\t\t\t";
 
-		// $this->menu .= '<li class = "menu"><a class="fa-info-circle" href="allSettings.php">Settings</a></li>' . "\n\t\t\t";
+		$this->menu .= '<li class = "menu"><a class="fa-info-circle" href="allSettings.php">Settings</a></li>' . "\n\t\t\t";
 
 		$this->loginAndReg = "";
 
@@ -205,6 +186,8 @@ class demoSite {
 		}
 
 		else if ($pageName === "allSettings") {
+
+			$html .= "<h1>Settings</h1>";
 
 			foreach ($this as $key => $value) {
 
@@ -312,6 +295,8 @@ class demoSite {
 	}
 
 	private function checkAPIkey() {
+		/* Find an apiKey and then check to see
+		if it is valid */
 
 		if (empty($this->apiKey) && $this->apiKeyPath) {
 			$this->apiKey = $this->getAPIkey();
@@ -335,7 +320,7 @@ class demoSite {
 
 	}
 
-	private function getFile($configFile) {
+	private function getFile($configFile, $getDefault = FALSE) {
 
 		$fileName = $configFile . ".json";
 
@@ -343,8 +328,9 @@ class demoSite {
 			$dir = $this->sitePath;
 		}
 		else {
-
-			$dir = $this->defaultPath;
+			if ($getDefault) {
+				$dir = $this->defaultPath;
+			}
 		}
 
 		$path = $dir . $fileName;
@@ -357,7 +343,6 @@ class demoSite {
 
 			$this->$key = $value;
 		}
-
 	}
 
 	// Reads json config files and stores the settings in $this object
@@ -366,7 +351,7 @@ class demoSite {
 	private function getSettings($configFile) {
 
 		if ($this->metaData[$configFile]["required"]) {
-			$this->getFile($configFile);
+			$this->getFile($configFile, $this->metaData[$configFile]["required"]);
 		}
 		else {
 			$dependency = $this->metaData[$configFile]["dependency"];
@@ -427,210 +412,15 @@ class demoSite {
 		return $thisString;
 	}
 
-
-	private function insertElements($thisString, $array) {
-
-		foreach ($array as $element) {
-			$target = "%" . $element . "%";
-
-			$thisString = str_replace($target, $this->$element, $thisString);
-		}
-
-		return $thisString;
-
-	}
-
-	public function showSettings() {
-		$output = "<p><b>Settings</b></p>";
-
-		foreach ($this->importantSettings as $key) {
-
-			$output .= "<p><b>" . $key . "</b>: ";
-
-			if (isset($this->$key)) {
-
-				if (is_array($this->$key)) {
-					$output .= json_encode($this->$key);
-				}
-				else {
-					$output .= $this->$key;
-				}
-			}
-			else {
-				$output .= "[none]";
-			}
-		}
-
-		echo $output;
-	}
-
-
-	function load() {
-
-		$siteToLoad = $this->getSiteToLoad();
-
-		$this->configHome = $this->fsHome . "sites/" . $siteToLoad;
-
-		$this->configFile = $this->configHome . "/config.php";
-
-		$configFiles = ["mainConfig", "groups", "theme", "regDesc"];
-
-		foreach ($configFiles as $fileName) {
-
-			$this->loadConfigFile($fileName);
-
-		}
-
-		$this->setRemotePaths();
-
-		$this->lookForAPIkey();
-
-		$this->apiKeyIsValid = $this->checkAPIkey();
-
-		if (!empty($this->idps)) { $this->idps = json_encode($this->idps); }
-
-		echo "<p>HELLO";
-
-
-	}
-
 	private function setRemotePaths() {
 		$this->oktaBaseURL = "https://" . $this->oktaOrg . ".okta.com";
 		$this->apiHome = $this->oktaBaseURL . "/api/v1";
-
-
-// 	// Need to add some logic here to accommodate https
-// 	$config["host"] = "http://" . $config["host"];
-
-// 	$config["webHomeURL"] = $config["host"] . $config["webHome"];
-
-// 	// Danger Will Robinson
-// 	// This value needs to match a value in the Redirect URIs list
-// 	// in your Okta tenant
-
-// 	$config["redirectURL"] = $config["host"] . $config["webHome"];
-// }
-
-		
-		// $this->redirectUri = 
 	}
 
 	private function isSecure() {
 		return
 		    (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
 		    || $_SERVER['SERVER_PORT'] == 443;		
-	}
-
-	private function getSiteToLoad() {
-
-		if (file_exists($this->siteToLoadPath)) {
-			$siteToLoad = trim(file_get_contents($this->siteToLoadPath));
-		}
-		else {
-			$env = $this->getLocalEnv();
-
-			if ($env == "tom") {
-				$siteToLoad = "atkodemo";
-			}
-			else if ($env == "atkodemo") {
-				$siteToLoad = "atkodemo";
-			}
-			else {
-				$siteToLoad = "default";
-			}
-		}
-		return $siteToLoad;
-	}
-
-	function loadConfigFile($fileName) {
-		$fullFileName = $fileName . ".json";
-
-		$filePath = $this->configHome . "/" . $fullFileName;
-
-		if (!file_exists($filePath)) {
-			$filePath = $this->defaultHome . "/" . $fullFileName;
-		}
-
-		$json = trim(file_get_contents($filePath));
-
-		echo "<p>the file path is: " . $filePath;
-		echo "<p>";
-		echo $json;
-
-		$arr = json_decode($json, TRUE);
-
-		// echo "<p>The assoc array is: " . "<pre>" . var_dump($arr) . "</pre></p>";
-
-		// $arr = json_decode($json);
-
-		$this->$fileName = $arr;
-
-		// $temp["basic"]["title"] = "basic reg title";
-		// $temp["basic"]["desc"] = "basic description";
-		// $temp["basic"]["shortDesc"] = "basic short desc";
-
-		// $temp["mfa"]["title"] = "mfa reg title";
-		// $temp["mfa"]["desc"] = "mfa description";
-		// $temp["mfa"]["shortDesc"] = "mfa short desc";
-
-		// echo "<p>this is what the json should look like: ";
-		// echo json_encode($temp);
-	}
-
-	function setDesc($siteDesc) {
-		if (empty($siteDesc)) {
-			$desc["tom"] = "tom's local machine";
-			$desc["atkodemo"] = "public site: www.atkodemo.com";
-			$desc["docker"] = "docker container";
-			$desc["unknown"] = "unknown";
-
-			$this->desc = $desc[$this->name];
-		}
-		else { $this->desc = $siteDesc; }
-	}
-
-	function setHomeDir($homeDir) {
-		if (empty($homeDir)) {
-			if ( $this->getLocalEnv() === "atkodemo") { $homeDir = ""; }
-			else { $homeDir = "atkodemo"; }
-		}
-		$this->homeDir = $homeDir;
-	}
-
-	function setName($siteName) {
-		if (empty($siteName)) { $this->name = $this->getLocalEnv(); }
-		else { $this->name = $siteName; }
-	}
-
-	function setLocalPaths() {
-
-		// web home
-		if (empty($this->homeDir)) { $this->webHome = "/"; }
-		else { $this->webHome = "/" . $this->homeDir . "/"; }
-
-		// local file space home
-		$this->fsHome = $_SERVER["DOCUMENT_ROOT"] . $this->webHome;
-
-		// include path
-		$this->includePath = $this->fsHome . "includes";
-
-		set_include_path($this->includePath);
-
-		// host and web home url
-
-		if ($_SERVER["SERVER_NAME"] != "localhost") {
-			error_reporting(0); // turn off error reporting for "production" sites
-		}
-
-		$this->webHomeURL = $this->getWebHomeURL();
-
-		$this->redirectURL = $this->webHomeURL;
-
-		$this->sitesHome = $this->fsHome . "sites/";
-
-		$this->siteToLoadPath = $this->sitesHome . "siteToLoad.txt";
-
-		$this->defaultHome = $this->sitesHome . "default";
 	}
 
 	private function getRedirectURI() {
