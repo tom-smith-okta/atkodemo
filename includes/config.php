@@ -63,9 +63,6 @@ function setIncludePaths() {
 
 //////////////////////////////////////////
 
-
-// $thisSite->setLocalPaths();
-
 /************** Custom files *******************/
 
 // Okta Widget and session elements
@@ -155,77 +152,45 @@ $config["defaultVals"] = [
 // }
 
 
-function getRegOptions() {
-	global $config;
-
-	$retVal = "";
-
-	foreach ($config["regFlow"] as $regFlowName => $values) {
-
-		$retVal .= "<li>";
-		$retVal .= "<a href = 'register.php?regType=" . $regFlowName . "'>";
-		$retVal .= "<h3>" . $values["title"] . "</h3>";
-
-		if (array_key_exists("shortDesc", $values)) {
-			$retVal .= "<p>" . $values["shortDesc"] . "</p>";
-		}
-
-		$retVal .= "</a></li>";
-
-	}
-	return $retVal;
-}
-
-function getMenu() {
-	global $config;
-
-	$settings = $config["fsHome"] . "html/settings.html";
-
-	$retVal = file_get_contents($settings);
-
-	if (!empty($config["warnings"])) {
-		$warnings = $config["fsHome"] . "html/warnings.html";
-
-		$retVal .= file_get_contents($warnings);
-	}
-
-	if ($config["apiKeyIsValid"]) {
-		$regOptions = $config["fsHome"] . "html/regOptions.html";
-
-		$retVal .= file_get_contents($regOptions);		
-	}
-
-	return $retVal;
-}
-
-// function getServerSettings() {
+// function getRegOptions() {
 // 	global $config;
 
 // 	$retVal = "";
 
-// 	$settings = ["oktaOrg", "envLong", "apiKey", "apiKeyIsValid", "clientId"];
+// 	foreach ($config["regFlow"] as $regFlowName => $values) {
 
-// 	foreach ($settings as $setting) {
-// 		$retVal .= "<p>" . $setting . ": ";
+// 		$retVal .= "<li>";
+// 		$retVal .= "<a href = 'register.php?regType=" . $regFlowName . "'>";
+// 		$retVal .= "<h3>" . $values["title"] . "</h3>";
 
-// 		if ($setting === "apiKey") {
-// 			$value = showAPIkey();
+// 		if (array_key_exists("shortDesc", $values)) {
+// 			$retVal .= "<p>" . $values["shortDesc"] . "</p>";
 // 		}
-// 		else { $value = $config[$setting]; }
 
-// 		$retVal .= $value . "</p>";
+// 		$retVal .= "</a></li>";
+
 // 	}
-
 // 	return $retVal;
 // }
 
-// function showAPIkey() {
+// function getMenu() {
 // 	global $config;
 
-// 	if ($config["apiKey"]) {
-// 		return substr($config["apiKey"], 0, 5) . "...";
+// 	$settings = $config["fsHome"] . "html/settings.html";
+
+// 	$retVal = file_get_contents($settings);
+
+// 	if (!empty($config["warnings"])) {
+// 		$warnings = $config["fsHome"] . "html/warnings.html";
+
+// 		$retVal .= file_get_contents($warnings);
 // 	}
-// 	else {
-// 		return "NONE";
+
+// 	if ($config["apiKeyIsValid"]) {
+// 		$regOptions = $config["fsHome"] . "html/regOptions.html";
+
+// 		$retVal .= file_get_contents($regOptions);		
 // 	}
+
+// 	return $retVal;
 // }
