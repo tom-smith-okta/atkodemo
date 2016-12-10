@@ -155,9 +155,9 @@ class demoSite {
 
 	private function setMenus() {
 
-		$this->menu = '<li class = "menu"><a class="fa-server" href="status.php">Site Status</a></li>';
+		// $this->menu = '<li class = "menu"><a class="fa-server" href="status.php">Site Status</a></li>' . "\n\t\t\t";
 
-		$this->menu .= '<li class = "menu"><a class="fa-info-circle" href="allSettings.php">Settings</a></li>';
+		// $this->menu .= '<li class = "menu"><a class="fa-info-circle" href="allSettings.php">Settings</a></li>' . "\n\t\t\t";
 
 		$this->loginAndReg = "";
 
@@ -175,6 +175,9 @@ class demoSite {
 
 		if ($this->status["registration"]) {
 			$this->loginAndReg .= "<li><a href = '#menu'>Registration options</a></li>";
+			$this->menu .= '<li class = "menu">' . "\n\t\t\t";
+			$this->menu .= '<a class="fa-bars" href = "#menu">Menu</a>' . "\n\t\t\t";
+			$this->menu .= '</li>';
 		}
 
 	}
