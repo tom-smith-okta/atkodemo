@@ -36,6 +36,22 @@
 	  }
 	</style>
 
+	<style media="screen" type="text/css">
+
+		#myApps {
+			border-style: solid;
+			border-width: 1px;
+			padding: 10px;
+			display: none;
+			position: absolute;
+			top: 15;
+			z-index: 101;
+			background-color: white;
+			opacity: 0.9;
+		}
+
+	</style>
+
 	<link rel = 'stylesheet' href = '../css/mainCSS.css'/>
 
 	<!-- ******* JAVASCRIPT *******************-->		
@@ -56,7 +72,7 @@
 		
 	<script>
 
-	console.log("chekcing session...");
+	console.log("checking session...");
 	/************************************/
 	// Check for an Okta session
 	// and update menu accordingly
@@ -137,17 +153,13 @@
 	}
 
 	</script>
-
 		
 	<script src = '../javascript/dates.js'></script>
 
-			
 	<script src = '../javascript/skel.min.js'></script>
 
-			
 	<script src = '../javascript/main.js'></script>
 
-			
 	<script src = '../javascript/util.js'></script>
 
 		
@@ -159,58 +171,17 @@
 
 		if (authState == "authenticated") {
 			menu = "<li><a href = '#' onclick = 'signout()'>Log out</a></li>";
-		
-			$.ajax({
-	            type: "GET",
-	            dataType: 'json',
-	            url: "https://%--oktaOrg--%.okta.com/api/v1/users/" + userID + "/appLinks",
-
-	            xhrFields: {
-	                withCredentials: true
-	            },
-	            success: function (data) {
-
-	            	var whitelist = %--appsWhitelist--%;
-
-	            	var apps = "";
-
-	            	var appName;
-
-	            	// This could be a lot more efficient
-	            	for (var i = 0, len = data.length; i < len; i++) {
-
-	            		appName = data[i].appName;
-
-	            		console.log("found an app: " + appName);
-
-  						for (var myAppName in whitelist) {
-							if (whitelist.hasOwnProperty(myAppName)) {
-
-    							if (myAppName == appName) {
-    								console.log("found a match between " + myAppName + " and " + appName);
-    								apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + whitelist[myAppName] + "</a></li>";
-    							}
-
-  							}
-						}
-
-					}
-
-					menu += apps;
-
-					$("#authLinks").html(menu);
- 
-	            },
-	            error: function (textStatus, errorThrown) {
-	                console.log('error retrieving session: ' + JSON.stringify(textStatus));
-	                console.log(errorThrown);
-	            },
-	            async: true
-        	});
 
 			if (localStorage.getItem("given_name")) {
 				menu += "<li><a href='#'>Welcome, " + localStorage.getItem("given_name") + "!</a></li>";
 			}
+
+			console.log ("the user id is: " + userID);
+
+			// menu += "<li id = 'showApps'><a href = '#' onclick = 'showApps('" + userID + "')'>My Apps</a></li>";
+
+			menu += "<li id = 'showApps'><a href = '#' onclick = 'showApps(\"" + userID + "\")'>My Apps</a></li>";
+
 
 		}
 		else {
@@ -221,6 +192,87 @@
 
 		$("#authLinks").html(menu);
 
+	}
+
+	</script>
+
+
+	<script>
+
+	function showApps(userID) {
+
+		var appsList = "";
+
+		alert("the user id is: " + userID);
+
+
+		// $("#myApps").html('<section><ul class="links"><li><a href="#"><h3>Lorem ipsum</h3><p>Feugiat tempus veroeros dolor</p></a></li></ul></section>');
+		// $("#myApps").show();
+		// $("#showApps").html('<a href="#" onclick="hideApps()">My Apps</a>');
+
+	}
+
+	function hideApps() {
+		$("#myApps").hide();
+		$("#showApps").html('<a href="#" onclick="showApps()">My Apps</a>');
+
+	}
+
+	</script>
+
+
+
+
+
+	<script>
+
+	function getApps(userID) {
+
+		$.ajax({
+	  		type: "GET",
+            dataType: 'json',
+            url: "https://%--oktaOrg--%.okta.com/api/v1/users/" + userID + "/appLinks",
+
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+
+            	var whitelist = %--appsWhitelist--%;
+
+            	var apps = "";
+
+            	var appName;
+
+            	// This could be a lot more efficient
+            	for (var i = 0, len = data.length; i < len; i++) {
+
+            		appName = data[i].appName;
+
+            		console.log("found an app: " + appName);
+
+					for (var myAppName in whitelist) {
+						if (whitelist.hasOwnProperty(myAppName)) {
+
+							if (myAppName == appName) {
+								console.log("found a match between " + myAppName + " and " + appName);
+								apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + whitelist[myAppName] + "</a></li>";
+							}
+						}
+					}
+				}
+
+				menu += apps;
+
+				$("#authLinks").html(menu);
+ 
+	        },
+            error: function (textStatus, errorThrown) {
+                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+                console.log(errorThrown);
+            },
+            async: true
+    	});
 	}
 
 	</script>

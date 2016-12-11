@@ -157,6 +157,7 @@ class demoSite {
 			else {
 				$this->loginAndReg .= "<li><a href = 'login.php'>Log in</a></li>";
 			}
+
 		}
 
 		if ($this->status["registration"]) {
@@ -170,11 +171,13 @@ class demoSite {
 
 		$html = "";
 
+		$this->getAppsCall = "something strange";
+
 		if ($pageName === "status") {
 
 			$html .= "<h1>Site status</h1>";
 			$html .= "<table border = '1'>\n";
-			$html .= "<tr><td>Site</td><td>env</td><td>Okta org</td><td align = 'center'>AuthN</td><td align = 'center'>Reg</td><td align = 'center'>reg w/MFA</td><td align = 'center'>OIDC</td><td align = 'center'>Social</td></tr>";
+			$html .= "<tr><td>Site</td><td>env</td><td>Okta org</td><td align = 'center'>AuthN</td><td align = 'center'>Reg</td><td align = 'center'>reg w/MFA</td><td align = 'center'>OIDC</td><td align = 'center'>Social</td><td align= 'center'>Apps WL</td></tr>";
 			$html .= "<tr>";
 			$html .= "<td>" . $this->siteName . "</td>";
 			$html .= "<td>" . $this->env . "</td>";
@@ -184,10 +187,11 @@ class demoSite {
 			$html .= "<td align = 'center'>" . $this->getIcon("regWithMFA") . "</td>";
 			$html .= "<td align = 'center'>" . $this->getIcon("OIDC") . "</td>";
 			$html .= "<td align = 'center'>" . $this->getIcon("socialLogin") . "</td>";
+			$html .= "<td align = 'center'>" . $this->getIcon("appsWhitelist") . "</td>";
+
 			$html .= "</tr>";
 			$html .= "</table>";
 		}
-
 		else if ($pageName === "allSettings") {
 
 			$html .= "<h1>Settings</h1>";
@@ -214,7 +218,12 @@ class demoSite {
 				}
 			}
 		}
+		else if ($pageName === "myApps") {
+			echo "we are in the right place!";
+			$this->getAppsCall = "getApps(userID);";
 
+			$html .= "<p>these are my apps";
+		}
 		else {
 
 			$filePath = "../html/" . $pageName . ".html";
