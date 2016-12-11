@@ -7,14 +7,14 @@
 function renderWidget() {
 
 	oktaSignIn.renderEl(
-		{ el: '#oktaWidget'},
+		{ el: '#oktaWidgetBasic'},
 	  	function (res) {
 
 	  		console.log("the res.status is: " + res.status);
 
 	  		if (res.status == "SUCCESS") {
 
-	  			res.session.setCookieAndRedirect('%redirectURL%');
+	  			res.session.setCookieAndRedirect('%--redirectUri--%');
 
 	  		}
 	  		else {

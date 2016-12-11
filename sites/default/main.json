@@ -1,4 +1,5 @@
 {
+	"siteName": "Okta platform demo",
 	"oktaOrg": "atkodemovm",
 	"apiKeyPath": "/usr/local/keys/atkodemovm.txt",
 	"apiKey": "",

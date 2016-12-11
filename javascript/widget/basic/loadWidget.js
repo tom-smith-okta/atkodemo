@@ -5,14 +5,14 @@
 /************************************/
 
 var oktaSignIn = new OktaSignIn({
-	baseUrl: '%oktaBaseURL%',
-	logo: '%logo%',
+	baseUrl: '%--oktaBaseURL--%',
+	logo: '%--logo--%',
 	features: {
 		multiOptionalFactorEnroll: true,
 		smsRecovery: true
 	},
   
-	redirectUri: '%redirectURL%'
+	redirectUri: '%--redirectUri--%'
 
 });
 

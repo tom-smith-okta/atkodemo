@@ -20,6 +20,8 @@ class demoSite {
 
 		$this->importantSettings = array_merge($this->configFiles, [ "homeDir", "host", "oktaOrg", "apiKeyPath", "apiKey", "apiKeyIsValid", "clientId", "appsWhitelist", "idps"]);
 
+		$this->pages = [];
+
 	}
 
 	private function getConfig($varName) {
@@ -44,11 +46,11 @@ class demoSite {
 		}		
 	}
 
-	public function setSite($siteName) {
+	public function setSite($siteDir) {
 		
-		$this->siteName = $siteName;
+		$this->siteDir = $siteDir;
 
-		$this->sitePath = $this->sitesHome . $this->siteName . "/";
+		$this->sitePath = $this->sitesHome . $this->siteDir . "/";
 
 		// load just the essentials first
 		// $isRequired = TRUE
@@ -72,25 +74,22 @@ class demoSite {
 			// do something else
 		}
 
-		$this->setOktaWidget();
-
 		$this->setRegOptions();
-
-		$this->setMenus();
 
 	}
 
-	private function setOktaWidget() {
+	private function setOktaWidget($pageName = "") {
 
 		$this->redirectUri = $this->getRedirectURI();
 
-		if ($this->status["OIDC"]) {
+		$path = "../javascript/widget/";
 
-			$this->oktaSignIn = file_get_contents("../javascript/loadWidgetOIDC.js");
+		if ($pageName === "login") {
+			$path .= "basic/";
+		}
+		else if ($this->status["OIDC"]) {
 
-			$this->renderWidget = file_get_contents("../javascript/renderWidgetOIDC.js");
-
-			$this->widgetInBody = "<div id = 'container>\n\t\t<div id = 'oktaWidget'></div>\n\t</div>";
+			$path .= "OIDC/";
 
 			if ($this->status["socialLogin"]) {
 				$this->idpJS = "idpDisplay: 'PRIMARY',\n\t\t";
@@ -99,7 +98,13 @@ class demoSite {
 			else { $this->idpJS = ""; }
 		}
 
+		$this->oktaSignIn = file_get_contents($path . "loadWidget.js");
+
+		$this->renderWidget = file_get_contents($path . "renderWidget.js");
+
 		$this->oktaSignIn = $this->replaceElements($this->oktaSignIn);
+
+		$this->renderWidget = $this->replaceElements($this->renderWidget);
 
 	}
 
@@ -373,6 +378,16 @@ class demoSite {
 	}
 
 	public function showPage($pageName) {
+
+		$this->setOktaWidget($pageName);
+
+		$this->setMenus();
+
+		if ($pageName === "index") { $displayName = "home"; }
+		else { $displayName = $pageName; }
+
+		$this->title = $this->siteName . ": " . $displayName;
+
 		$head = file_get_contents("../html/head.html");
 
 		$head = $this->replaceElements($head);
