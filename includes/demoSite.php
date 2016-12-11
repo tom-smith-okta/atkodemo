@@ -16,9 +16,9 @@ class demoSite {
 
 		}
 
-		$this->capabilities = ["authentication", "registration", "regWithMFA", "OIDC", "socialLogin", "appsWhitelist", "regWithMFA", "appProvisioning"];
+		$this->capabilities = ["authentication", "registration", "regWithMFA", "OIDC", "socialLogin", "appsBlacklist", "regWithMFA", "appProvisioning"];
 
-		$this->importantSettings = array_merge($this->configFiles, [ "homeDir", "host", "oktaOrg", "apiKeyPath", "apiKey", "apiKeyIsValid", "clientId", "appsWhitelist", "idps"]);
+		$this->importantSettings = array_merge($this->configFiles, [ "homeDir", "host", "oktaOrg", "apiKeyPath", "apiKey", "apiKeyIsValid", "clientId", "appsBlacklist", "idps"]);
 
 		$this->pages = [];
 
@@ -67,11 +67,11 @@ class demoSite {
 		// and which are not
 		$this->setSiteStatus();
 
-		if ($this->status["appsWhitelist"]) {
-			$this->appsWhitelist = json_encode($this->appsWhitelist);
+		if ($this->status["appsBlacklist"]) {
+			$this->appsBlacklist = json_encode($this->appsBlacklist);
 		}
 		else {
-			// do something else
+			$this->appsBlacklist = "none";
 		}
 
 		$this->setRegOptions();
@@ -187,7 +187,7 @@ class demoSite {
 			$html .= "<td align = 'center'>" . $this->getIcon("regWithMFA") . "</td>";
 			$html .= "<td align = 'center'>" . $this->getIcon("OIDC") . "</td>";
 			$html .= "<td align = 'center'>" . $this->getIcon("socialLogin") . "</td>";
-			$html .= "<td align = 'center'>" . $this->getIcon("appsWhitelist") . "</td>";
+			$html .= "<td align = 'center'>" . $this->getIcon("appsBlacklist") . "</td>";
 
 			$html .= "</tr>";
 			$html .= "</table>";
@@ -267,7 +267,7 @@ class demoSite {
 		if ($this->clientId) { $this->status["OIDC"] = TRUE; }
 		if ($this->status["OIDC"] && $this->idps) { $this->status["socialLogin"] = TRUE; }
 
-		if (!empty($this->appsWhitelist)) { $this->status["appsWhitelist"] = TRUE; }
+		if (!empty($this->appsBlacklist)) { $this->status["appsBlacklist"] = TRUE; }
 
 	}
 

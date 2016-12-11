@@ -19,22 +19,10 @@
 	    top: 60px;
 	    left: 20px;
 	  }
-	  
-/*	  #container #okta-login-container .button {
-	    color: #ffffff;
-	    background-color: #3a3f44;
-	    border-color: #3a3f44;
-	    background-image: -webkit-linear-gradient(#484e55, #3a3f44 60%, #313539);
-	    background-image: -o-linear-gradient(#484e55, #3a3f44 60%, #313539);
-	    background-image: -webkit-gradient(linear, left top, left bottom, from(#484e55), color-stop(60%, #3a3f44), to(#313539));
-	    background-image: linear-gradient(#484e55, #3a3f44 60%, #313539);
-	    background-repeat: no-repeat;
-	    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff484e55', endColorstr='#ff313539', GradientType=0);
-	    -webkit-filter: none;
-	    filter: none;
-*/
-	  }
+
 	</style>
+
+	<link rel = 'stylesheet' href = '../css/mainCSS.css'/>
 
 	<style media="screen" type="text/css">
 
@@ -47,12 +35,12 @@
 			top: 15;
 			z-index: 101;
 			background-color: white;
-			opacity: 0.9;
+/*			background-color: #646464;
+*/			color: black;
+			opacity: 1;
 		}
 
 	</style>
-
-	<link rel = 'stylesheet' href = '../css/mainCSS.css'/>
 
 	<!-- ******* JAVASCRIPT *******************-->		
 	
@@ -178,10 +166,7 @@
 
 			console.log ("the user id is: " + userID);
 
-			// menu += "<li id = 'showApps'><a href = '#' onclick = 'showApps('" + userID + "')'>My Apps</a></li>";
-
 			menu += "<li id = 'showApps'><a href = '#' onclick = 'showApps(\"" + userID + "\")'>My Apps</a></li>";
-
 
 		}
 		else {
@@ -203,31 +188,6 @@
 
 		var appsList = "";
 
-		alert("the user id is: " + userID);
-
-
-		// $("#myApps").html('<section><ul class="links"><li><a href="#"><h3>Lorem ipsum</h3><p>Feugiat tempus veroeros dolor</p></a></li></ul></section>');
-		// $("#myApps").show();
-		// $("#showApps").html('<a href="#" onclick="hideApps()">My Apps</a>');
-
-	}
-
-	function hideApps() {
-		$("#myApps").hide();
-		$("#showApps").html('<a href="#" onclick="showApps()">My Apps</a>');
-
-	}
-
-	</script>
-
-
-
-
-
-	<script>
-
-	function getApps(userID) {
-
 		$.ajax({
 	  		type: "GET",
             dataType: 'json',
@@ -238,33 +198,37 @@
             },
             success: function (data) {
 
-            	var whitelist = %--appsWhitelist--%;
+            	var blacklist = %--appsBlacklist--%;
 
-            	var apps = "";
+            	var apps = "<h3>My Apps</h3>";
 
-            	var appName;
+            	var onBlacklist;
 
-            	// This could be a lot more efficient
             	for (var i = 0, len = data.length; i < len; i++) {
 
-            		appName = data[i].appName;
+            		onBlacklist = false;
 
-            		console.log("found an app: " + appName);
+            		label = data[i].label;
 
-					for (var myAppName in whitelist) {
-						if (whitelist.hasOwnProperty(myAppName)) {
+            		console.log("found an app: " + label + " id: " + data[i].id);
 
-							if (myAppName == appName) {
-								console.log("found a match between " + myAppName + " and " + appName);
-								apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + whitelist[myAppName] + "</a></li>";
-							}
-						}
-					}
+            		if (typeof blacklist === "object") {
+            			for (var j = 0, jlen = blacklist.length; j < jlen; j++) {
+            				if (blacklist[j].id === data[i].id) {
+            					onBlacklist = true;
+            					console.log(label + " is on the blacklist");
+            					break;
+            				}
+            			}
+            		}
+
+            		if (!(onBlacklist)) {
+            			apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + label + "</a></li>";
+            		}
+
 				}
 
-				menu += apps;
-
-				$("#authLinks").html(menu);
+				$("#myApps").html(apps);
  
 	        },
             error: function (textStatus, errorThrown) {
@@ -273,6 +237,16 @@
             },
             async: true
     	});
+
+		$("#myApps").show();
+		$("#showApps").html('<a href="#" onclick="hideApps()">My Apps</a>');
+
+	}
+
+	function hideApps() {
+		$("#myApps").hide();
+		$("#showApps").html('<a href="#" onclick="showApps()">My Apps</a>');
+
 	}
 
 	</script>

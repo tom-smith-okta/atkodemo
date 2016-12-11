@@ -3,9 +3,10 @@
 	"oktaOrg": "tomco",
 	"clientId": "YYUAPHIAj3JPPO6yJans",
 	"apiKeyPath": "/usr/local/keys/oktaAPI.txt",
-	"appsWhitelist": {
-		"salesforce": "Chatter"
-	},
+	"appsBlacklist": [
+		{ "name": "Facebook media management",
+		"id": "auclb3c8tgEqckPeq1t6" }
+	],
 	"idps": [
 		{ "type": "FACEBOOK",
 		"id": "0oa1w1pmezuPUbhoE1t6"},
@@ -14,4 +15,3 @@
 	],
 	"widgetVer": "1.7.0"
 }
-
