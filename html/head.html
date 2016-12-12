@@ -12,19 +12,16 @@
 
 	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/%--widgetVer--%/css/okta-theme.css'/>
 
-	<style>
-	  #container {
-	    z-index: 101;
-	    position: absolute;
-	    top: 60px;
-	    left: 20px;
-	  }
-
-	</style>
-
 	<link rel = 'stylesheet' href = '../css/mainCSS.css'/>
 
 	<style media="screen" type="text/css">
+
+		#container {
+		    z-index: 101;
+		    position: absolute;
+		    top: 60px;
+		    left: 20px;
+	  	}
 
 		#myApps {
 			border-style: solid;
@@ -35,8 +32,7 @@
 			top: 15;
 			z-index: 101;
 			background-color: white;
-/*			background-color: #646464;
-*/			color: black;
+			color: black;
 			opacity: 1;
 		}
 
@@ -141,16 +137,7 @@
 	}
 
 	</script>
-		
-	<script src = '../javascript/dates.js'></script>
 
-	<script src = '../javascript/skel.min.js'></script>
-
-	<script src = '../javascript/main.js'></script>
-
-	<script src = '../javascript/util.js'></script>
-
-		
 	<script>
 
 	function setMenu(authState, userID) {
@@ -180,7 +167,6 @@
 	}
 
 	</script>
-
 
 	<script>
 
@@ -246,9 +232,16 @@
 	function hideApps() {
 		$("#myApps").hide();
 		$("#showApps").html('<a href="#" onclick="showApps()">My Apps</a>');
-
 	}
 
 	</script>
+
+	<script src = '../javascript/ui/dates.js'></script>
+
+	<script src = '../javascript/ui/skel.min.js'></script>
+
+	<script src = '../javascript/ui/main.js'></script>
+
+	<script src = '../javascript/ui/util.js'></script>
 
 </head>
