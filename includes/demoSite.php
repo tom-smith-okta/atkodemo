@@ -230,16 +230,15 @@ class demoSite {
 				$json = file_get_contents($this->defaultPath . $fileName);
 			}
 
-			$formFields = $this->getFormFieldsHTML($json);
+			$this->fields = $this->getFormFieldsHTML($json);
 
-			// echo $json;
+			$this->regDesc = $this->regFlows[$regFlow]["desc"];
 
-			$regForm = file_get_contents("../html/register.html");
+			$filePath = "../html/" . $pageName . ".html";
 
-			// echo $regForm;
+			$html = file_get_contents($filePath);
 
-			// $fields = file_get_contents(filename)
-			exit;
+			$html = $this->replaceElements($html);
 
 		}
 		else {
@@ -258,17 +257,33 @@ class demoSite {
 
 	private function getFormFieldsHTML($json) {
 
+		$html = "";
+
 		$fieldTemplate = file_get_contents("../html/regFormFieldTemplate.html");
 
 		$assocArray = json_decode($json);
 
-		foreach ($assocArray as $key => $value) {
-			echo "<p>" . $key;
-			# code...
+		foreach ($assocArray as $fieldName => $properties) {
+
+			$formField = $fieldTemplate;
+
+			$input = "<input name = '" . $fieldName . "'";
+
+			foreach ($properties as $propertyName => $value) {
+				$input .= " " . $propertyName . " = '" . $value . "'";
+
+				if ($value == "hidden") {
+					$input .= " style='display:none'"; 
+				}
+			}
+
+			$input .= ">";
+
+			$formField = str_replace("%--input--%", $input, $formField);
+
+			$html .= $formField;
 		}
-
-		exit;
-
+		return $html;
 	}
 
 	private function getIcon($param) {
