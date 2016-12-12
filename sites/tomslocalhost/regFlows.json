@@ -3,7 +3,8 @@
 		"basic": {
 			"title": "Basic registration flow",
 			"desc": "A basic user record will be created in the Okta universal directory. The user will be authenticated immediately.",
-			"groupID": "00gst60jvcizQe0No1t6"
+			"groupID": "00gst60jvcizQe0No1t6",
+			"fields": ["firstName", "lastName", "email", "password"]
 		},
 		"appProvisioning": {
 			"title": "Registration with Salesforce provisioning",

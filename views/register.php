@@ -2,4 +2,4 @@
 
 include "../includes/config.php";
 
-$thisSite->showPage("login");
+$thisSite->showPage("register");

@@ -119,7 +119,8 @@ class demoSite {
 			foreach ($this->regFlows as $key => $values) {
 
 				$retVal .= "<li>";
-				$retVal .= "<a href = 'register.php?regType=" . $values["title"] . "'>";
+				$retVal .= "<a href = 'register.php?regFlow=" . $key . "'>";
+
 				$retVal .= "<h3>" . $values["title"] . "</h3>";
 
 				if (array_key_exists("shortDesc", $values)) {
@@ -171,8 +172,6 @@ class demoSite {
 
 		$html = "";
 
-		$this->getAppsCall = "something strange";
-
 		if ($pageName === "status") {
 
 			$html .= "<h1>Site status</h1>";
@@ -218,11 +217,30 @@ class demoSite {
 				}
 			}
 		}
-		else if ($pageName === "myApps") {
-			echo "we are in the right place!";
-			$this->getAppsCall = "getApps(userID);";
+		else if ($pageName === "register") {
 
-			$html .= "<p>these are my apps";
+			$regFlow = $_GET["regFlow"];
+
+			$fileName = "regFields.json";
+
+			if (file_exists($this->sitePath . $fileName)) {
+				$json = file_get_contents($this->sitePath . $fileName);
+			}
+			else {
+				$json = file_get_contents($this->defaultPath . $fileName);
+			}
+
+			$formFields = $this->getFormFieldsHTML($json);
+
+			// echo $json;
+
+			$regForm = file_get_contents("../html/register.html");
+
+			// echo $regForm;
+
+			// $fields = file_get_contents(filename)
+			exit;
+
 		}
 		else {
 
@@ -235,6 +253,21 @@ class demoSite {
 		}
 
 		return $html;
+
+	}
+
+	private function getFormFieldsHTML($json) {
+
+		$fieldTemplate = file_get_contents("../html/regFormFieldTemplate.html");
+
+		$assocArray = json_decode($json);
+
+		foreach ($assocArray as $key => $value) {
+			echo "<p>" . $key;
+			# code...
+		}
+
+		exit;
 
 	}
 

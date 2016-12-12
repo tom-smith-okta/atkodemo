@@ -1,0 +1,18 @@
+{
+	"firstName": {
+		"type": "text",
+		"placeholder": "First Name"
+	},
+	"lastName": {
+		"type": "text",
+		"placeholder": "Last Name"
+	},
+	"email": {
+		"type": "text",
+		"placeholder": "email"
+	},
+	"password": {
+		"type": "password",
+		"placeholder": "password"
+	}
+}

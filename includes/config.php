@@ -61,35 +61,6 @@ function setIncludePaths() {
 	set_include_path(get_include_path() . PATH_SEPARATOR . $includePath . "/config");
 }
 
-//////////////////////////////////////////
-
-/************** Custom files *******************/
-
-// Okta Widget and session elements
-
-$config["regOptionsLink"] = "";
-
-// Display the "registration options link" only if there is a valid API key
-// if ($thisSite->apiKeyIsValid) {
-// 	$config["regOptionsLink"] = "<li><a href = '#menu'>Registration options</a></li>";
-// }
-
-// $config["regOptions"] = getRegOptions();
-
-// $a = $thisSite->getRegOptions();
-
-// echo "<p>" . $a;
-
-// $config["serverSettings"] = getServerSettings();
-
-// Leave this at the bottom bc this function decides whether to
-// display a warning icon in the UI. This decision is based on
-// whether any warnings have accumulated in the $config["warnings"]
-// object.
-// $config["menu"] = getMenu();
-
-/************** Okta files *********************/
-
 /*************** Registration forms *************/
 $config["regFormType"]["min"] = ["firstName", "lastName", "login", "email"];
 
