@@ -234,6 +234,8 @@ class demoSite {
 
 			$this->regDesc = $this->regFlows[$regFlow]["desc"];
 
+			$this->regFlow = $regFlow;
+
 			$filePath = "../html/" . $pageName . ".html";
 
 			$html = file_get_contents($filePath);
