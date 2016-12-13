@@ -230,7 +230,35 @@ class demoSite {
 				$json = file_get_contents($this->defaultPath . $fileName);
 			}
 
-			$this->fields = $this->getFormFieldsHTML($json);
+			$regFields = json_decode($json, TRUE);
+
+			$template = file_get_contents("../html/regFormFieldTemplate.html");
+
+			$fields = "";
+
+			foreach ($this->regFlows[$regFlow]["fields"] as $fieldName) {
+
+				$type = $regFields[$fieldName]["type"];
+
+				if ($type === "hidden") {
+
+					$value = $this->regFlows[$regFlow][$fieldName];
+
+					$fields .= "\t\t\t\t\t";
+
+					$fields .= "<input name = '" . $fieldName . "' type = 'hidden' value = '" . $value . "'>";
+				}
+
+				else {
+
+					$fields .= $this->getFormFieldHTML($template, $fieldName, $regFields[$fieldName]);
+				}
+
+				$fields .= "\n";
+
+			}
+
+			$this->fields = $fields;
 
 			$this->regDesc = $this->regFlows[$regFlow]["desc"];
 
@@ -257,35 +285,18 @@ class demoSite {
 
 	}
 
-	private function getFormFieldsHTML($json) {
+	private function getFormFieldHTML($template, $name, $properties) {
 
-		$html = "";
+		$input = "<input name = '" . $name . "'";
 
-		$fieldTemplate = file_get_contents("../html/regFormFieldTemplate.html");
+		foreach ($properties as $key => $value) {
 
-		$assocArray = json_decode($json);
-
-		foreach ($assocArray as $fieldName => $properties) {
-
-			$formField = $fieldTemplate;
-
-			$input = "<input name = '" . $fieldName . "'";
-
-			foreach ($properties as $propertyName => $value) {
-				$input .= " " . $propertyName . " = '" . $value . "'";
-
-				if ($value == "hidden") {
-					$input .= " style='display:none'"; 
-				}
-			}
-
-			$input .= ">";
-
-			$formField = str_replace("%--input--%", $input, $formField);
-
-			$html .= $formField;
+			$input .= " " . $key . " = '" . $value . "'";
 		}
-		return $html;
+
+		$input .= ">";
+
+		return str_replace("%--input--%", $input, $template);
 	}
 
 	private function getIcon($param) {
