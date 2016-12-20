@@ -10,7 +10,7 @@ class user {
 
 	function __construct($regType, $user) {
 
-		unset($_POST["regType"]);
+		unset($_POST["regFlow"]);
 
 
 		// ************** BUILD USER DATA *****************/
@@ -21,9 +21,13 @@ class user {
 			unset($_POST["password"]);
 		}
 
-		foreach ($_POST as $key => $value) {
-			$userData["profile"][$key] = $value;
+		$userData["profile"] = $_POST;
+
+		if (array_key_exists("login", $_POST)) {}
+		else { 
+			$userData["profile"]["login"] = $_POST["email"];
 		}
+
 
 		/**************** ANY GROUPS? ********************/
 
@@ -57,37 +61,27 @@ class user {
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
-    		CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json")
-		));
-
-		curl_setopt_array($curl, array(
 			CURLOPT_POST => TRUE,
 			CURLOPT_RETURNTRANSFER => TRUE,
 			CURLOPT_URL => $url,
-	    	CURLOPT_POSTFIELDS => $data
+	    	CURLOPT_POSTFIELDS => $data,
+	    	CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json")
 		));
 
 		$jsonResult = curl_exec($curl);
 
-		// echo "<p> the json result is: " . $jsonResult;
+		echo "<p> the json result is: " . $jsonResult;
 
 		$result = json_decode($jsonResult, TRUE);
 
-		$this->userID = $result["id"];
+		if (array_key_exists("errorCode", $result)) {
+			echo $jsonResult;
+		}
+		else {
+			$this->userID = $result["id"];
+		}
 
-		/*********** ADD TO GROUP ******************/
-		$curl = curl_init();
-
-		$url = $config["apiHome"] . "/groups/" . $this->groupID . "/users/" . $this->userID;
-
-		curl_setopt_array($curl, array(
-			CURLOPT_CUSTOMREQUEST => "PUT",
-			CURLOPT_RETURNTRANSFER => TRUE,
-			CURLOPT_URL => $url,
-		));
-
-		$result = sendCurlRequest($curl, $errorMsg);
-
+		exit;
 	}
 
 	function authenticate() {
