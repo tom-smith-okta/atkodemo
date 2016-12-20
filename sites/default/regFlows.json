@@ -3,25 +3,25 @@
 		"basic": {
 			"title": "Basic registration flow",
 			"desc": "A basic user record will be created in the Okta universal directory. The user will be authenticated immediately.",
-			"groupID": "00gst60jvcizQe0No1t6"
+			"groupIDs": ["00gst60jvcizQe0No1t6"]
 		},
 		"appProvisioning": {
 			"title": "Registration with Salesforce provisioning",
 			"desc": "A user record will be created in the Okta universal directory, and the user will be provisioned to Salesforce Chatter. User will be authenticated immediately.",
 			"shortDesc": "Provision a Salesforce Chatter user",
-			"groupID": "00gst7346E06ywPyc1t6"
+			"groupIDs": ["00gst7346E06ywPyc1t6"]
 		},
 		"withMFA": {
 			"title": "MFA Registration flow",
 			"desc": "A user record will be created in the Okta universal directory. An activation email will be sent to the user. The user must use a 2nd factor when they authenticate.",
 			"shortDesc": "User must enroll in MFA",
-			"groupID": "00gst4ezhRw5g3phR1t6"
+			"groupIDs": ["00gst4ezhRw5g3phR1t6"]
 		},
 		"withEmail": {
 			"title": "Email verification user flow",
 			"desc": "A user record will be created in the Okta universal directory. The user must verify their email address before they can authenticate.",
 			"shortDesc": "User must verify their email address",
-			"groupID": "00gst60n94ZTQFRqn1t6"
+			"groupIDs": ["00gst60n94ZTQFRqn1t6"]
 		},
 		"provisional": {
 			"title": "Provisional registration",

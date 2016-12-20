@@ -221,6 +221,12 @@ class demoSite {
 
 			$regFlow = $_GET["regFlow"];
 
+			// $_SESSION["groupIDs"] = $this->regFlows[$regFlow]["groupIDs"];
+
+			// echo "the group ids are: " . $this->regFlows[$regFlow]["groupIDs"];
+
+			// echo "the group ids in the session are: " . $_SESSION["groupIDs"];
+
 			$fileName = "regFields.json";
 
 			if (file_exists($this->sitePath . $fileName)) {

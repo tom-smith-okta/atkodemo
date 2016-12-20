@@ -1,23 +1,28 @@
 <?php
 
-include "includes/includes.php";
+// include "includes/includes.php";
+
+include "../includes/user.php";
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 // echo "the post is: ";
 
 // echo json_encode($_POST);
 
-if (array_key_exists("flowType", $_POST)) {
-	$regType = $_POST["flowType"];
+if (array_key_exists("regFlow", $_POST)) {
+	$regFlow = $_POST["regFlow"];
 }
 else {
-	if (empty($_POST["regType"])) { $regType = "basic"; }
-	else { $regType = $_POST["regType"]; }
+	if (empty($_POST["regFlow"])) { $regFlow = "basic"; }
+	else { $regFlow = $_POST["regFlow"]; }
 }
 
-foreach ($_POST as $fieldName => $value) {
-	if ($fieldName == "basic" || $fieldName == "flowType") {}
-	else {
-		$user[$fieldName] = filter_var($value, FILTER_SANITIZE_STRING);
+foreach ($_POST as $key => $value) {
+	if ($key != "regFlow") {
+		$user[$key] = filter_var($value, FILTER_SANITIZE_STRING);
 	}
 }
 
@@ -25,7 +30,10 @@ foreach ($_POST as $fieldName => $value) {
 
 // echo "<p>the user object is: " . json_encode($user);
 
-$thisUser = new user($regType, $user);
+$thisUser = new user($regFlow, $user);
+
+exit;
+
 
 if ($regType == "basic" || $regType == "sfChatter") {
 

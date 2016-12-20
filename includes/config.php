@@ -1,5 +1,9 @@
 <?php
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 setIncludePaths();
 
 include "includes.php";
@@ -22,6 +26,8 @@ $thisSite = new demoSite($env, $homeDir);
 $siteToLoad = getSite($env);
 
 $thisSite->setSite($siteToLoad);
+
+$_SESSION["siteObj"] = $thisSite;
 
 /********* Function defs *********************/
 
