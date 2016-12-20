@@ -12,6 +12,8 @@ class user {
 
 		unset($_POST["regType"]);
 
+
+		// ************** BUILD USER DATA *****************/
 		$password = "";
 
 		if (array_key_exists("password", $_POST)) {
@@ -23,35 +25,34 @@ class user {
 			$userData["profile"][$key] = $value;
 		}
 
-		echo "<p>the user object is: " . json_encode($userData);
+		/**************** ANY GROUPS? ********************/
 
 		$groupIDs = "";
 
 		if ($_SESSION["siteObj"]->regFlows[$regType]["groupIDs"]) {
-			$groupIDs = $_SESSION["siteObj"]->regFlows[$regType]["groupIDs"];
-		}
-
-		$url = $_SESSION["siteObj"]->apiHome . "/users?activate=";
-
-		echo "<p>the apiHome is: " . $url;
-
-
-		if ($regType == "sfChatter" || $regType == "basic") {
-			$this->password = $user["password"];
-
-			$userData["credentials"]["password"]["value"] = $this->password;
-
-			$url .= "true"; // activate=true
-		}
-		else { // $regType = withMFA || withEmail || okta
-			$url .= "false"; // activate=false
+			$userData["groupIds"] = $_SESSION["siteObj"]->regFlows[$regType]["groupIDs"];
 		}
 
 		$data = json_encode($userData);
 
-		// echo $data;
+		echo "<p>the user object is: " . $data;
 
-		$apiKey = $config["apiKey"];
+		// ************** ACTIVATE USER? *****************/
+
+		if ($_SESSION["siteObj"]->regFlows[$regType]["activate"]) {
+			$activate = "true";
+		}
+		else { $activate = "false"; }
+
+		/**************** SET URL ************************/
+
+		$url = $_SESSION["siteObj"]->apiHome . "/users?activate=";
+
+		$url .= $activate;
+
+		/**************** GET API KEY *******************/
+
+		$apiKey = $_SESSION["siteObj"]->apiKey;
 
 		$curl = curl_init();
 
