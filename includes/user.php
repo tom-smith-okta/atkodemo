@@ -8,10 +8,9 @@ if (session_status() == PHP_SESSION_NONE) {
 
 class user {
 
-	function __construct($regType, $user) {
+	function __construct($regFlow, $user) {
 
 		unset($_POST["regFlow"]);
-
 
 		// ************** BUILD USER DATA *****************/
 		$password = "";
@@ -33,8 +32,8 @@ class user {
 
 		$groupIDs = "";
 
-		if ($_SESSION["siteObj"]->regFlows[$regType]["groupIDs"]) {
-			$userData["groupIds"] = $_SESSION["siteObj"]->regFlows[$regType]["groupIDs"];
+		if ($_SESSION["siteObj"]->regFlows[$regFlow]["groupIDs"]) {
+			$userData["groupIds"] = $_SESSION["siteObj"]->regFlows[$regFlow]["groupIDs"];
 		}
 
 		$data = json_encode($userData);
@@ -43,7 +42,7 @@ class user {
 
 		// ************** ACTIVATE USER? *****************/
 
-		if ($_SESSION["siteObj"]->regFlows[$regType]["activate"]) {
+		if ($_SESSION["siteObj"]->regFlows[$regFlow]["activate"]) {
 			$activate = "true";
 		}
 		else { $activate = "false"; }

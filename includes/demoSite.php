@@ -11,17 +11,10 @@ class demoSite {
 		$this->metaData = $this->getConfig("metadata");
 
 		foreach($this->metaData as $key => $value) {
-
 			$this->configFiles[] = $key;
-
 		}
 
-		$this->capabilities = ["authentication", "registration", "regWithMFA", "OIDC", "socialLogin", "appsBlacklist", "regWithMFA", "appProvisioning"];
-
-		$this->importantSettings = array_merge($this->configFiles, [ "homeDir", "host", "oktaOrg", "apiKeyPath", "apiKey", "apiKeyIsValid", "clientId", "appsBlacklist", "idps"]);
-
-		$this->pages = [];
-
+		$this->capabilities = ["authentication", "registration", "OIDC", "socialLogin", "appsBlacklist"];
 	}
 
 	private function getConfig($varName) {
@@ -176,14 +169,13 @@ class demoSite {
 
 			$html .= "<h1>Site status</h1>";
 			$html .= "<table border = '1'>\n";
-			$html .= "<tr><td>Site</td><td>env</td><td>Okta org</td><td align = 'center'>AuthN</td><td align = 'center'>Reg</td><td align = 'center'>reg w/MFA</td><td align = 'center'>OIDC</td><td align = 'center'>Social</td><td align= 'center'>Apps WL</td></tr>";
+			$html .= "<tr><td>Site</td><td>env</td><td>Okta org</td><td align = 'center'>AuthN</td><td align = 'center'>Reg</td><td align = 'center'>OIDC</td><td align = 'center'>Social</td><td align= 'center'>Apps BL</td></tr>";
 			$html .= "<tr>";
 			$html .= "<td>" . $this->siteName . "</td>";
 			$html .= "<td>" . $this->env . "</td>";
 			$html .= "<td>" . $this->oktaOrg . "</td>";
 			$html .= "<td align = 'center'>" . $this->getIcon("authentication") . "</td>";
 			$html .= "<td align = 'center'>" . $this->getIcon("registration") . "</td>";
-			$html .= "<td align = 'center'>" . $this->getIcon("regWithMFA") . "</td>";
 			$html .= "<td align = 'center'>" . $this->getIcon("OIDC") . "</td>";
 			$html .= "<td align = 'center'>" . $this->getIcon("socialLogin") . "</td>";
 			$html .= "<td align = 'center'>" . $this->getIcon("appsBlacklist") . "</td>";
@@ -220,12 +212,6 @@ class demoSite {
 		else if ($pageName === "register") {
 
 			$regFlow = $_GET["regFlow"];
-
-			// $_SESSION["groupIDs"] = $this->regFlows[$regFlow]["groupIDs"];
-
-			// echo "the group ids are: " . $this->regFlows[$regFlow]["groupIDs"];
-
-			// echo "the group ids in the session are: " . $_SESSION["groupIDs"];
 
 			$fileName = "regFields.json";
 
@@ -286,9 +272,7 @@ class demoSite {
 			$html = $this->replaceElements($html);
 
 		}
-
 		return $html;
-
 	}
 
 	private function getFormFieldHTML($template, $name, $properties) {
@@ -319,17 +303,7 @@ class demoSite {
 
 		if ($this->oktaOrg) { $this->status["authentication"] = TRUE; }
 
-		if ($this->apiKeyIsValid) {
-			$this->status["registration"] = TRUE;
-
-			if (isset($this->regFlows["withMFA"]["groupID"])) { 
-				$this->status["regWithMFA"] = TRUE;
-			}
-			if (isset($this->regFlows["appProvisioning"]["groupID"])) {
-				$this->status["appProvisioning"] = TRUE;
-			}
-
-		}
+		if ($this->apiKeyIsValid) { $this->status["registration"] = TRUE; }
 
 		if ($this->clientId) { $this->status["OIDC"] = TRUE; }
 		if ($this->status["OIDC"] && $this->idps) { $this->status["socialLogin"] = TRUE; }
