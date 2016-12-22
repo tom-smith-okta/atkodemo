@@ -8,7 +8,9 @@ if (session_status() == PHP_SESSION_NONE) {
 
 class user {
 
-	function __construct($regFlow, $user) {
+	function __construct() {
+
+		$regFlow = $_POST["regFlow"];
 
 		unset($_POST["regFlow"]);
 
@@ -17,16 +19,21 @@ class user {
 
 		if (array_key_exists("password", $_POST)) {
 			$userData["credentials"]["password"]["value"] = $_POST["password"];
+			$this->password = $userData["credentials"]["password"]["value"];
 			unset($_POST["password"]);
 		}
 
 		$userData["profile"] = $_POST;
 
-		if (array_key_exists("login", $_POST)) {}
+		if (array_key_exists("login", $_POST)) {
+			$this->login = $_POST["login"];
+		}
 		else { 
 			$userData["profile"]["login"] = $_POST["email"];
-		}
 
+			$this->login = $userData["profile"]["login"];
+
+		}
 
 		/**************** ANY GROUPS? ********************/
 
@@ -38,7 +45,7 @@ class user {
 
 		$data = json_encode($userData);
 
-		echo "<p>the user object is: " . $data;
+		// echo "<p>the user object is: " . $data;
 
 		// ************** ACTIVATE USER? *****************/
 
@@ -69,7 +76,7 @@ class user {
 
 		$jsonResult = curl_exec($curl);
 
-		echo "<p> the json result is: " . $jsonResult;
+		// echo "<p> the json result is: " . $jsonResult;
 
 		$result = json_decode($jsonResult, TRUE);
 
@@ -79,11 +86,16 @@ class user {
 		else {
 			$this->userID = $result["id"];
 		}
+		curl_close();
 
-		exit;
+		// exit;
 	}
 
 	function authenticate() {
+
+		$apiKey = $_SESSION["siteObj"]->apiKey;
+
+		$apiHome = $_SESSION["siteObj"]->apiHome;
 
 		$curl = curl_init();
 
@@ -92,22 +104,30 @@ class user {
 			"password": "' . $this->password . '"
 		}';
 
-		$url = $this->config["apiHome"] . "/sessions?additionalFields=cookieToken";
+		$url = $apiHome . "/sessions?additionalFields=cookieToken";
 
 		curl_setopt_array($curl, array(
+			CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
 			CURLOPT_POST => TRUE,
 			CURLOPT_RETURNTRANSFER => TRUE,
 			CURLOPT_URL => $url,
 			CURLOPT_POSTFIELDS => $userData
 		));
 
-		$errorMsg = "<p>Sorry, there was an error trying to authenticate the new user:</p>";
+		// $errorMsg = "<p>Sorry, there was an error trying to authenticate the new user:</p>";
 
-		$result = sendCurlRequest($curl, $errorMsg);
+		$jsonResult = curl_exec($curl);
 
-		// echo "<p>the cookie token is: " . $result["cookieToken"];
+		$result = json_decode($jsonResult, TRUE);
 
-		return $result["cookieToken"];
+		if (array_key_exists("errorCode", $result)) {
+			echo $jsonResult;
+			exit;
+		}
+		else {
+			return $result["cookieToken"];
+		}
+		curl_close();
 	}
 
 	function hasOktaEmailAddress() {
@@ -117,7 +137,7 @@ class user {
 
 	function redirect($cookieToken) {
 
-		$url = $this->config["oktaBaseURL"] . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $this->config["redirectURL"];
+		$url = $_SESSION["siteObj"]->oktaBaseURL . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $_SESSION["siteObj"]->redirectUri;
 
 		$headerString = "Location: " . $url; 
 

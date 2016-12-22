@@ -1,45 +1,29 @@
 <?php
 
-// include "includes/includes.php";
-
 include "../includes/user.php";
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// echo "the post is: ";
+$regFlow = $_POST["regFlow"];
 
-// echo json_encode($_POST);
+$thisUser = new user();
 
-if (array_key_exists("regFlow", $_POST)) {
-	$regFlow = $_POST["regFlow"];
+if ($_SESSION["siteObj"]->regFlows[$regFlow]["activate"]) {
+
+	$cookieToken = $thisUser->authenticate();
+
+	$thisUser->redirect($cookieToken);
+
 }
-else {
-	if (empty($_POST["regFlow"])) { $regFlow = "basic"; }
-	else { $regFlow = $_POST["regFlow"]; }
-}
-
-foreach ($_POST as $key => $value) {
-	if ($key != "regFlow") {
-		$user[$key] = filter_var($value, FILTER_SANITIZE_STRING);
-	}
-}
-
-// echo "<p>";
-
-// echo "<p>the user object is: " . json_encode($user);
-
-$thisUser = new user($regFlow, $user);
 
 exit;
 
 
 if ($regType == "basic" || $regType == "sfChatter") {
 
-	$cookieToken = $thisUser->authenticate();
 
-	$thisUser->redirect($cookieToken);
 }
 else {
 

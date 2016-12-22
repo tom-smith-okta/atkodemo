@@ -39,7 +39,6 @@ function getEnvironment() {
 	foreach ($envMarkers as $name => $path) {
 		if (file_exists($path)) { return $name; }
 	}
-
 	return "unknown";
 }
 
