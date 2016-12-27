@@ -256,6 +256,8 @@ class demoSite {
 
 			$this->regDesc = $this->regFlows[$regFlow]["desc"];
 
+			$this->regTitle = $this->regFlows[$regFlow]["title"];
+
 			$this->regFlow = $regFlow;
 
 			$filePath = "../html/" . $pageName . ".html";

@@ -5,9 +5,7 @@
 			"desc": "A basic user record will be created in the Okta universal directory. The user will be authenticated immediately.",
 			"groupIDs": ["00gntdlmx9Favuwhp1t6"],
 			"fields": ["firstName", "lastName", "email", "password"],
-			"activate": true,
-			"thankYouMsg01": "test message 01",
-			"thankYouMsg02": "test message 02"
+			"activate": true
 		},
 		"appProvisioning": {
 			"title": "Registration with Salesforce provisioning",
