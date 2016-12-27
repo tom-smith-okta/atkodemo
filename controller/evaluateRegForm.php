@@ -10,46 +10,43 @@ $regFlow = $_POST["regFlow"];
 
 $thisUser = new user();
 
+$_SESSION["user"] = $thisUser;
+
 if ($_SESSION["siteObj"]->regFlows[$regFlow]["activate"]) {
 
 	$cookieToken = $thisUser->authenticate();
 
 	$thisUser->redirect($cookieToken);
-
-}
-
-exit;
-
-
-if ($regType == "basic" || $regType == "sfChatter") {
-
-
 }
 else {
 
-	$msg = "<p>Thank you for registering with us, " . $thisUser->firstName . "!</p>";
+	// $msg = "<p>Thank you for registering with us, " . $thisUser->firstName . "!</p>";
 
-	if ($regType == "provisional") {
+	if ($regFlow == "provisional") {
 
 		$msg .= "<p>You will receive an activation email after your registration has been reviewed.</p>";
 
 	}
 	else {
 
-		$msg .= "<p>Please check your inbox for an activation email to complete your registration.</p>";
+		// $msg .= "<p>Please check your inbox for an activation email to complete your registration.</p>";
 
-		if ($regType == "okta") {
-			if ($thisUser->hasOktaEmailAddress()) {
-				$thisUser->setAdminRights();
-			}
-		}
+		// if ($regType == "okta") {
+		// 	if ($thisUser->hasOktaEmailAddress()) {
+		// 		$thisUser->setAdminRights();
+		// 	}
+		// }
 
 		$thisUser->sendActivationEmail();
 
 	}
 
-	$headerString = "Location: " . $config["webHomeURL"] . "thankYou.php?email=" . $thisUser->email;
-	$headerString .= "&msg=" . $msg;
+	$headerString = "Location: " . $_SESSION["siteObj"]->webHome . "views/thankYou.php";
+
+	// echo "<p>The header string is: " . $headerString;
+
+	// $headerString = "Location: " . $config["webHomeURL"] . "thankYou.php?email=" . $thisUser->email;
+	// $headerString .= "&msg=" . $msg;
 
 	header($headerString);
 

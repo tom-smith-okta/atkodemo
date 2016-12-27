@@ -12,6 +12,8 @@ class user {
 
 		$regFlow = $_POST["regFlow"];
 
+		$_SESSION["regFlow"] = $regFlow;
+
 		unset($_POST["regFlow"]);
 
 		// ************** BUILD USER DATA *****************/
@@ -32,7 +34,6 @@ class user {
 			$userData["profile"]["login"] = $_POST["email"];
 
 			$this->login = $userData["profile"]["login"];
-
 		}
 
 		/**************** ANY GROUPS? ********************/
@@ -85,10 +86,12 @@ class user {
 		}
 		else {
 			$this->userID = $result["id"];
-		}
-		curl_close();
 
-		// exit;
+			$_SESSION["userProfile"] = $userData["profile"];
+
+			// echo "<p>the user email is: " . $_SESSION["userProfile"]["email"];
+		}
+		curl_close($curl);
 	}
 
 	function authenticate() {
@@ -114,8 +117,6 @@ class user {
 			CURLOPT_POSTFIELDS => $userData
 		));
 
-		// $errorMsg = "<p>Sorry, there was an error trying to authenticate the new user:</p>";
-
 		$jsonResult = curl_exec($curl);
 
 		$result = json_decode($jsonResult, TRUE);
@@ -127,7 +128,7 @@ class user {
 		else {
 			return $result["cookieToken"];
 		}
-		curl_close();
+		curl_close($curl);
 	}
 
 	function hasOktaEmailAddress() {
@@ -148,20 +149,30 @@ class user {
 
 	function sendActivationEmail() {
 
-		$url = $this->config["apiHome"] . "/users/" . $this->userID . "/lifecycle/activate?sendEmail=true";
+		$apiKey = $_SESSION["siteObj"]->apiKey;
+
+		$apiHome = $_SESSION["siteObj"]->apiHome;
+
+		$url = $apiHome . "/users/" . $this->userID . "/lifecycle/activate?sendEmail=true";
 
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
+			CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
 			CURLOPT_POST => TRUE,
 			CURLOPT_RETURNTRANSFER => TRUE,
 			CURLOPT_URL => $url,
 		));
 
-		$errorMsg = "<p>Sorry, something went wrong with trying to set admin rights";
+		$jsonResult = curl_exec($curl);
 
-		$result = sendCurlRequest($curl, $errorMsg);
+		$result = json_decode($jsonResult, TRUE);
 
+		if (array_key_exists("errorCode", $result)) {
+			echo "error sending email: " . $jsonResult;
+			exit;
+		}
+		curl_close($curl);
 	}
 
 	function setAdminRights() {

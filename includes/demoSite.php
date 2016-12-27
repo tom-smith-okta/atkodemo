@@ -1,5 +1,7 @@
 <?php
 
+// include "user.php";
+
 class demoSite {
 
 	function __construct($env, $homeDir) {
@@ -263,6 +265,26 @@ class demoSite {
 			$html = $this->replaceElements($html);
 
 		}
+		else if ($pageName === "thankYou") {
+
+			$filePath = "../html/" . $pageName . ".html";
+
+			$html = file_get_contents($filePath);
+
+			$regFlow = $_SESSION["regFlow"];
+
+			$thankYouMsg01 = $_SESSION["siteObj"]->regFlows[$regFlow]["thankYouMsg01"];
+			$thankYouMsg02 = $_SESSION["siteObj"]->regFlows[$regFlow]["thankYouMsg02"];
+
+			$email = $_SESSION["userProfile"]["email"];
+
+			$html = str_replace("%--thankYouMsg01--%", $thankYouMsg01, $html);
+			$html = str_replace("%--thankYouMsg02--%", $thankYouMsg02, $html);
+			$html = str_replace("%--email--%", $email, $html);
+
+			$html = $this->replaceElements($html);
+
+		}
 		else {
 
 			$filePath = "../html/" . $pageName . ".html";
@@ -503,6 +525,5 @@ class demoSite {
 		$redirectURI .= $this->webHome . "views/index.php";
 
 		return $redirectURI;
-
 	}
 }

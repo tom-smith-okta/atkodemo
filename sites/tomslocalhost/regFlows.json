@@ -5,7 +5,9 @@
 			"desc": "A basic user record will be created in the Okta universal directory. The user will be authenticated immediately.",
 			"groupIDs": ["00gntdlmx9Favuwhp1t6"],
 			"fields": ["firstName", "lastName", "email", "password"],
-			"activate": true
+			"activate": true,
+			"thankYouMsg01": "test message 01",
+			"thankYouMsg02": "test message 02"
 		},
 		"appProvisioning": {
 			"title": "Registration with Salesforce provisioning",
@@ -21,7 +23,9 @@
 			"shortDesc": "User must enroll in MFA",
 			"groupIDs": ["00gnv1elhvYu03OLh1t6"],
 			"fields": ["firstName", "lastName", "email"],
-			"activate": false
+			"activate": false,
+			"thankYouMsg01": "Thank you for registering with us",
+			"thankYouMsg02": "Please check your inbox for an activation email to complete your registration."
 		},
 		"withEmail": {
 			"title": "Email verification user flow",
@@ -29,7 +33,9 @@
 			"shortDesc": "User must verify their email address",
 			"groupIDs": ["00gnv4sf0vkoLWiC21t6"],
 			"fields": ["firstName", "lastName", "email"],
-			"activate": false
+			"activate": false,
+			"thankYouMsg01": "Thank you for registering with us!",
+			"thankYouMsg02": "Please check your inbox for an activation email to complete your registration."
 		},
 		"provisional": {
 			"title": "Provisional registration",
@@ -37,7 +43,9 @@
 			"shortDesc": "User must be approved by admin",
 			"groupIDs": ["00guad15t26RsGWPK1t6"],
 			"fields": ["firstName", "lastName", "email"],
-			"activate": false
+			"activate": false,
+			"thankYouMsg01": "Thank you for registering with us",
+			"thankYouMsg02": "You will receive an activation email after your registration has been reviewed."
 		}
 	}
 }
