@@ -22,7 +22,7 @@
 			"groupIDs": ["00gnv1elhvYu03OLh1t6"],
 			"fields": ["firstName", "lastName", "email"],
 			"activate": false,
-			"thankYouMsg01": "Thank you for registering with us",
+			"thankYouMsg01": "Thank you for registering with us!",
 			"thankYouMsg02": "Please check your inbox for an activation email to complete your registration."
 		},
 		"withEmail": {
@@ -42,8 +42,21 @@
 			"groupIDs": ["00guad15t26RsGWPK1t6"],
 			"fields": ["firstName", "lastName", "email"],
 			"activate": false,
-			"thankYouMsg01": "Thank you for registering with us",
+			"thankYouMsg01": "Thank you for registering with us!",
 			"thankYouMsg02": "You will receive an activation email after your registration has been reviewed."
+		},
+		"oktaAdmin": {
+			"title": "Okta admin self-reg",
+			"desc": "Anyone with an @okta.com email address can register as a read-only admin.",
+			"shortDesc": "User must have an @okta.com email address",
+			"groupIDs": ["00gnv0lbm756RjxT61t6"],
+			"fields": ["firstName", "lastName", "email"],
+			"activate": false,
+			"thankYouMsg01": "Thank you for registering with us!",
+			"thankYouMsg02": "Please check your inbox for an activation email to complete your registration.",
+			"ALLOW_ADMIN_REG": true,
+			"adminSubstring": "@okta.com",
+			"adminRole": "READ_ONLY_ADMIN"
 		}
 	}
 }

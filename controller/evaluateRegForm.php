@@ -8,6 +8,8 @@ if (session_status() == PHP_SESSION_NONE) {
 
 $regFlow = $_POST["regFlow"];
 
+$_SESSION["regFlow"] = $regFlow;
+
 $thisUser = new user();
 
 $_SESSION["user"] = $thisUser;
@@ -20,34 +22,22 @@ if ($_SESSION["siteObj"]->regFlows[$regFlow]["activate"]) {
 }
 else {
 
-	// $msg = "<p>Thank you for registering with us, " . $thisUser->firstName . "!</p>";
+	if ($_SESSION["siteObj"]->regFlows[$regFlow]["ALLOW_ADMIN_REG"]) {
 
-	if ($regFlow == "provisional") {
+		if ($thisUser->hasRequiredEmailAddress()) {
 
-		$msg .= "<p>You will receive an activation email after your registration has been reviewed.</p>";
+			$thisUser->setAdminRights();
 
+		}
+		else {
+			echo "Sorry, that email address is not authorized for admin access.";
+			exit;
+		}
 	}
-	else {
 
-		// $msg .= "<p>Please check your inbox for an activation email to complete your registration.</p>";
-
-		// if ($regType == "okta") {
-		// 	if ($thisUser->hasOktaEmailAddress()) {
-		// 		$thisUser->setAdminRights();
-		// 	}
-		// }
-
-		$thisUser->sendActivationEmail();
-
-	}
+	$thisUser->sendActivationEmail();
 
 	$headerString = "Location: " . $_SESSION["siteObj"]->webHome . "views/thankYou.php";
 
-	// echo "<p>The header string is: " . $headerString;
-
-	// $headerString = "Location: " . $config["webHomeURL"] . "thankYou.php?email=" . $thisUser->email;
-	// $headerString .= "&msg=" . $msg;
-
 	header($headerString);
-
 }
