@@ -1,7 +1,5 @@
 <?php
 
-// include "user.php";
-
 class demoSite {
 
 	function __construct($env, $homeDir) {
@@ -348,11 +346,11 @@ class demoSite {
 	private function apiKeyIsValid() {
 
 		$curl = curl_init();
-
+		
 		$url = $this->apiHome . "/meta/schemas/user/default";
-
+		
 		$apiKey = $this->apiKey;
-
+		
 		curl_setopt_array($curl, array(
 			CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
 			CURLOPT_RETURNTRANSFER => TRUE,
@@ -360,10 +358,11 @@ class demoSite {
 		));
 
 		$jsonResult = curl_exec($curl);
-
+		
 		$assocArray = json_decode($jsonResult, TRUE);
-
+		
 		if ($assocArray["id"]) { return TRUE; }
+		
 		else {
 			$this->warnings[] = $jsonResult;
 			$this->warnings[] = "User registration is not possible without an API key.";

@@ -22,16 +22,19 @@ if ($_SESSION["siteObj"]->regFlows[$regFlow]["activate"]) {
 }
 else {
 
-	if ($_SESSION["siteObj"]->regFlows[$regFlow]["ALLOW_ADMIN_REG"]) {
+	if (array_key_exists("ALLOW_ADMIN_REG", $_SESSION["siteObj"]->regFlows[$regFlow])) {
 
-		if ($thisUser->hasRequiredEmailAddress()) {
+		if ($_SESSION["siteObj"]->regFlows[$regFlow]["ALLOW_ADMIN_REG"] === TRUE) {
 
-			$thisUser->setAdminRights();
+			if ($thisUser->hasRequiredEmailAddress()) {
 
-		}
-		else {
-			echo "Sorry, that email address is not authorized for admin access.";
-			exit;
+				$thisUser->setAdminRights();
+
+			}
+			else {
+				echo "Sorry, that email address is not authorized for admin access.";
+				exit;
+			}
 		}
 	}
 

@@ -1,5 +1,9 @@
 <?php
 
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 function curlRequest($path, $postFields) {
 
 	$apiKey = $_SESSION["siteObj"]->apiKey;
@@ -20,11 +24,20 @@ function curlRequest($path, $postFields) {
 
 	$jsonResult = curl_exec($curl);
 
+	curl_close($curl);
+
 	$result = json_decode($jsonResult, TRUE);
+
+	// if (array_key_exists("errorCode", $result)) {
+	// 	if ($exitOnError) {
+	// 		echo $jsonResult;
+	// 		exit;
+	// 	}
+	// }
 
 	if (array_key_exists("errorCode", $result)) {
 		echo $jsonResult;
 		exit;
 	}
-	curl_close($curl);
+	return $result;
 }

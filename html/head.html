@@ -15,14 +15,12 @@
 	<link rel = 'stylesheet' href = '../css/mainCSS.css'/>
 
 	<style media="screen" type="text/css">
-
 		#container {
 		    z-index: 101;
 		    position: absolute;
 		    top: 60px;
 		    left: 20px;
 	  	}
-
 		#myApps {
 			border-style: solid;
 			border-width: 1px;
@@ -35,7 +33,6 @@
 			color: black;
 			opacity: 1;
 		}
-
 	</style>
 
 	<!-- ******* JAVASCRIPT *******************-->		
@@ -55,18 +52,15 @@
 	%--renderWidget--%
 		
 	<script>
-
 	console.log("checking session...");
 	/************************************/
 	// Check for an Okta session
 	// and update menu accordingly
 	/************************************/
-
 	oktaSignIn.session.exists(function (exists) {
 		if (exists) {
 			console.log("there is an active session.");
 			console.log("---------------------------");
-
 			// getting the fname from the server instead of local storage
 			// to accomodate the use-case where a new user registers and
 			// then gets redirected to this page. There's probably a better
@@ -76,20 +70,14 @@
 		            type: "GET",
 		            dataType: 'json',
 		            url: "https://%--oktaOrg--%.okta.com/api/v1/users/" + res.userId,
-
 		            xhrFields: {
 		                withCredentials: true
 		            },
 		            success: function (data) {
-
 		            	console.dir(data);
-
 		            	console.log("the given_name is: " + data.profile.firstName);
-
 		                localStorage.setItem("given_name", data.profile.firstName);
-
 		                setMenu("authenticated", data.id);
-
 		            },
 		            error: function (textStatus, errorThrown) {
 		                console.log('error retrieving session: ' + JSON.stringify(textStatus));
@@ -105,20 +93,15 @@
 			setMenu("anon");
 		}
 	});
-
 	</script>
 
 	<script>
-
 	function signout() {
-
 		console.log("attempting to sign out...");
-
 	    $.ajax({
 	        type: "DELETE",
 	        dataType: 'json',
 	        url: "https://%--oktaOrg--%.okta.com/api/v1/sessions/me",
-
 	        xhrFields: {
 	            withCredentials: true
 	        },
@@ -132,72 +115,47 @@
 	        },
 	        async: true
 	    });
-
 		setMenu("anon");
 	}
-
 	</script>
 
 	<script>
-
 	function setMenu(authState, userID) {
-
 		var menu = "";
-
 		if (authState == "authenticated") {
 			menu = "<li><a href = '#' onclick = 'signout()'>Log out</a></li>";
-
 			if (localStorage.getItem("given_name")) {
 				menu += "<li><a href='#'>Welcome, " + localStorage.getItem("given_name") + "!</a></li>";
 			}
-
 			console.log ("the user id is: " + userID);
-
 			menu += "<li id = 'showApps'><a href = '#' onclick = 'showApps(\"" + userID + "\")'>My Apps</a></li>";
-
 		}
 		else {
-
 			menu += "%--loginAndReg--%";
 			
 		}
-
 		$("#authLinks").html(menu);
-
 	}
-
 	</script>
 
 	<script>
-
 	function showApps(userID) {
-
 		var appsList = "";
-
 		$.ajax({
 	  		type: "GET",
             dataType: 'json',
             url: "https://%--oktaOrg--%.okta.com/api/v1/users/" + userID + "/appLinks",
-
             xhrFields: {
                 withCredentials: true
             },
             success: function (data) {
-
             	var blacklist = %--appsBlacklist--%;
-
             	var apps = "<h3>My Apps</h3>";
-
             	var onBlacklist;
-
             	for (var i = 0, len = data.length; i < len; i++) {
-
             		onBlacklist = false;
-
             		label = data[i].label;
-
             		console.log("found an app: " + label + " id: " + data[i].id);
-
             		if (typeof blacklist === "object") {
             			for (var j = 0, jlen = blacklist.length; j < jlen; j++) {
             				if (blacklist[j].id === data[i].id) {
@@ -207,13 +165,10 @@
             				}
             			}
             		}
-
             		if (!(onBlacklist)) {
             			apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + label + "</a></li>";
             		}
-
 				}
-
 				$("#myApps").html(apps);
  
 	        },
@@ -223,17 +178,13 @@
             },
             async: true
     	});
-
 		$("#myApps").show();
 		$("#showApps").html('<a href="#" onclick="hideApps()">My Apps</a>');
-
 	}
-
 	function hideApps() {
 		$("#myApps").hide();
 		$("#showApps").html('<a href="#" onclick="showApps()">My Apps</a>');
 	}
-
 	</script>
 
 	<script src = '../javascript/ui/dates.js'></script>

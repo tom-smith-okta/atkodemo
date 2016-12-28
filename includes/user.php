@@ -1,8 +1,5 @@
 <?php
 
-include "demoSite.php";
-include "curlRequest.php";
-
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -58,79 +55,30 @@ class user {
 		}
 		else { $activate = "false"; }
 
-		/**************** SET URL ************************/
+		/**************** SEND CURL REQUEST *******************/
 
-		$url = $_SESSION["siteObj"]->apiHome . "/users?activate=";
+		$path = "/users?activate=" . $activate;
 
-		$url .= $activate;
+		$result = curlRequest($path, $data);
 
-		/**************** GET API KEY *******************/
+		$this->userID = $result["id"];
+		$this->email = $_POST["email"];
 
-		$apiKey = $_SESSION["siteObj"]->apiKey;
-
-		$curl = curl_init();
-
-		curl_setopt_array($curl, array(
-			CURLOPT_POST => TRUE,
-			CURLOPT_RETURNTRANSFER => TRUE,
-			CURLOPT_URL => $url,
-	    	CURLOPT_POSTFIELDS => $data,
-	    	CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json")
-		));
-
-		$jsonResult = curl_exec($curl);
-
-		// echo "<p> the json result is: " . $jsonResult;
-
-		$result = json_decode($jsonResult, TRUE);
-
-		if (array_key_exists("errorCode", $result)) {
-			echo $jsonResult;
-		}
-		else {
-			$this->userID = $result["id"];
-			$this->email = $_POST["email"];
-
-			$_SESSION["userProfile"] = $userData["profile"];
-		}
-		curl_close($curl);
+		$_SESSION["userProfile"] = $userData["profile"];
 	}
 
 	function authenticate() {
 
-		$apiKey = $_SESSION["siteObj"]->apiKey;
-
-		$apiHome = $_SESSION["siteObj"]->apiHome;
-
-		$curl = curl_init();
+		$path = "/sessions?additionalFields=cookieToken";
 
 		$userData = '{
 			"username": "' . $this->login . '",
 			"password": "' . $this->password . '"
 		}';
 
-		$url = $apiHome . "/sessions?additionalFields=cookieToken";
+		$result = curlRequest($path, $userData);
 
-		curl_setopt_array($curl, array(
-			CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
-			CURLOPT_POST => TRUE,
-			CURLOPT_RETURNTRANSFER => TRUE,
-			CURLOPT_URL => $url,
-			CURLOPT_POSTFIELDS => $userData
-		));
-
-		$jsonResult = curl_exec($curl);
-
-		$result = json_decode($jsonResult, TRUE);
-
-		if (array_key_exists("errorCode", $result)) {
-			echo $jsonResult;
-			exit;
-		}
-		else {
-			return $result["cookieToken"];
-		}
-		curl_close($curl);
+		return $result["cookieToken"];
 	}
 
 	public function hasRequiredEmailAddress() {
@@ -160,30 +108,9 @@ class user {
 
 	function sendActivationEmail() {
 
-		$apiKey = $_SESSION["siteObj"]->apiKey;
+		$path = "/users/" . $this->userID . "/lifecycle/activate?sendEmail=true";
 
-		$apiHome = $_SESSION["siteObj"]->apiHome;
-
-		$url = $apiHome . "/users/" . $this->userID . "/lifecycle/activate?sendEmail=true";
-
-		$curl = curl_init();
-
-		curl_setopt_array($curl, array(
-			CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
-			CURLOPT_POST => TRUE,
-			CURLOPT_RETURNTRANSFER => TRUE,
-			CURLOPT_URL => $url,
-		));
-
-		$jsonResult = curl_exec($curl);
-
-		$result = json_decode($jsonResult, TRUE);
-
-		if (array_key_exists("errorCode", $result)) {
-			echo $jsonResult;
-			exit;
-		}
-		curl_close($curl);
+		$result = curlRequest($path, "");
 	}
 
 	public function setAdminRights() {
@@ -194,7 +121,7 @@ class user {
 
 		$postFields = '{ "type": "' . $role . '" }';
 
-		curlRequest($path, $postFields);
+		$result = curlRequest($path, $postFields);
 
 	}
 }
