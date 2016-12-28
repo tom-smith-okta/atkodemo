@@ -182,6 +182,18 @@ class demoSite {
 
 			$html .= "</tr>";
 			$html .= "</table>";
+
+			$sites = scandir($this->sitesHome);
+
+			foreach ($sites as $site) {
+
+				if (is_dir($site)) {
+					$html .= "<p>" . $site . " is a directory ";
+				}
+			}
+
+
+			$html .= "<p>List of sites: " . json_encode($sites);
 		}
 		else if ($pageName === "allSettings") {
 
