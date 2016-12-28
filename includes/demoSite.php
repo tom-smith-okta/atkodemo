@@ -183,23 +183,24 @@ class demoSite {
 			$html .= "</tr>";
 			$html .= "</table>";
 
-			$sites = scandir($this->sitesHome);
+			$dirs = scandir($this->sitesHome);
 
-			foreach ($sites as $site) {
+			foreach ($dirs as $dir) {
 
-				$path = $this->sitesHome . $site;
+				if ($dir === "." || $dir === "..") {}
+				else {
+					$path = $this->sitesHome . $dir;
 
-				// echo "<p>the path is: " . $path;
+					if (is_dir($path)) {
+						$html .= "<p>" . $dir . " is a directory ";
 
-				// echo "<p>the filetype of $site is: " . filetype($path);
 
-				if (is_dir($path)) {
-					$html .= "<p>" . $site . " is a directory ";
+					}
 				}
 			}
 
 
-			$html .= "<p>List of sites: " . json_encode($sites);
+			// $html .= "<p>List of sites: " . json_encode($sites);
 		}
 		else if ($pageName === "allSettings") {
 
@@ -364,30 +365,26 @@ class demoSite {
 	private function apiKeyIsValid() {
 
 		$curl = curl_init();
-		
+
 		$url = $this->apiHome . "/meta/schemas/user/default";
 
-		echo "the url is: " . $url;
-		
 		$apiKey = $this->apiKey;
 
-		echo "the apiKey is: " . $apiKey;
-		
 		curl_setopt_array($curl, array(
-			CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
-			CURLOPT_POST => TRUE,
+			CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json"),
 			CURLOPT_RETURNTRANSFER => TRUE,
 			CURLOPT_URL => $url
 		));
 
 		$jsonResult = curl_exec($curl);
 
-		echo "<p>$jsonResult";
-		
+		if (curl_error($curl)) { $this->warnings[] = curl_error($curl); }
+
+		curl_close($curl);
+
 		$assocArray = json_decode($jsonResult, TRUE);
-		
+
 		if ($assocArray["id"]) { return TRUE; }
-		
 		else {
 			$this->warnings[] = $jsonResult;
 			$this->warnings[] = "User registration is not possible without an API key.";

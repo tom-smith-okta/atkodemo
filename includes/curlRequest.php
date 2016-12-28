@@ -24,16 +24,14 @@ function curlRequest($path, $postFields) {
 
 	$jsonResult = curl_exec($curl);
 
+	if (curl_error($curl)) {
+		echo curl_error($curl);
+		exit;
+	}
+
 	curl_close($curl);
 
 	$result = json_decode($jsonResult, TRUE);
-
-	// if (array_key_exists("errorCode", $result)) {
-	// 	if ($exitOnError) {
-	// 		echo $jsonResult;
-	// 		exit;
-	// 	}
-	// }
 
 	if (array_key_exists("errorCode", $result)) {
 		echo $jsonResult;
