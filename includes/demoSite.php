@@ -187,7 +187,13 @@ class demoSite {
 
 			foreach ($sites as $site) {
 
-				if (is_dir($site)) {
+				$path = $this->sitesHome . $site;
+
+				// echo "<p>the path is: " . $path;
+
+				// echo "<p>the filetype of $site is: " . filetype($path);
+
+				if (is_dir($path)) {
 					$html .= "<p>" . $site . " is a directory ";
 				}
 			}
@@ -360,16 +366,23 @@ class demoSite {
 		$curl = curl_init();
 		
 		$url = $this->apiHome . "/meta/schemas/user/default";
+
+		echo "the url is: " . $url;
 		
 		$apiKey = $this->apiKey;
+
+		echo "the apiKey is: " . $apiKey;
 		
 		curl_setopt_array($curl, array(
 			CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
+			CURLOPT_POST => TRUE,
 			CURLOPT_RETURNTRANSFER => TRUE,
 			CURLOPT_URL => $url
 		));
 
 		$jsonResult = curl_exec($curl);
+
+		echo "<p>$jsonResult";
 		
 		$assocArray = json_decode($jsonResult, TRUE);
 		
