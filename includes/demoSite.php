@@ -2,19 +2,21 @@
 
 class demoSite {
 
-	function __construct($env, $homeDir) {
+	function __construct($siteName) {
 
-		$this->env = $env; // name of the local server environment
+		// $this->env = $env; // name of the local server environment
 
-		$this->setLocalPaths($homeDir);
+		echo "<p>the site Name is: $siteName";
 
-		$this->metaData = $this->getConfig("metadata");
+		// $this->setLocalPaths($homeDir);
 
-		foreach($this->metaData as $key => $value) {
-			$this->configFiles[] = $key;
-		}
+		// $this->metaData = $this->getConfig("metadata");
 
-		$this->capabilities = ["authentication", "registration", "OIDC", "socialLogin", "appsBlacklist"];
+		// foreach($this->metaData as $key => $value) {
+		// 	$this->configFiles[] = $key;
+		// }
+
+		// $this->capabilities = ["authentication", "registration", "OIDC", "socialLogin", "appsBlacklist"];
 	}
 
 	private function getConfig($varName) {
