@@ -2,65 +2,34 @@
 
 class demoSite {
 
-	function __construct($siteName) {
+	function __construct($dirName) {
 
-		// $this->env = $env; // name of the local server environment
+		$this->dirName = $dirName;
 
-		echo "<p>the site Name is: $siteName";
+		$this->sitePath = "../sites/" . $dirName . "/";
 
-		// $this->setLocalPaths($homeDir);
+		$this->main = $this->getConfigFile("main", TRUE);
 
-		// $this->metaData = $this->getConfig("metadata");
+		foreach ($this->main as $key => $value) {
+			$this->$key = $value;
+		}
 
-		// foreach($this->metaData as $key => $value) {
-		// 	$this->configFiles[] = $key;
-		// }
+		$this->theme = $this->getConfigFile("theme", TRUE);
 
-		// $this->capabilities = ["authentication", "registration", "OIDC", "socialLogin", "appsBlacklist"];
-	}
-
-	private function getConfig($varName) {
-		$json = file_get_contents($varName . ".json", FILE_USE_INCLUDE_PATH);
-
-		$assocArray = json_decode($json, TRUE);
-		return $assocArray;
-	}
-
-	private function setLocalPaths($homeDir) {
-
-		$this->homeDir = $homeDir;
-
-		$this->sitesHome = "../sites/";
-
-		$this->defaultPath = "../sites/default/";
-
-		$this->webHome = "/";
-
-		if(!empty($this->homeDir)) {
-			$this->webHome = $this->webHome . $homeDir . "/";
-		}		
-	}
-
-	public function setSite($siteDir) {
-		
-		$this->siteDir = $siteDir;
-
-		$this->sitePath = $this->sitesHome . $this->siteDir . "/";
-
-		// load just the essentials first
-		// $isRequired = TRUE
-		$this->loadConfigFiles(TRUE);
+		foreach ($this->theme as $key => $value) {
+			$this->$key = $value;
+		}
 
 		$this->setRemotePaths();
 
 		$this->checkAPIkey();
 
-		// load the optional config files
-		$this->loadConfigFiles(FALSE);
-
-		// check to see which capabilities are ready
-		// and which are not
 		$this->setSiteStatus();
+
+		if ($this->status["registration"]) {
+			$this->regFlows = $this->getConfigFile("regFlows", TRUE);
+			$this->setRegOptions();
+		}
 
 		if ($this->status["appsBlacklist"]) {
 			$this->appsBlacklist = json_encode($this->appsBlacklist);
@@ -69,8 +38,7 @@ class demoSite {
 			$this->appsBlacklist = "none";
 		}
 
-		$this->setRegOptions();
-
+		$this->webHome = $_SESSION["env"]["webHome"];
 	}
 
 	private function setOktaWidget($pageName = "") {
@@ -163,7 +131,11 @@ class demoSite {
 
 	}
 
-	private function getHTML($pageName) {
+	public function getStatus() {
+		return $this->status;
+	}
+
+	public function getHTML($pageName) {
 
 		$html = "";
 
@@ -173,7 +145,7 @@ class demoSite {
 			$html .= "<table border = '1'>\n";
 			$html .= "<tr><td>Site</td><td>env</td><td>Okta org</td><td align = 'center'>AuthN</td><td align = 'center'>Reg</td><td align = 'center'>OIDC</td><td align = 'center'>Social</td><td align= 'center'>Apps BL</td></tr>";
 			$html .= "<tr>";
-			$html .= "<td>" . $this->siteName . "</td>";
+			$html .= "<td>" . $this->dirName . "</td>";
 			$html .= "<td>" . $this->env . "</td>";
 			$html .= "<td>" . $this->oktaOrg . "</td>";
 			$html .= "<td align = 'center'>" . $this->getIcon("authentication") . "</td>";
@@ -200,7 +172,6 @@ class demoSite {
 					}
 				}
 			}
-
 
 			// $html .= "<p>List of sites: " . json_encode($sites);
 		}
@@ -240,7 +211,7 @@ class demoSite {
 				$json = file_get_contents($this->sitePath . $fileName);
 			}
 			else {
-				$json = file_get_contents($this->defaultPath . $fileName);
+				$json = file_get_contents($_SESSION["defaultPath"] . $fileName);
 			}
 
 			$regFields = json_decode($json, TRUE);
@@ -294,8 +265,8 @@ class demoSite {
 
 			$regFlow = $_SESSION["regFlow"];
 
-			$thankYouMsg01 = $_SESSION["siteObj"]->regFlows[$regFlow]["thankYouMsg01"];
-			$thankYouMsg02 = $_SESSION["siteObj"]->regFlows[$regFlow]["thankYouMsg02"];
+			$thankYouMsg01 = $_SESSION["demo"]["site"]->regFlows[$regFlow]["thankYouMsg01"];
+			$thankYouMsg02 = $_SESSION["demo"]["site"]->regFlows[$regFlow]["thankYouMsg02"];
 
 			$email = $_SESSION["userProfile"]["email"];
 
@@ -332,7 +303,7 @@ class demoSite {
 		return str_replace("%--input--%", $input, $template);
 	}
 
-	private function getIcon($param) {
+	public function getIcon($param) {
 
 		if ($this->status[$param]) { return "<i class='fa fa-check' aria-hidden='true' style='color:LimeGreen'></i>"; }
 		else { return "<i class='fa fa-close' aria-hidden='true' style='color:Red'></i>"; }
@@ -340,7 +311,7 @@ class demoSite {
 
 	function setSiteStatus() {
 
-		foreach ($this->capabilities as $capability) {
+		foreach ($_SESSION["capabilities"] as $capability) {
 			$this->status[$capability] = FALSE;
 		}
 
@@ -362,6 +333,10 @@ class demoSite {
 		}
 		else { return "NONE"; }
 
+	}
+
+	public function showSettings() {
+		echo json_encode($this);
 	}
 
 	private function apiKeyIsValid() {
@@ -417,64 +392,41 @@ class demoSite {
 		else {
 			$this->warnings[] = "The file " . $apiKeyPath . " does not exist.";
 		}
-
 	}
 
-	private function getFile($configFile, $getDefault = FALSE) {
+	private function getConfigFile($configFile, $getDefault = FALSE) {
+
+		$dir = "";
 
 		$fileName = $configFile . ".json";
+
+		// echo "<p>the site path is: " . $this->sitePath;
 
 		if (file_exists($this->sitePath . $fileName)) {
 			$dir = $this->sitePath;
 		}
 		else {
 			if ($getDefault) {
-				$dir = $this->defaultPath;
+				$dir = $_SESSION["defaultPath"];
 			}
 		}
 
 		$path = $dir . $fileName;
 
-		$this->$configFile = $path; // save the $path for error-checking purposes
+		$this->$configFile["loadedFrom"] = $path; // save the $path for error-checking purposes
 
-		$settings = json_decode(file_get_contents($path), TRUE);
+		// echo "<p>loading $configFile from " . $this->$configFile["loadedFrom"];
 
-		foreach ($settings as $key => $value) {
-
-			$this->$key = $value;
-		}
-	}
-
-	// Reads json config files and stores the settings in $this object
-	// If the config file is not in the site directory, then the json
-	// file will be loaded from the default directory.
-	private function getSettings($configFile) {
-
-		if ($this->metaData[$configFile]["required"]) {
-			$this->getFile($configFile, $this->metaData[$configFile]["required"]);
+		if (file_exists($path)) {
+			return json_decode(file_get_contents($path), TRUE); 
 		}
 		else {
-			$dependency = $this->metaData[$configFile]["dependency"];
-
-			if ($this->$dependency) {
-				$this->getFile($configFile);
-			}
-			else {
-				$this->$configFile = "none";
-			}
+			$this->warnings[] = "could not find file " . $path;
+			return "";
 		}
 	}
 
-	private function loadConfigFiles($isRequired) {
-
-		foreach ($this->configFiles as $configFile) {
-			if ($this->metaData[$configFile]["required"] === $isRequired) {
-				$this->getSettings($configFile);
-			}
-		}
-	}
-
-	public function showPage($pageName) {
+	public function showPage($pageName, $bodyMain = "") {
 
 		$this->setOktaWidget($pageName);
 
@@ -489,7 +441,12 @@ class demoSite {
 
 		$head = $this->replaceElements($head);
 
-		$this->bodyMain = $this->getHTML($pageName);
+		if (empty($bodyMain)) {
+			$this->bodyMain = $this->getHTML($pageName);
+		}
+		else {
+			$this->bodyMain = $bodyMain;
+		}
 
 		$body = file_get_contents("../html/body.html");
 
@@ -506,7 +463,7 @@ class demoSite {
 
 		$arr = explode($delimiter, $thisString);
 
-		foreach($arr as $element) {
+		foreach ($arr as $element) {
 			if (substr($element, 0, 2) == "--") {
 				$target = "%" . $element . "%";
 
@@ -515,7 +472,6 @@ class demoSite {
 				$name = $nameArr[1];
 
 				$thisString = str_replace($target, $this->$name, $thisString);
-
 			}
 		}
 
@@ -547,7 +503,7 @@ class demoSite {
 			else { $redirectURI .= ":" . $_SERVER["SERVER_PORT"]; }
 		}
 
-		$redirectURI .= $this->webHome . "views/index.php";
+		$redirectURI .= $_SESSION["env"]["webHome"] . "views/index.php";
 
 		return $redirectURI;
 	}

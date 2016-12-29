@@ -11,31 +11,35 @@ function setDemoEnv() {
 	// 3) a docker container
 	// 4) other
 
-	$json = file_get_contents("standardEnvs.json", FILE_USE_INCLUDE_PATH);
-
-	$envs = json_decode($json, TRUE);
-
-	$_SESSION["demo"]["env"]["name"] = getEnvironment($envs);
+	setEnvVars();
 
 	$_SESSION["demo"]["homeDir"] = getHomeDir();
 
 	getSites();
 
+	$_SESSION["capabilities"] = ["authentication", "registration", "OIDC", "socialLogin", "appsBlacklist"];
+
+	$_SESSION["defaultPath"] = "../sites/default/";
+
 }
 
-/********* Function defs *********************/
+function setEnvVars() {
+	$_SESSION["env"]["name"] = "unknown";
+	$_SESSION["env"]["defaultDir"] = "default";
+	$_SESSION["env"]["webHome"] = "atkodemo";
 
-function getEnvironment($envs) {
+	$json = file_get_contents("standardEnvs.json", FILE_USE_INCLUDE_PATH);
+
+	$envs = json_decode($json, TRUE);
+
 	foreach ($envs as $name => $vals) {
 		if (file_exists($vals["marker"])) {
-
-			$_SESSION["demo"]["env"]["defaultSite"] = $vals["site"];
-
-			return $name;
+			$_SESSION["env"]["name"] = $name;
+			$_SESSION["env"]["defaultDir"] = $vals["dir"];
+			$_SESSION["env"]["webHome"] = $vals["webHome"];
+			break;
 		}
 	}
-	$_SESSION["demo"]["env"]["defaultSite"] = "default";
-	return "unknown";
 }
 
 // fixes the script's place in the filesystem

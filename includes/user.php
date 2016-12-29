@@ -1,6 +1,9 @@
 <?php
 
-if (session_status() == PHP_SESSION_NONE) {
+include "../includes/demoSite.php";
+include "../includes/curlRequest.php";
+
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
@@ -40,8 +43,8 @@ class user {
 
 		$groupIDs = "";
 
-		if ($_SESSION["siteObj"]->regFlows[$regFlow]["groupIDs"]) {
-			$userData["groupIds"] = $_SESSION["siteObj"]->regFlows[$regFlow]["groupIDs"];
+		if ($_SESSION["demo"]["site"]->regFlows[$regFlow]["groupIDs"]) {
+			$userData["groupIds"] = $_SESSION["demo"]["site"]->regFlows[$regFlow]["groupIDs"];
 		}
 
 		$data = json_encode($userData);
@@ -50,7 +53,7 @@ class user {
 
 		// ************** ACTIVATE USER? *****************/
 
-		if ($_SESSION["siteObj"]->regFlows[$regFlow]["activate"]) {
+		if ($_SESSION["demo"]["site"]->regFlows[$regFlow]["activate"]) {
 			$activate = "true";
 		}
 		else { $activate = "false"; }
@@ -85,7 +88,7 @@ class user {
 
 		$regFlow = $_SESSION["regFlow"];
 
-		$substr = $_SESSION["siteObj"]->regFlows[$regFlow]["adminSubstring"];
+		$substr = $_SESSION["demo"]["site"]->regFlows[$regFlow]["adminSubstring"];
 
 		$len = strlen($substr);
 
@@ -97,7 +100,7 @@ class user {
 
 	function redirect($cookieToken) {
 
-		$url = $_SESSION["siteObj"]->oktaBaseURL . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $_SESSION["siteObj"]->redirectUri;
+		$url = $_SESSION["demo"]["site"]->oktaBaseURL . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $_SESSION["demo"]["site"]->redirectUri;
 
 		$headerString = "Location: " . $url; 
 
@@ -117,7 +120,7 @@ class user {
 
 		$path = "/users/" . $this->userID . "/roles";
 
-		$role = $_SESSION["siteObj"]->regFlows[$this->regFlow]["adminRole"];
+		$role = $_SESSION["demo"]["site"]->regFlows[$this->regFlow]["adminRole"];
 
 		$postFields = '{ "type": "' . $role . '" }';
 

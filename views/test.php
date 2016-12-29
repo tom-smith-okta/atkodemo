@@ -5,31 +5,39 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 include "../includes/demoEnv.php";
+include "../includes/demoSite.php";
 
-if (!(array_key_exists("demo", $_SESSION))) {
+if (!(array_key_exists("env", $_SESSION))) {
 	setDemoEnv();
 }
 
-if (empty($_SESSION["demo"]["siteToLoad"])) {
-	$_SESSION["demo"]["siteToLoad"] = $_SESSION["demo"]["env"]["defaultSite"];
+if (empty($_SESSION["demo"]["site"])) {
+	$siteName = $_SESSION["env"]["defaultSite"];
+
+	$_SESSION["demo"]["site"] = new demoSite($siteName);
+
+	// $_SESSION["demo"]["site"] = $thisSite;
 }
-
-include "../includes/demoSite.php";
-
-echo "<p>the include path is: " . get_include_path();
-
-echo "<p>the env name is: " . $_SESSION["demo"]["env"]["name"];
-
-echo "<p>the home dir is: " . $_SESSION["demo"]["homeDir"];
-
-echo "<p>the default site is: " . $_SESSION["demo"]["env"]["defaultSite"];
-
-echo "<p>the list of sites is: " . json_encode($_SESSION["demo"]["sites"]);
 
 foreach($_SESSION["demo"]["sites"] as $siteName) {
 
 	$thisSite = new demoSite($siteName);
 
+	// echo "<p><b>" . $thisSite->siteName . "</b></p>";
+
+	// echo "<p>the base URL is: " . $thisSite->apiHome;
+
+	// echo "<p> the apikey is: " . $thisSite->apiKey;
+
+	// $thisSite->showSettings();
+
+
 }
+
+$thisSite = new demoSite("tomslocalhost");
+
+
+$thisSite->showPage("index");
+
 
 session_destroy();

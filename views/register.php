@@ -1,9 +1,5 @@
 <?php
 
-include "../includes/config.php";
+include "../includes/loadDemo.php";
 
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
-$thisSite->showPage("register");
+$_SESSION["demo"]["site"]->showPage("register");

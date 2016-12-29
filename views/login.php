@@ -1,5 +1,5 @@
 <?php
 
-include "../includes/config.php";
+include "../includes/loadDemo.php";
 
-$thisSite->showPage("login");
+$_SESSION["demo"]["site"]->showPage("login");
