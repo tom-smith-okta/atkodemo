@@ -317,7 +317,10 @@ class demoSite {
 
 		if ($this->oktaOrg) { $this->status["authentication"] = TRUE; }
 
-		if ($this->apiKeyIsValid) { $this->status["registration"] = TRUE; }
+		if ($this->apiKeyIsValid) {
+			$this->status["apiKey"] = TRUE;
+			$this->status["registration"] = TRUE;
+		}
 
 		if ($this->clientId) { $this->status["OIDC"] = TRUE; }
 		if ($this->status["OIDC"] && $this->idps) { $this->status["socialLogin"] = TRUE; }
@@ -400,8 +403,6 @@ class demoSite {
 
 		$fileName = $configFile . ".json";
 
-		// echo "<p>the site path is: " . $this->sitePath;
-
 		if (file_exists($this->sitePath . $fileName)) {
 			$dir = $this->sitePath;
 		}
@@ -413,12 +414,13 @@ class demoSite {
 
 		$path = $dir . $fileName;
 
-		$this->$configFile["loadedFrom"] = $path; // save the $path for error-checking purposes
-
-		// echo "<p>loading $configFile from " . $this->$configFile["loadedFrom"];
+		$this->source[$configFile] = $path; // save the $path for error-checking purposes
 
 		if (file_exists($path)) {
-			return json_decode(file_get_contents($path), TRUE); 
+			$this->status[$configFile] = TRUE;
+			
+			return json_decode(file_get_contents($path), TRUE);
+
 		}
 		else {
 			$this->warnings[] = "could not find file " . $path;
