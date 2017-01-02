@@ -11,7 +11,10 @@ if (!(array_key_exists("env", $_SESSION))) {
 	setDemoEnv();
 }
 
-if (empty($_SESSION["demo"]["site"])) {
+if (array_key_exists("siteToLoad", $_GET)) {
+	$_SESSION["demo"]["site"] = new demoSite($_GET["siteToLoad"]);
+}
+else if (empty($_SESSION["demo"]["site"])) {
 	$siteName = $_SESSION["env"]["defaultSite"];
 
 	$_SESSION["demo"]["site"] = new demoSite($siteName);

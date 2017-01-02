@@ -14,11 +14,15 @@ $configFiles = ["main", "regFlows", "theme"];
 
 $bottomRow = file_get_contents("../html/status/bottomRow.html");
 
-foreach ($_SESSION["demo"]["sites"] as $siteName) {
+foreach ($_SESSION["demo"]["sites"] as $dirName) {
 
-	$site = new demoSite($siteName);
+	$site = new demoSite($dirName);
 
-	$rows .= "<tr>";
+	if ($site->dirName === $thisSite->dirName) { 
+		$rows .= "<tr style = 'background-color: LightGoldenRodYellow;'>";
+	}
+	else { $rows .= "<tr>"; }
+
 	$rows .= "<td style = 'border-left: 2px solid; border-right: 2px solid;'>" . $site->dirName . "</td>";
 	$rows .= "<td>" . $site->siteName . "</td>";
 	$rows .= "<td>" . $site->oktaOrg . "</td>";
@@ -34,6 +38,13 @@ foreach ($_SESSION["demo"]["sites"] as $siteName) {
 
 	$thisRow = $bottomRow;
 
+	if ($site->dirName === $thisSite->dirName) { $siteToLoad = ""; }
+	else {
+		$siteToLoad = "<a href = 'status.php?siteToLoad=" . $dirName . "' class = 'button big'>Load</a>";
+	}
+
+	$thisRow = str_replace("%--siteToLoad--%", $siteToLoad, $thisRow);
+
 	foreach ($configFiles as $file) {
 
 		$bullseye = "%--" . $file . "--%";
@@ -47,12 +58,6 @@ foreach ($_SESSION["demo"]["sites"] as $siteName) {
 	}
 
 	$rows .= $thisRow;
-
-	// $rows .= "<tr style = 'border-bottom: 2px solid'>";
-
-	// $rows .= "<td style = 'border-left: 2px solid; border-right: 2px solid;'></td><td colspan = '7' style = 'border-right: 1px solid; text-align: center;'>" . $site->source["main"] . "</td><td style = 'border-right: 1px solid; text-align: center;'>" . $site->source["regFlows"] . "</td><td style = 'border-right: 1px solid; text-align: center;'>" . $site->source["theme"] . "</td>";
-
-	// $rows .= "</tr>\n";
 
 }
 
