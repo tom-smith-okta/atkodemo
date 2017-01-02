@@ -16,3 +16,6 @@ RUN git clone -b tsmith/dockerV01 --single-branch https://github.com/tom-smith-o
 
 ####################
 
+# docker build -t atkodemov01 .
+# docker run -d -p 80:80 atkodemodockerv01
+
