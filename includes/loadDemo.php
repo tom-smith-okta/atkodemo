@@ -7,9 +7,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (!(array_key_exists("env", $_SESSION))) {
-	setDemoEnv();
-}
+setDemoEnv();
+
+// if (!(array_key_exists("env", $_SESSION))) {
+// 	setDemoEnv();
+// }
 
 if (array_key_exists("siteToLoad", $_GET)) {
 	$_SESSION["demo"]["site"] = new demoSite($_GET["siteToLoad"]);

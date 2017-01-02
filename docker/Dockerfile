@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y git
 
 WORKDIR /var/www/html/
 
-RUN git clone -b tsmith/dockerV01 --single-branch https://github.com/tom-smith-okta/atkodemo.git
+RUN git clone -b tsmith/dockerV02 --single-branch https://github.com/tom-smith-okta/atkodemo.git
 
 ####################
 
