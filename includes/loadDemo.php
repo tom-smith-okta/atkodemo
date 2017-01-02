@@ -15,7 +15,7 @@ if (array_key_exists("siteToLoad", $_GET)) {
 	$_SESSION["demo"]["site"] = new demoSite($_GET["siteToLoad"]);
 }
 else if (empty($_SESSION["demo"]["site"])) {
-	$siteName = $_SESSION["env"]["defaultSite"];
+	$siteName = $_SESSION["defaultSite"];
 
 	$_SESSION["demo"]["site"] = new demoSite($siteName);
 }

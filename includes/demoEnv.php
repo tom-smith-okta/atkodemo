@@ -4,16 +4,9 @@ function setDemoEnv() {
 
 	setIncludePaths();
 
-	// look for a marker file on the local machine
-	// to indicate whether the script is running on:
-	// 1) Tom's local machine
-	// 2) the www.atkodemo.com web server
-	// 3) a docker container
-	// 4) other
+	$_SESSION["webHome"] = getHomeDir();
 
-	setEnvVars();
-
-	$_SESSION["demo"]["homeDir"] = getHomeDir();
+	$_SESSION["defaultSite"] = "atkodemoShared";
 
 	getSites();
 
@@ -49,6 +42,8 @@ function getHomeDir() {
 }
 
 function getSites() {
+
+	unset($_SESSION["demo"]["sites"]);
 
 	$sitesHome = "../sites";
 

@@ -6,8 +6,6 @@ $thisSite = $_SESSION["demo"]["site"];
 
 $bodyMain = file_get_contents("../html/status.html");
 
-$env = $_SESSION["env"]["name"];
-
 $rows = "";
 
 $configFiles = ["main", "regFlows", "theme"];
@@ -56,13 +54,9 @@ foreach ($_SESSION["demo"]["sites"] as $dirName) {
 		$thisRow = str_replace("%--$file--%", $arrow, $thisRow);
 
 	}
-
 	$rows .= $thisRow;
-
 }
 
-
 $bodyMain = str_replace("%--rows--%", $rows, $bodyMain);
-$bodyMain = str_replace("%--env--%", $env, $bodyMain);
 
 $thisSite->showPage("status", $bodyMain);

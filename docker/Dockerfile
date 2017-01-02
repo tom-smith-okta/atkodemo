@@ -12,11 +12,7 @@ RUN touch dockerContainer.txt
 
 # RUN git clone https://github.com/tom-smith-okta/atkodemo.git
 
-RUN git clone https://github.com/tom-smith-okta/atkodemo.git
-
-# EXPOSE 80
+RUN git clone -b tsmith/dockerV01 --single-branch https://github.com/tom-smith-okta/atkodemo.git
 
 ####################
-
-# Point dockerfile to specific git branch
 

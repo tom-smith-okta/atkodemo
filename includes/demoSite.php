@@ -8,6 +8,9 @@ class demoSite {
 
 		$this->sitePath = "../sites/" . $dirName . "/";
 
+		if ($_SESSION["webHome"] === "/") { $this->webHome = "/"; }
+		else { $this->webHome =  "/" . $_SESSION["webHome"]; }
+
 		$this->main = $this->getConfigFile("main", TRUE);
 
 		foreach ($this->main as $key => $value) {
@@ -38,7 +41,6 @@ class demoSite {
 			$this->appsBlacklist = "none";
 		}
 
-		$this->webHome = $_SESSION["env"]["webHome"];
 	}
 
 	private function setOktaWidget($pageName = "") {
@@ -418,7 +420,7 @@ class demoSite {
 
 		if (file_exists($path)) {
 			$this->status[$configFile] = TRUE;
-			
+
 			return json_decode(file_get_contents($path), TRUE);
 
 		}
@@ -476,7 +478,6 @@ class demoSite {
 				$thisString = str_replace($target, $this->$name, $thisString);
 			}
 		}
-
 		return $thisString;
 	}
 
@@ -505,7 +506,7 @@ class demoSite {
 			else { $redirectURI .= ":" . $_SERVER["SERVER_PORT"]; }
 		}
 
-		$redirectURI .= $_SESSION["env"]["webHome"] . "views/index.php";
+		$redirectURI .= $this->webHome . "/views/index.php";
 
 		return $redirectURI;
 	}
