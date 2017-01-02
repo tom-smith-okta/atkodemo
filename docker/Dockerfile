@@ -6,12 +6,6 @@ RUN apt-get update && apt-get install -y git
 
 WORKDIR /var/www/html/
 
-# This is a flag that tells the script what kind of
-# environment it's running on
-RUN touch dockerContainer.txt
-
-# RUN git clone https://github.com/tom-smith-okta/atkodemo.git
-
 RUN git clone -b tsmith/dockerV01 --single-branch https://github.com/tom-smith-okta/atkodemo.git
 
 ####################
