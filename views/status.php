@@ -47,9 +47,13 @@ foreach ($_SESSION["demo"]["sites"] as $dirName) {
 
 		$bullseye = "%--" . $file . "--%";
 
-		$path = $site->source[$file];
+		$arrow = "";
 
-		$arrow = "<a href = '" . $path . "' target = '_blank'>" . $path . "</a>";
+		if (array_key_exists($file, $site->source)) {
+			$path = $site->source[$file];
+
+			$arrow = "<a href = '" . $path . "' target = '_blank'>" . $path . "</a>";
+		}
 
 		$thisRow = str_replace("%--$file--%", $arrow, $thisRow);
 

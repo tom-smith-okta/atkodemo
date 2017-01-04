@@ -2,7 +2,8 @@
 	"siteName": "Okta platform demo",
 	"oktaOrg": "atkodemovm",
 	"clientId": "YYUAPHIAj3JPPO6yJans",
-	"apiKeyPath": "/usr/local/keys/oktaAPI.txt",
+	"apiKey": "",
+	"apiKeyPath": "/usr/local/keys/atkodemovm.txt",
 	"idps": {
 		"FACEBOOK": "0oa1w1pmezuPUbhoE1t6",
 		"GOOGLE": "0oa1w8n4dlYlOLjPl1t6"

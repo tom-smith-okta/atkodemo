@@ -141,43 +141,7 @@ class demoSite {
 
 		$html = "";
 
-		if ($pageName === "status") {
-
-			$html .= "<h1>Site status</h1>";
-			$html .= "<table border = '1'>\n";
-			$html .= "<tr><td>Site</td><td>env</td><td>Okta org</td><td align = 'center'>AuthN</td><td align = 'center'>Reg</td><td align = 'center'>OIDC</td><td align = 'center'>Social</td><td align= 'center'>Apps BL</td></tr>";
-			$html .= "<tr>";
-			$html .= "<td>" . $this->dirName . "</td>";
-			$html .= "<td>" . $this->env . "</td>";
-			$html .= "<td>" . $this->oktaOrg . "</td>";
-			$html .= "<td align = 'center'>" . $this->getIcon("authentication") . "</td>";
-			$html .= "<td align = 'center'>" . $this->getIcon("registration") . "</td>";
-			$html .= "<td align = 'center'>" . $this->getIcon("OIDC") . "</td>";
-			$html .= "<td align = 'center'>" . $this->getIcon("socialLogin") . "</td>";
-			$html .= "<td align = 'center'>" . $this->getIcon("appsBlacklist") . "</td>";
-
-			$html .= "</tr>";
-			$html .= "</table>";
-
-			$dirs = scandir($this->sitesHome);
-
-			foreach ($dirs as $dir) {
-
-				if ($dir === "." || $dir === "..") {}
-				else {
-					$path = $this->sitesHome . $dir;
-
-					if (is_dir($path)) {
-						$html .= "<p>" . $dir . " is a directory ";
-
-
-					}
-				}
-			}
-
-			// $html .= "<p>List of sites: " . json_encode($sites);
-		}
-		else if ($pageName === "allSettings") {
+		if ($pageName === "allSettings") {
 
 			$html .= "<h1>Settings</h1>";
 
@@ -307,8 +271,12 @@ class demoSite {
 
 	public function getIcon($param) {
 
-		if ($this->status[$param]) { return "<i class='fa fa-check' aria-hidden='true' style='color:LimeGreen'></i>"; }
-		else { return "<i class='fa fa-close' aria-hidden='true' style='color:Red'></i>"; }
+		if (array_key_exists($param, $this->status)) {
+			if ($this->status[$param]) {
+				return "<i class='fa fa-check' aria-hidden='true' style='color:LimeGreen'></i>";
+			}
+		}
+		return "<i class='fa fa-close' aria-hidden='true' style='color:Red'></i>";
 	}
 
 	function setSiteStatus() {
@@ -319,12 +287,17 @@ class demoSite {
 
 		if ($this->oktaOrg) { $this->status["authentication"] = TRUE; }
 
-		if ($this->apiKeyIsValid) {
-			$this->status["apiKey"] = TRUE;
-			$this->status["registration"] = TRUE;
+		if ($this->apiKey) {
+			if ($this->apiKeyIsValid) {
+				$this->status["apiKey"] = TRUE;
+				$this->status["registration"] = TRUE;
+			}
 		}
 
-		if ($this->clientId) { $this->status["OIDC"] = TRUE; }
+		if (property_exists($this, "clientId")) {
+			if ($this->clientId) { $this->status["OIDC"] = TRUE; }
+		}
+
 		if ($this->status["OIDC"] && $this->idps) { $this->status["socialLogin"] = TRUE; }
 
 		if (!empty($this->appsBlacklist)) { $this->status["appsBlacklist"] = TRUE; }
@@ -366,7 +339,7 @@ class demoSite {
 
 		$assocArray = json_decode($jsonResult, TRUE);
 
-		if ($assocArray["id"]) { return TRUE; }
+		if (array_key_exists("id", $assocArray)) { return TRUE; }
 		else {
 			$this->warnings[] = $jsonResult;
 			$this->warnings[] = "User registration is not possible without an API key.";
@@ -378,8 +351,30 @@ class demoSite {
 		/* Find an apiKey and then check to see
 		if it is valid */
 
-		if (empty($this->apiKey) && $this->apiKeyPath) {
-			$this->apiKey = $this->getAPIkey();
+		if (property_exists($this, "apiKey")) {
+			if (empty($this->apiKey)) {
+				if (property_exists($this, "apiKeyPath")) {
+					if (empty($this->apiKeyPath)) {
+						$this->apiKey = "";
+					}
+					else {
+						$this->apiKey = $this->getAPIkey();
+					}
+				}
+			}
+		}
+		else { 
+			if (property_exists($this, "apiKeyPath")) {
+				if (empty($this->apiKeyPath)) {
+					$this->apiKey = "";
+				}
+				else {
+					$this->apiKey = $this->getAPIkey();
+				}
+			}
+			else {
+				$this->apiKey = "";
+			}
 		}
 
 		if ($this->apiKey) {
