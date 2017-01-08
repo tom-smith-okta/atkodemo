@@ -11,6 +11,8 @@ class demoSite {
 		if ($_SESSION["webHome"] === "/") { $this->webHome = "/"; }
 		else { $this->webHome =  "/" . $_SESSION["webHome"]; }
 
+		$this->apiKey = "";
+
 		$this->main = $this->getConfigFile("main", TRUE);
 
 		foreach ($this->main as $key => $value) {
@@ -260,12 +262,26 @@ class demoSite {
 
 	public function getIcon($param) {
 
-		if (array_key_exists($param, $this->status)) {
-			if ($this->status[$param]) {
-				return "<i class='fa fa-check' aria-hidden='true' style='color:LimeGreen'></i>";
+		$redX = "<i class='fa fa-close' aria-hidden='true' style='color:Red'></i>";
+		$greenCheck = "<i class='fa fa-check' aria-hidden='true' style='color:LimeGreen'></i>";
+
+		if ($param === "apiKey") { 
+			if ($this->status["apiKey"]["exists"]) {
+				if ($this->status["apiKey"]["isValid"]) {
+					return "<p style='color:LimeGreen'>" . $this->showAPIkey() . "</p>";
+				}
+				else {
+					return "<p style='color:Red'>" . $this->showAPIkey() . "</p>";
+				}
+			}
+			else {
+				return $redX;
 			}
 		}
-		return "<i class='fa fa-close' aria-hidden='true' style='color:Red'></i>";
+		else {
+			if ($this->status[$param]) { return $greenCheck; }
+			else { return $redX; }
+		}
 	}
 
 	function setSiteStatus() {
@@ -277,10 +293,17 @@ class demoSite {
 		if ($this->oktaOrg) { $this->status["authentication"] = TRUE; }
 
 		if ($this->apiKey) {
+			$this->status["apiKey"]["exists"] = TRUE;
+
 			if ($this->apiKeyIsValid) {
-				$this->status["apiKey"] = TRUE;
+				$this->status["apiKey"]["isValid"] = TRUE;
 				$this->status["registration"] = TRUE;
 			}
+			else { $this->status["apiKey"]["isValid"] = FALSE; }
+
+		}
+		else {
+			$this->status["apiKey"]["exists"] = FALSE;
 		}
 
 		if (property_exists($this, "clientId")) {
@@ -340,31 +363,27 @@ class demoSite {
 		/* Find an apiKey and then check to see
 		if it is valid */
 
-		if (property_exists($this, "apiKey")) {
-			if (empty($this->apiKey)) {
-				if (property_exists($this, "apiKeyPath")) {
-					if (empty($this->apiKeyPath)) {
-						$this->apiKey = "";
-					}
-					else {
-						$this->apiKey = $this->getAPIkey();
-					}
-				}
-			}
-		}
-		else { 
+		if (empty($this->apiKey)) {
 			if (property_exists($this, "apiKeyPath")) {
-				if (empty($this->apiKeyPath)) {
-					$this->apiKey = "";
-				}
-				else {
+				if (!(empty($this->apiKeyPath))) {
 					$this->apiKey = $this->getAPIkey();
 				}
 			}
-			else {
-				$this->apiKey = "";
-			}
 		}
+
+		// else { 
+		// 	if (property_exists($this, "apiKeyPath")) {
+		// 		if (empty($this->apiKeyPath)) {
+		// 			$this->apiKey = "";
+		// 		}
+		// 		else {
+		// 			$this->apiKey = $this->getAPIkey();
+		// 		}
+		// 	}
+		// 	else {
+		// 		$this->apiKey = "";
+		// 	}
+		// }
 
 		if ($this->apiKey) {
 			$this->apiKeyIsValid = $this->apiKeyIsValid();
@@ -402,7 +421,7 @@ class demoSite {
 
 		$this->source[$configFile]["path"] = $path; // save the $path for error-checking purposes
 
-		$this->source[$configFile]["dir"] = $dir; // save the $path for error-checking purposes
+		$this->source[$configFile]["dir"] = $dir; // save the $dir for error-checking purposes
 
 		if (file_exists($path)) {
 			$this->status[$configFile] = TRUE;
