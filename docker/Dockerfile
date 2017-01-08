@@ -9,7 +9,13 @@ WORKDIR /var/www/html/
 RUN git clone -b tsmith/dockerV02 --single-branch https://github.com/tom-smith-okta/atkodemo.git
 
 ####################
-
-# docker build -t atkodemov01 .
-# docker run -d -p 80:80 atkodemodockerv01
+# Tom's testing sequence
+# 1. Create a git branch specifically for the docker build
+#		atkodemoDockerV01
+# 2. Push the git branch to github
+# 3. Build the docker container locally
+#		docker build -t atkodemov01 .
+# 4. Upload the container to dockerhub
+# 5. Run the container
+#		docker run -d -p 80:80 atkodemodockerv01
 
