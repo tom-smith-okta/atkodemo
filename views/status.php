@@ -8,7 +8,7 @@ $bodyMain = file_get_contents("../html/status.html");
 
 $rows = "";
 
-$configFiles = ["main", "regFlows", "theme", "regFields"];
+$configFiles = $_SESSION["configFiles"];
 
 $bottomRow = file_get_contents("../html/status/bottomRow.html");
 
@@ -51,9 +51,10 @@ foreach ($_SESSION["demo"]["sites"] as $dirName) {
 		$arrow = "";
 
 		if (array_key_exists($file, $site->source)) {
-			$path = $site->source[$file];
+			$path = $site->source[$file]["path"];
+			$dir = $site->source[$file]["dir"];
 
-			$arrow = "<a href = '" . $path . "' target = '_blank'>" . $path . "</a>";
+			$arrow = "<a href = '" . $path . "' target = '_blank'>" . $dir . "</a>";
 		}
 
 		$thisRow = str_replace("%--$file--%", $arrow, $thisRow);

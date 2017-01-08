@@ -400,13 +400,14 @@ class demoSite {
 
 		$path = $dir . $fileName;
 
-		$this->source[$configFile] = $path; // save the $path for error-checking purposes
+		$this->source[$configFile]["path"] = $path; // save the $path for error-checking purposes
+
+		$this->source[$configFile]["dir"] = $dir; // save the $path for error-checking purposes
 
 		if (file_exists($path)) {
 			$this->status[$configFile] = TRUE;
 
 			return json_decode(file_get_contents($path), TRUE);
-
 		}
 		else {
 			$this->warnings[] = "could not find file " . $path;

@@ -14,6 +14,9 @@ function setDemoEnv() {
 
 	$_SESSION["defaultPath"] = "../sites/default/";
 
+	$_SESSION["configFiles"] = ["main", "regFlows", "theme", "regFields"];
+
+
 }
 
 function setEnvVars() {
