@@ -1,7 +1,7 @@
 <?php
 
 include "../includes/demoEnv.php";
-include "../includes/Site.php";
+include "../includes/site.php";
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
