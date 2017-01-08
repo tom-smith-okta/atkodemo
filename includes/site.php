@@ -1,6 +1,6 @@
 <?php
 
-class demoSite {
+class Site {
 
 	function __construct($dirName) {
 
@@ -11,19 +11,21 @@ class demoSite {
 		if ($_SESSION["webHome"] === "/") { $this->webHome = "/"; }
 		else { $this->webHome =  "/" . $_SESSION["webHome"]; }
 
+		$this->capabilities = ["authentication", "apiKey", "registration", "OIDC", "socialLogin", "appsBlacklist"];
+
+		$this->configFiles = ["main" => TRUE, "theme" => TRUE, "regFlows" => FALSE, "regFields" => FALSE];
+
+		foreach ($this->configFiles as $file => $isRequired) {
+			$this->status[$file] = FALSE;
+			if ($isRequired) {
+				$this->$file = $this->getConfigFile($file, TRUE);
+				foreach ($this->$file as $key => $value) {
+					$this->$key = $value;
+				}
+			}
+		}
+
 		$this->apiKey = "";
-
-		$this->main = $this->getConfigFile("main", TRUE);
-
-		foreach ($this->main as $key => $value) {
-			$this->$key = $value;
-		}
-
-		$this->theme = $this->getConfigFile("theme", TRUE);
-
-		foreach ($this->theme as $key => $value) {
-			$this->$key = $value;
-		}
 
 		$this->setRemotePaths();
 
@@ -45,6 +47,37 @@ class demoSite {
 		}
 		else {
 			$this->appsBlacklist = "none";
+		}
+	}
+
+	private function getPrefix() {
+		if ($this->isSecure()) { $prefix = "https://"; }
+		else { $prefix = "http://"; }
+		return $prefix;
+	}
+
+	private function setMenus() {
+
+		$this->menu = "\t" . '<li class = "menu"><a class="fa-server" href="status.php">Site Status</a></li>' . "\n\t\t\t\t";
+
+		$this->menu .= '<li class = "menu"><a class="fa-info-circle" href="allSettings.php">Settings</a></li>' . "\n\t\t\t\t";
+
+		$this->loginAndReg = "";
+
+		if ($this->status["authentication"]) {
+
+			if ($this->status["OIDC"]) {
+
+				$this->loginAndReg .= "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in (OIDC)</a></li>";
+			}
+			else {
+				$this->loginAndReg .= "<li><a href = 'login.php'>Log in</a></li>";
+			}
+		}
+
+		if ($this->status["registration"]) {
+			$this->loginAndReg .= "<li><a href = '#menu'>Registration options</a></li>";
+			$this->menu .= '<li class = "menu"><a class="fa-bars" href = "#menu">Menu</a></li>';
 		}
 
 	}
@@ -103,42 +136,6 @@ class demoSite {
 			}
 			$this->regOptions = trim($retVal);
 		}
-	}
-
-	private function getPrefix() {
-		if ($this->isSecure()) { $prefix = "https://"; }
-		else { $prefix = "http://"; }
-		return $prefix;
-	}
-
-	private function setMenus() {
-
-		$this->menu = "\t" . '<li class = "menu"><a class="fa-server" href="status.php">Site Status</a></li>' . "\n\t\t\t\t";
-
-		$this->menu .= '<li class = "menu"><a class="fa-info-circle" href="allSettings.php">Settings</a></li>' . "\n\t\t\t\t";
-
-		$this->loginAndReg = "";
-
-		if ($this->status["authentication"]) {
-
-			if ($this->status["OIDC"]) {
-
-				$this->loginAndReg .= "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in (OIDC)</a></li>";
-			}
-			else {
-				$this->loginAndReg .= "<li><a href = 'login.php'>Log in</a></li>";
-			}
-		}
-
-		if ($this->status["registration"]) {
-			$this->loginAndReg .= "<li><a href = '#menu'>Registration options</a></li>";
-			$this->menu .= '<li class = "menu"><a class="fa-bars" href = "#menu">Menu</a></li>';
-		}
-
-	}
-
-	public function getStatus() {
-		return $this->status;
 	}
 
 	public function getHTML($pageName) {
@@ -289,7 +286,7 @@ class demoSite {
 
 	function setSiteStatus() {
 
-		foreach ($_SESSION["capabilities"] as $capability) {
+		foreach ($this->capabilities as $capability) {
 			$this->status[$capability] = FALSE;
 		}
 
@@ -320,12 +317,10 @@ class demoSite {
 	}
 
 	private function showAPIkey() {
-
 		if ($this->apiKey) {
 			return substr($this->apiKey, 0, 5) . "...";
 		}
 		else { return "NONE"; }
-
 	}
 
 	public function showSettings() {

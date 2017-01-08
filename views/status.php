@@ -14,7 +14,7 @@ $bottomRow = file_get_contents("../html/status/bottomRow.html");
 
 foreach ($_SESSION["demo"]["sites"] as $dirName) {
 
-	$site = new demoSite($dirName);
+	$site = new Site($dirName);
 
 	if ($site->dirName === $thisSite->dirName) { 
 		$rows .= "<tr style = 'background-color: LightGoldenRodYellow;'>";

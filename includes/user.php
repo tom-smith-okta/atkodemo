@@ -1,6 +1,6 @@
 <?php
 
-include "../includes/demoSite.php";
+include "../includes/site.php";
 include "../includes/curlRequest.php";
 
 if (session_status() === PHP_SESSION_NONE) {
