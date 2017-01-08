@@ -31,6 +31,7 @@ class demoSite {
 
 		if ($this->status["registration"]) {
 			$this->regFlows = $this->getConfigFile("regFlows", TRUE);
+			$this->regFields = $this->getConfigFile("regFields", TRUE);
 			$this->setRegOptions();
 		}
 
@@ -118,12 +119,10 @@ class demoSite {
 			if ($this->status["OIDC"]) {
 
 				$this->loginAndReg .= "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in (OIDC)</a></li>";
-
 			}
 			else {
 				$this->loginAndReg .= "<li><a href = 'login.php'>Log in</a></li>";
 			}
-
 		}
 
 		if ($this->status["registration"]) {
@@ -171,16 +170,7 @@ class demoSite {
 
 			$regFlow = $_GET["regFlow"];
 
-			$fileName = "regFields.json";
-
-			if (file_exists($this->sitePath . $fileName)) {
-				$json = file_get_contents($this->sitePath . $fileName);
-			}
-			else {
-				$json = file_get_contents($_SESSION["defaultPath"] . $fileName);
-			}
-
-			$regFields = json_decode($json, TRUE);
+			$regFields = $this->regFields;
 
 			$template = file_get_contents("../html/regFormFieldTemplate.html");
 
@@ -205,7 +195,6 @@ class demoSite {
 				}
 
 				$fields .= "\n";
-
 			}
 
 			$this->fields = $fields;

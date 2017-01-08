@@ -8,7 +8,7 @@ $bodyMain = file_get_contents("../html/status.html");
 
 $rows = "";
 
-$configFiles = ["main", "regFlows", "theme"];
+$configFiles = ["main", "regFlows", "theme", "regFields"];
 
 $bottomRow = file_get_contents("../html/status/bottomRow.html");
 
@@ -30,6 +30,7 @@ foreach ($_SESSION["demo"]["sites"] as $dirName) {
 	$rows .= "<td align = 'center'>" . $site->getIcon("socialLogin") . "</td>";
 	$rows .= "<td align = 'center' style = 'border-right: 1px solid'>" . $site->getIcon("appsBlacklist") . "</td>";
 	$rows .= "<td align = 'center' style = 'border-right: 1px solid'>" . $site->getIcon("regFlows") . "</td>";
+	$rows .= "<td align = 'center' style = 'border-right: 1px solid'>" . $site->getIcon("regFields") . "</td>";
 	$rows .= "<td align = 'center' style = 'border-right: 1px solid'>" . $site->getIcon("theme") . "</td>";
 
 	$rows .= "</tr>\n";
