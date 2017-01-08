@@ -16,26 +16,6 @@ function setDemoEnv() {
 
 	$_SESSION["configFiles"] = ["main", "regFlows", "theme", "regFields"];
 
-
-}
-
-function setEnvVars() {
-	$_SESSION["env"]["name"] = "unknown";
-	$_SESSION["env"]["defaultDir"] = "default";
-	$_SESSION["env"]["webHome"] = "atkodemo";
-
-	$json = file_get_contents("standardEnvs.json", FILE_USE_INCLUDE_PATH);
-
-	$envs = json_decode($json, TRUE);
-
-	foreach ($envs as $name => $vals) {
-		if (file_exists($vals["marker"])) {
-			$_SESSION["env"]["name"] = $name;
-			$_SESSION["env"]["defaultDir"] = $vals["dir"];
-			$_SESSION["env"]["webHome"] = $vals["webHome"];
-			break;
-		}
-	}
 }
 
 // fixes the script's place in the filesystem

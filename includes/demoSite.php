@@ -31,6 +31,9 @@ class demoSite {
 
 		$this->setSiteStatus();
 
+		$this->regFlows = "";
+		$this->regFields = "";
+
 		if ($this->status["registration"]) {
 			$this->regFlows = $this->getConfigFile("regFlows", TRUE);
 			$this->regFields = $this->getConfigFile("regFields", TRUE);
@@ -370,20 +373,6 @@ class demoSite {
 				}
 			}
 		}
-
-		// else { 
-		// 	if (property_exists($this, "apiKeyPath")) {
-		// 		if (empty($this->apiKeyPath)) {
-		// 			$this->apiKey = "";
-		// 		}
-		// 		else {
-		// 			$this->apiKey = $this->getAPIkey();
-		// 		}
-		// 	}
-		// 	else {
-		// 		$this->apiKey = "";
-		// 	}
-		// }
 
 		if ($this->apiKey) {
 			$this->apiKeyIsValid = $this->apiKeyIsValid();
