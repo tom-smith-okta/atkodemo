@@ -1,0 +1,457 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset='utf-8' />
+	<meta name='viewport' content='width=device-width, initial-scale=1' />
+
+	<!-- ******* TITLE OF PAGE ******** -->
+
+	<title>Okta platform demo: home</title>
+
+	<!-- ******* CSS *******************-->
+	
+	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.7.0/css/okta-sign-in.min.css'/>
+
+	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.7.0/css/okta-theme.css'/>
+
+	<link rel = 'stylesheet' href = '../css/mainCSS.css'/>
+
+	<style media="screen" type="text/css">
+		#container {
+		    z-index: 101;
+		    position: absolute;
+		    top: 60px;
+		    left: 20px;
+	  	}
+		#myApps {
+			border-style: solid;
+			border-width: 1px;
+			padding: 10px;
+			display: none;
+			position: absolute;
+			top: 15;
+			z-index: 101;
+			background-color: white;
+			color: black;
+			opacity: 1;
+		}
+	</style>
+
+	<!-- ******* JAVASCRIPT *******************-->		
+	
+	<script src = '../javascript/jquery/jquery.min.js'></script>
+
+	<script src = 'https://use.fontawesome.com/dc4e4e9270.js'></script>
+
+	<script src = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.7.0/js/okta-sign-in.min.js'></script>
+				
+	<!-- *** Initialize the Okta widget ***** -->
+
+	<script>
+
+	$("#widget").hide();
+
+	var oktaSignIn = new OktaSignIn({
+		baseUrl: 'https://atkodemovm.okta.com',
+		logo: 'http://oauth2.atkodemo.com/images/atkodemo/themes/default/logo.png',
+		features: {
+			multiOptionalFactorEnroll: true,
+			smsRecovery: true
+		},
+	  
+		// OIDC options
+		clientId: 'KySezizDE4ScxOlsNLsX',
+		redirectUri: 'http://localhost:8888/atkodemo/views/index.php',
+
+		authScheme: 'OAUTH2',
+		authParams: {
+			responseType: 'id_token',
+			responseMode: 'okta_post_message',
+			scopes: [
+				'openid',
+				'email',
+				'profile',
+				'address',
+				'phone'
+			]
+		},
+
+		idpDisplay: 'PRIMARY',
+		idps: [{"FACEBOOK":"0oassj82zxJdGVjjL1t6"},{"GOOGLE":"0oasss0hkdAGnhCzF1t6"}]
+
+	});
+
+	</script>
+
+	<!-- *** Render the Okta widget ***** -->
+
+	<script>
+
+	function renderWidgetOIDC() {
+
+	    $("#oktaWidget").hide();
+
+		oktaSignIn.renderEl(
+			{ el: '#oktaWidget'},
+		  	function (res) {
+
+		  		console.log("the res.status is: " + res.status);
+
+		  		if (res.status == "SUCCESS") {
+
+		  			$("#oktaWidget").hide();
+		  			
+		  			console.log("authentication successful.");
+		  			console.log("user now has an active session.");
+		  			console.log("id_token:" + res.idToken);
+		  			console.log("claims:");
+		  			console.dir(res.claims);
+
+		  			localStorage.setItem("given_name", res.claims.given_name);
+
+		  			setMenu("authenticated", res.claims.sub);
+
+		  		}
+		  		else {
+		  			console.log("the user was not authenticated.");
+		  			console.log("the error is: " + res.status);
+		  		}
+			}
+		);
+	}
+
+	function showWidget() {
+
+	    $("#oktaWidget").show();
+
+	    $("#login").attr("onclick", "hideWidget()");
+
+	}
+
+	function hideWidget() {
+		$("#oktaWidget").hide();
+
+		$("#login").attr("onclick", "showWidget()");
+
+	}
+
+	window.onload = function() {
+		getDate();
+		renderWidgetOIDC();
+	}
+
+	</script>
+		
+	<script>
+	console.log("checking session...");
+	/************************************/
+	// Check for an Okta session
+	// and update menu accordingly
+	/************************************/
+	oktaSignIn.session.exists(function (exists) {
+		if (exists) {
+			console.log("there is an active session.");
+			console.log("---------------------------");
+			// getting the fname from the server instead of local storage
+			// to accomodate the use-case where a new user registers and
+			// then gets redirected to this page. There's probably a better
+			// way.
+			oktaSignIn.session.get(function (res) {
+	  			$.ajax({
+		            type: "GET",
+		            dataType: 'json',
+		            url: "https://atkodemovm.okta.com/api/v1/users/" + res.userId,
+		            xhrFields: {
+		                withCredentials: true
+		            },
+		            success: function (data) {
+		            	console.dir(data);
+		            	console.log("the given_name is: " + data.profile.firstName);
+		                localStorage.setItem("given_name", data.profile.firstName);
+		                setMenu("authenticated", data.id);
+		            },
+		            error: function (textStatus, errorThrown) {
+		                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+		                console.log(errorThrown);
+		            },
+		            async: true
+	        	});
+	  		});
+		}
+		else {
+			console.log("there is not an active session.");
+			console.log("-------------------------------");
+			setMenu("anon");
+		}
+	});
+	</script>
+
+	<script>
+	function signout() {
+		console.log("attempting to sign out...");
+	    $.ajax({
+	        type: "DELETE",
+	        dataType: 'json',
+	        url: "https://atkodemovm.okta.com/api/v1/sessions/me",
+	        xhrFields: {
+	            withCredentials: true
+	        },
+	        success: function (data) {
+	            console.log('success deleting session');
+	            sessionStorage.removeItem('sessionToken');
+	        },
+	        error: function (textStatus, errorThrown) {
+	            console.log('error deleting session: ' + JSON.stringify(textStatus));
+	            console.log(errorThrown);
+	        },
+	        async: true
+	    });
+		setMenu("anon");
+	}
+	</script>
+
+	<script>
+	function setMenu(authState, userID) {
+		var menu = "";
+		if (authState == "authenticated") {
+			menu = "<li><a href = '#' onclick = 'signout()'>Log out</a></li>";
+			if (localStorage.getItem("given_name")) {
+				menu += "<li><a href='#'>Welcome, " + localStorage.getItem("given_name") + "!</a></li>";
+			}
+			console.log ("the user id is: " + userID);
+			menu += "<li id = 'showApps'><a href = '#' onclick = 'showApps(\"" + userID + "\")'>My Apps</a></li>";
+		}
+		else {
+			menu += "<li><a href = '#' id = 'login' onclick = 'showWidget()'>Log in (OIDC)</a></li><li><a href = '#menu'>Registration options</a></li>";
+			
+		}
+		$("#authLinks").html(menu);
+	}
+	</script>
+
+	<script>
+	function showApps(userID) {
+		var appsList = "";
+		$.ajax({
+	  		type: "GET",
+            dataType: 'json',
+            url: "https://atkodemovm.okta.com/api/v1/users/" + userID + "/appLinks",
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+            	var blacklist = none;
+            	var apps = "<h3>My Apps</h3>";
+            	var onBlacklist;
+            	for (var i = 0, len = data.length; i < len; i++) {
+            		onBlacklist = false;
+            		label = data[i].label;
+            		console.log("found an app: " + label + " id: " + data[i].id);
+            		if (typeof blacklist === "object") {
+            			for (var j = 0, jlen = blacklist.length; j < jlen; j++) {
+            				if (blacklist[j].id === data[i].id) {
+            					onBlacklist = true;
+            					console.log(label + " is on the blacklist");
+            					break;
+            				}
+            			}
+            		}
+            		if (!(onBlacklist)) {
+            			apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + label + "</a></li>";
+            		}
+				}
+				$("#myApps").html(apps);
+ 
+	        },
+            error: function (textStatus, errorThrown) {
+                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+                console.log(errorThrown);
+            },
+            async: true
+    	});
+		$("#myApps").show();
+		$("#showApps").html('<a href="#" onclick="hideApps()">My Apps</a>');
+	}
+	function hideApps() {
+		$("#myApps").hide();
+		$("#showApps").html('<a href="#" onclick="showApps()">My Apps</a>');
+	}
+	</script>
+
+	<script src = '../javascript/ui/dates.js'></script>
+
+	<script src = '../javascript/ui/skel.min.js'></script>
+
+	<script src = '../javascript/ui/main.js'></script>
+
+	<script src = '../javascript/ui/util.js'></script>
+
+</head>
+
+<body>
+<!-- Wrapper -->
+<div id="wrapper">
+
+	<!-- Header -->
+
+	<header id="header">
+
+		<h1><a href="/atkodemoviews/">Atko Corp</a></h1>
+
+		<nav class="links">
+			<ul id = "authLinks"></ul>
+		</nav>
+
+		<nav class="main">
+			<ul>
+ 				<li class = "menu"><a class="fa-server" href="status.php">Site Status</a></li>
+				<li class = "menu"><a class="fa-info-circle" href="allSettings.php">Settings</a></li>
+				<li class = "menu"><a class="fa-bars" href = "#menu">Menu</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<!-- Menu -->
+	<section id="menu">
+
+		<!-- Links -->
+		<section>
+			<ul class="links">
+				<li>
+					<a href="index.php">
+						<h3>Home</h3>
+					</a>
+				</li>
+				<li>
+					<a href="login.php">
+						<h3>Log in: basic</h3>
+					</a>
+				</li>
+
+				<li><a href = 'register.php?regFlow=basic'><h3>Basic registration flow</h3></a></li>
+				<li><a href = 'register.php?regFlow=appProvisioning'><h3>Registration with Salesforce provisioning</h3><p>Provision a Salesforce Chatter user</p></a></li>
+				<li><a href = 'register.php?regFlow=withMFA'><h3>MFA Registration flow</h3><p>User must enroll in MFA</p></a></li>
+				<li><a href = 'register.php?regFlow=withEmail'><h3>Email verification user flow</h3><p>User must verify their email address</p></a></li>
+				<li><a href = 'register.php?regFlow=provisional'><h3>Provisional registration</h3><p>User must be approved by admin</p></a></li>
+				<li><a href = 'register.php?regFlow=oktaAdmin'><h3>Okta admin self-reg</h3><p>User must have an @okta.com email address</p></a></li>
+
+			</ul>
+		</section>
+
+	</section>
+
+
+	<!-- Main -->
+	<div id="main">
+
+		<div class = "links" id = "myApps"></div>
+
+		<div id = "container">
+			<div id="oktaWidget"></div>
+		</div>
+
+		<!-- Post -->
+		<article class="post">
+			<header>
+				<div class="title">
+					<h2><a href="#">Register now to chat with fellow travelers</a></h2>
+					<p>NYC TOUR ON SALE THROUGH THURSDAY!</p>
+				</div>
+				
+				<div class="meta">
+					<time class="published" datetime="2015-11-01"></time>
+				</div>
+			</header>
+
+			<a href="#" class="image featured"><img src="http://oauth2.atkodemo.com/images/atkodemo/themes/default/picnic.jpeg" alt="" /></a>
+			
+			<p>Yes, it's that time of year again! Get ready for some great food and fun on the waterfront!</p>
+
+			<footer>
+				<ul class="actions">
+					<li><a href="#" class="button big">Continue</a></li>
+				</ul>
+				<ul class="stats">
+					<li><a href="#">General</a></li>
+					<li><a href="#" class="icon fa-heart">28</a></li>
+					<li><a href="#" class="icon fa-comment">128</a></li>
+				</ul>
+			</footer>
+		</article>
+
+		<!-- Pagination -->
+		<ul class="actions pagination">
+			<li><a href="" class="disabled button big previous">Previous Page</a></li>
+			<li><a href="#" class="button big next">Next Page</a></li>
+		</ul>
+
+	</div> <!--Main-->
+
+	<!-- Sidebar -->
+	<section id="sidebar">
+
+		<!-- Intro -->
+		<section id="intro">
+			<a href="#" class="logo"><img src="http://oauth2.atkodemo.com/images/atkodemo/themes/default/logo.png" alt="" /></a>
+
+			<header>
+				<h2>Atko Corp</h2>
+				<p>Here to take you there</p>
+			</header>
+		</section>
+
+		<!-- Mini Posts -->
+		<section>
+			<div class="mini-posts">
+
+				<!-- Mini Post -->
+				<article class="mini-post">
+					<header>
+						<h3><a href="#">New trip to Yosemite</a></h3>
+						<time class="published" datetime="2015-10-20">October 20, 2015</time>
+						<a href="#" class="author"><img src="http://oauth2.atkodemo.com/images/atkodemo/themes/default/yosemite.jpeg" alt="" /></a>
+					</header>
+					<a href="#" class="image"><img src="http://oauth2.atkodemo.com/images/atkodemo/themes/default/yosemite.jpeg" alt="" /></a>
+				</article>
+
+				<!-- Mini Post -->
+				<article class="mini-post">
+					<header>
+						<h3><a href="#">YELLOWSTONE MOST POPULAR SO FAR IN 2016</a></h3>
+						<time class="published" datetime="2015-10-19">October 19, 2015</time>
+						<a href="#" class="author"><img src="http://oauth2.atkodemo.com/images/atkodemo/themes/default/yellowstone.jpeg" alt="" /></a>
+					</header>
+					<a href="#" class="image"><img src="http://oauth2.atkodemo.com/images/atkodemo/themes/default/yellowstone.jpeg" alt="" /></a>
+				</article>
+
+			</div>
+		</section>
+
+		<!-- About -->
+		<section class="blurb">
+			<h2>About</h2>
+			<p>We put great products together for great people.</p>
+			<ul class="actions">
+				<li><a href="#" class="button">Learn More</a></li>
+			</ul>
+		</section>
+
+		<!-- Footer -->
+		<section id="footer">
+			<ul class="icons">
+				<li><a href="#" class="fa-twitter"><span class="label">Twitter</span></a></li>
+				<li><a href="#" class="fa-facebook"><span class="label">Facebook</span></a></li>
+				<li><a href="#" class="fa-instagram"><span class="label">Instagram</span></a></li>
+				<li><a href="#" class="fa-rss"><span class="label">RSS</span></a></li>
+				<li><a href="#" class="fa-envelope"><span class="label">Email</span></a></li>
+			</ul>
+			<p class="copyright">&copy; Okta. Design: <a href="http://html5up.net">HTML5 UP</a>. Images: <a href="http://unsplash.com">Unsplash</a>.</p>
+		</section>
+
+	</div>
+
+</div>
+
+</body>
+</html>

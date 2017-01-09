@@ -97,6 +97,10 @@ class Site {
 
 			if ($this->status["socialLogin"]) {
 				$this->idpJS = "idpDisplay: 'PRIMARY',\n\t\t";
+
+				// echo "<p>" . json_encode($this->identityProviders);
+
+				// $this->idpJS .= "idps: " . json_encode($this->identityProviders);
 				$this->idpJS .= "idps: " . json_encode($this->idps);
 			}
 			else { $this->idpJS = ""; }

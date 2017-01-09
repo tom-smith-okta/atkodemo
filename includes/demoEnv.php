@@ -10,7 +10,7 @@ function setDemoEnv() {
 
 	getSites();
 
-	$_SESSION["capabilities"] = ["authentication", "apiKey", "registration", "OIDC", "socialLogin", "appsBlacklist"];
+	// $_SESSION["capabilities"] = ["authentication", "apiKey", "registration", "OIDC", "socialLogin", "appsBlacklist"];
 
 	$_SESSION["defaultPath"] = "../sites/default/";
 
