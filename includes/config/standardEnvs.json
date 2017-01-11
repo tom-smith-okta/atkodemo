@@ -1,0 +1,17 @@
+{
+	"tomsLocalhost":
+		{ "marker": "/usr/local/env/tomlocalhost.txt",
+		"dir": "tomsLocalhost",
+		"webHome": "/atkodemo/"
+	},
+	"atkodemoWebServer":
+		{ "marker": "/usr/local/env/atkoserver.txt",
+		"dir": "atkodemoWebServer",
+		"webHome": "/"
+	},
+	"dockerContainer": 
+		{ "marker": "/var/www/html/dockerContainer.txt",
+		"dir": "default",
+		"webHome": "/atkodemo/"
+	}
+}

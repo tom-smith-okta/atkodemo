@@ -1,0 +1,17 @@
+{
+	"basic": {
+		"title": "Basic registration flow",
+		"desc": "A basic user record will be created in the Okta universal directory. The user will be authenticated immediately.",
+		"fields": ["firstName", "lastName", "email", "password"],
+		"activate": true
+	},
+	"withEmail": {
+		"title": "Email verification user flow",
+		"desc": "A user record will be created in the Okta universal directory. The user must verify their email address before they can authenticate.",
+		"shortDesc": "User must verify their email address",
+		"fields": ["firstName", "lastName", "email"],
+		"activate": false,
+		"thankYouMsg01": "Thank you for registering with us!",
+		"thankYouMsg02": "Please check your inbox for an activation email to complete your registration."
+	}
+}
