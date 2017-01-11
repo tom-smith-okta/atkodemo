@@ -1,12 +1,10 @@
-# Okta Platform Demo #
-
 # Okta Portal Generator #
 
 tom.smith@okta.com
 
 This demo is meant to show some of the capabilities of Okta's platform, specifically in terms of IDAAS for external users. This particular demo has a B2C slant, but it can be modified for other external use cases as well (B2B etc.).
 
-The public version of this demo is at: www.atkodemo.com
+The public version of this demo, which is very similar, is at: www.atkodemo.com
 
 Installing
 The demo is written in php. It uses a custom, internal HTML generation engine, so the only dependency from a server perspective is that you have a web server running php. The code is written in php7, but may run under earlier php releases. The code makes heavy use of json.
@@ -20,7 +18,7 @@ The site expects to run in the following location:
 So, if you start in your web root dir and clone this repo you should be good to go. You *should* be able to run it from any context you want with a few tweaks, but this has not been fully tested yet.
 
 Running
-After you have cloned the repo, go to localhost/atkodemo in a browser. The default atkodemo site will load.
+After you have cloned the repo, load http://localhost/atkodemo in a browser. The default atkodemo site will load.
 
 Click on the server icon in the upper right to see the status page.
 
