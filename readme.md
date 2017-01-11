@@ -25,6 +25,10 @@ After you have cloned the repo, go to localhost/atkodemo in a browser. The defau
 Click on the server icon in the upper right to see the status page.
 
 To add your own site
+On your machine, make sure that php has the ability to write to the following directory:
+
+/{{webRoot}}/atkodemo/sites
+
 Just click on the “add new site” button to add your own sites. The only required field is your Okta tenant name. But, to enable registration you need to add an api key, and to enable OIDC authentication you need to add a client ID.
 
 When you add your own site, the OPG will load the default settings for the portal. This will give you the essential portal capabilities (authentication & registration) for your Okta tenant.
