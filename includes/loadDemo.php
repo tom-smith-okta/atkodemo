@@ -1,10 +1,7 @@
 <?php
 
 include "../includes/demoEnv.php";
-// include "../includes/site.php";
-
-include "/var/www/html/atkodemo/includes/site.php";
-
+include "../includes/site.php";
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

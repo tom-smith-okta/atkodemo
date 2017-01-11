@@ -1,162 +1,62 @@
 # Okta Platform Demo #
 
+# Okta Portal Generator #
+
 tom.smith@okta.com
-
-v3 release notes
-
-* login widget now appears as pop-up on same page
-* OIDC flow generates an id_token
-* View console to see id_token
-* Google social login not working in Safari and Firefox
-
-v2 release notes
-
-* added Google as IDP
-* stylesheet cleanup
-* MFA supported
 
 This demo is meant to show some of the capabilities of Okta's platform, specifically in terms of IDAAS for external users. This particular demo has a B2C slant, but it can be modified for other external use cases as well (B2B etc.).
 
 The public version of this demo is at: www.atkodemo.com
 
-The demo is written in php. It uses a custom, internal HTML generation engine, so the only dependency from a server perspective is that you have a web server running php. My workflow is to write code and test on localhost, and then do a git pull down to the www.atkodemo.com server, and it's good to go. So, you should be able to run fine on localhost as well as a public server, without making any changes to the code between local and remote.
+Installing
+The demo is written in php. It uses a custom, internal HTML generation engine, so the only dependency from a server perspective is that you have a web server running php. The code is written in php7, but may run under earlier php releases. The code makes heavy use of json.
 
-The approach is that you can make changes to just a single file:
+A dockerized version is in the works.
 
-/atkodemo/includes/config.php
+The site expects to run in the following location:
 
-and then you will be able to run the demo against your own okta tenant.
+/{{webRoot}}/atkodemo/
 
-To run the demo, you need to have your own okta tenant set up, and you need to set a number of things up in the tenant in order for the demo to work. Future work may include documenting this setup, but it is out of scope at the moment. (But the documentation is available on the Okta web site.)
+So, if you start in your web root dir and clone this repo you should be good to go. You *should* be able to run it from any context you want with a few tweaks, but this has not been fully tested yet.
 
-## How the HTML generator works ##
+Running
+After you have cloned the repo, go to localhost/atkodemo in a browser. The default atkodemo site will load.
 
-Note: You do not need to mess with any of this if you just want to get a demo up and running.
+Click on the server icon in the upper right to see the status page.
 
-This documentation is meant for those who want to do extensive configuration and extension.
+To add your own site
+Just click on the “add new site” button to add your own sites. The only required field is your Okta tenant name. But, to enable registration you need to add an api key, and to enable OIDC authentication you need to add a client ID.
 
-The HTML generator generates HTML on-the-fly. You can create an empty HTML page by calling the class constructor:
+When you add your own site, the OPG will load the default settings for the portal. This will give you the essential portal capabilities (authentication & registration) for your Okta tenant.
 
-    $thisPage = new htmlPage($config);
+Advanced capabilities 
 
-the class constructor will probably complain if it doesn't get a value for $config, but you should be able to immediately display an empty html page with the display() method:
+You can customize many aspects of your sites, including:
+Text & images
+Add new registration flows
+Add/adjust registration fields
+Attach Okta groups
+Applications to show in the “my apps” list
+All applications are listed by default
+You can exclude apps by adding their IDs to a blacklist
 
-    $thisPage->display()
+All of these settings for the sites are stored in json files. When a site is created by the OPG, a directory is created for the site.
 
-this will basically output
+/{{webRoot}}/atkodemo/sites/{{siteName}}/
 
-    <html><head></head><body></body></html>
+At the moment {{siteName}} is not configurable; it just incrememts with every new site.
 
-to the screen.
+There are four essential configuration files for each site. If OPG cannot find one of these files in the site’s directory, it will just load the default version of the file.
 
-Inserting content into the HTML page is broken down into two main sections, \<head> and \<body>.
+main.json: essential settings like orgname and api key 
+theme.json: images and text
+regFlows.json: defines registration flows (name of flow, which fields are included, groupIDs, etc.)
+regFields.json: simple data definitions for reg fields. Any field that is included in a regFlow needs to be defined here.
 
-The body is the easier part. Use the
+So, if you want to change some of these settings for your site, copy the entire default file to the directory for your site, and change the local copy of the file.
 
-    addToBody()
+The default versions of the files are located at:
 
-method to add HTML to \<body>. This method expects HTML as a parameter (without any body tags).
+/{{webRoot}}/atkodemo/sites/default/
 
-You can call this method as many times as you want to add new blocks of HTML to \<body>.
-
-To add a new component to \<head> you have two options:
-* addToBlock($content, $type)
-  * This method is a little more free-form.
-  * *$type* must be "javascript" || "css"
-  * *$content* should be html
-  * that's it. You can add as many pieces of content as you want.
-
-* addElement($elementName)
-  * This method is more structured, and good for creating elements that need to remain consistent across pages.
-  * The remainder of this documentation will describe the addElement method.
-
-*$elementName* will be a value in the *$config* array. *$elementName* can be an arbitrary string value.
-
-*$config[$elementName]* must have at least two properties.
-
-    $config[$elementName]["type"] = "javascript" || "css"
-
-    $config[elementName]["location"] = "remote" || "local" || "inline"
-
-### remote ###
-"remote" essentially means "fully qualified URL" &nbsp;
-
-the additional required value where location == "remote" is
-
-    $config[$elementName]["url"]
-
-which is a string value containing the full URL of the resource.
-
-*example*
-
-    $config["jquery"]["type"] = "javascript"
-    $config["jquery"]["location"] = "remote"
-    $config["jquery"]["url"] = "https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"
-
-results in:
-
-    <script src = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'></script>
-
-### local ###
-"local" essentially means "a local file". &nbsp;
-
-There are no other required values for "local" assets (not even a URL). **BUT** the script will expect the local file to reside in the following path:
-
-    /$config["homeDir"]/$type/$elementName.$ext
-
-*example*
-
-    $config["mainCSS"]["type"] = "css";
-    $config["mainCSS"]["location"] = "local";
-
-the following file must be in place:
-
-/atkodemo/css/mainCSS.js
-
-and this will result in the following tag to be added to \<head>:
-
-    <link rel = 'stylesheet' href = '/atkodemo/css/mainCSS.css'/>
-
-### inline ###
-"inline" is a special version of "local".
-"inline" means that the script will:
-
-1. open a local file into a string
-*  filename requirements are the same as those defined for "local"
-
-2. look for placeholders ( %placeholder% ) inside the string
-*  the value for "placeholder" = some $elementName in $config
-
-3. replace the %placeholders% with the corresponding value from $config
-
-4. add the string to the \<head> as either a \<script> or \<style>
-
-*example*
-
-    $config["checkForSession"]["type"] = "javascript";
-    $config["checkForSession"]["location"] = "inline";
-    $config["checkForSession"]["vars"] = array("oktaBaseURL", "homePage");
-
-the following file must be in place:
-
-/atkodemo/javascript/checkForSession.js
-
-1. the script will open this file into a string.
-
-2. the script will look in the string for "%oktaBaseURL%" and replace it with $config["oktaBaseURL"]
-
-3. the script will look in the string for "%homePage%" and replace it with $config["homePage"]
-
-4. the script will paste the string into the head as follows:
-
-    \<head>
-
-    \<script>
-
-    [the string]
-
-    \</script>
-
-    [other scripts and stuff]
-
-    \</head>
+You can also look at some of the more advanced settings in the other example sites included in the /sites/ directory.
