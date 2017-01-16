@@ -6,7 +6,9 @@ class Site {
 
 		$this->dirName = $dirName;
 
-		$this->sitePath = "../sites/" . $dirName . "/";
+		// $this->sitePath = "../sites/" . $dirName . "/";
+
+		$this->sitePath = $this->getSitePath();
 
 		if ($_SESSION["webHome"] === "/") { $this->webHome = "/"; }
 		else { $this->webHome =  "/" . $_SESSION["webHome"]; }
@@ -56,6 +58,20 @@ class Site {
 		return $prefix;
 	}
 
+	private function getSitePath() {
+		$sitePath = "../mysites/";
+		$officialSites = ["atkodemoOfficial", "atkodemoShared", "default"];
+
+		foreach ($officialSites as $site) {
+			if ($this->dirName === $site) {
+				$sitePath = "../sites/";
+				break;
+			}
+		}
+
+		return $sitePath . $this->dirName . "/";
+	}
+
 	private function setMenus() {
 
 		$this->menu = "\t" . '<li class = "menu"><a class="fa-server" href="status.php">Site Status</a></li>' . "\n\t\t\t\t";
@@ -88,22 +104,18 @@ class Site {
 
 		$path = "../javascript/widget/";
 
-		if ($pageName === "login") {
-			$path .= "basic/";
-		}
-		else if ($this->status["OIDC"]) {
-
+		if ($this->status["OIDC"]) {
 			$path .= "OIDC/";
 
 			if ($this->status["socialLogin"]) {
 				$this->idpJS = "idpDisplay: 'PRIMARY',\n\t\t";
 
-				// echo "<p>" . json_encode($this->identityProviders);
-
-				// $this->idpJS .= "idps: " . json_encode($this->identityProviders);
 				$this->idpJS .= "idps: " . json_encode($this->idps);
 			}
 			else { $this->idpJS = ""; }
+		}
+		else {
+			$path .= "basic/";
 		}
 
 		$this->oktaSignIn = file_get_contents($path . "loadWidget.js");

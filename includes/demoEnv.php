@@ -8,9 +8,11 @@ function setDemoEnv() {
 
 	$_SESSION["defaultSite"] = "atkodemoShared";
 
-	getSites();
+	unset($_SESSION["demo"]["sites"]);
 
-	// $_SESSION["capabilities"] = ["authentication", "apiKey", "registration", "OIDC", "socialLogin", "appsBlacklist"];
+	getSites("../sites");
+
+	getSites("../mysites");
 
 	$_SESSION["defaultPath"] = "../sites/default/";
 
@@ -24,11 +26,7 @@ function getHomeDir() {
 	return end($dirPathArr);
 }
 
-function getSites() {
-
-	unset($_SESSION["demo"]["sites"]);
-
-	$sitesHome = "../sites";
+function getSites($sitesHome) {
 
 	$dirs = scandir($sitesHome);
 

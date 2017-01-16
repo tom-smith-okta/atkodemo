@@ -1,8 +1,16 @@
 <?php
 
-$fileName = "../sites/siteCount.txt";
+// $fileName = "../sites/siteCount.txt";
 
-$siteCount = file_get_contents($fileName);
+$fileName = "../mysites/siteCount.txt";
+
+if (file_exists($fileName)) {
+	$siteCount = file_get_contents($fileName);
+}
+else {
+	$siteCount = 1;
+	file_put_contents($fileName, $siteCount);
+}
 
 $siteName = "site" . $siteCount;
 
@@ -26,7 +34,15 @@ if (array_key_exists("clientID", $_POST)) {
 	}
 }
 
-$path = "../sites/" . $siteName;
+$main["widgetVer"] = "1.7.0";
+
+// $path = "../sites/" . $siteName;
+
+$path = "../mysites/" . $siteName;
+
+// echo "<p>scan dir is: " . json_encode(scandir("../mysites/"));
+
+// echo "<p>trying to make directory: " . $path;
 
 mkdir($path);
 
