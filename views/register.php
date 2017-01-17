@@ -2,4 +2,4 @@
 
 include "../includes/loadDemo.php";
 
-$_SESSION["demo"]["site"]->showPage("register");
+$_SESSION["site"]->showPage("register");

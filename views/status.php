@@ -2,17 +2,15 @@
 
 include "../includes/loadDemo.php";
 
-$thisSite = $_SESSION["demo"]["site"];
+$thisSite = $_SESSION["site"];
 
 $bodyMain = file_get_contents("../html/status.html");
 
 $rows = "";
 
-$configFiles = $_SESSION["configFiles"];
-
 $bottomRow = file_get_contents("../html/status/bottomRow.html");
 
-foreach ($_SESSION["demo"]["sites"] as $dirName) {
+foreach ($_SESSION["allSites"] as $dirName) {
 
 	$site = new Site($dirName);
 
@@ -44,20 +42,20 @@ foreach ($_SESSION["demo"]["sites"] as $dirName) {
 
 	$thisRow = str_replace("%--siteToLoad--%", $siteToLoad, $thisRow);
 
-	foreach ($configFiles as $file) {
+	foreach ($site->configFiles as $key => $value) {
 
-		$bullseye = "%--" . $file . "--%";
+		$bullseye = "%--" . $key . "--%";
 
 		$arrow = "";
 
-		if (array_key_exists($file, $site->source)) {
-			$path = $site->source[$file]["path"];
-			$dir = $site->source[$file]["dir"];
+		if (array_key_exists($key, $site->source)) {
+			$path = $site->source[$key]["path"];
+			$dir = $site->source[$key]["dir"];
 
 			$arrow = "<a href = '" . $path . "' target = '_blank'>" . $dir . "</a>";
 		}
 
-		$thisRow = str_replace("%--$file--%", $arrow, $thisRow);
+		$thisRow = str_replace("%--$key--%", $arrow, $thisRow);
 
 	}
 	$rows .= $thisRow;

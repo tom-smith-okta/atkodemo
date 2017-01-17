@@ -1,7 +1,5 @@
 <?php
 
-// $fileName = "../sites/siteCount.txt";
-
 $fileName = "../mysites/siteCount.txt";
 
 if (file_exists($fileName)) {
@@ -36,13 +34,7 @@ if (array_key_exists("clientID", $_POST)) {
 
 $main["widgetVer"] = "1.7.0";
 
-// $path = "../sites/" . $siteName;
-
 $path = "../mysites/" . $siteName;
-
-// echo "<p>scan dir is: " . json_encode(scandir("../mysites/"));
-
-// echo "<p>trying to make directory: " . $path;
 
 mkdir($path);
 

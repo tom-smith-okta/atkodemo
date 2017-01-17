@@ -14,7 +14,7 @@ $thisUser = new user();
 
 $_SESSION["user"] = $thisUser;
 
-if ($_SESSION["demo"]["site"]->regFlows[$regFlow]["activate"]) {
+if ($_SESSION["site"]->regFlows[$regFlow]["activate"]) {
 
 	$cookieToken = $thisUser->authenticate();
 
@@ -22,9 +22,9 @@ if ($_SESSION["demo"]["site"]->regFlows[$regFlow]["activate"]) {
 }
 else {
 
-	if (array_key_exists("ALLOW_ADMIN_REG", $_SESSION["demo"]["site"]->regFlows[$regFlow])) {
+	if (array_key_exists("ALLOW_ADMIN_REG", $_SESSION["site"]->regFlows[$regFlow])) {
 
-		if ($_SESSION["demo"]["site"]->regFlows[$regFlow]["ALLOW_ADMIN_REG"] === TRUE) {
+		if ($_SESSION["site"]->regFlows[$regFlow]["ALLOW_ADMIN_REG"] === TRUE) {
 
 			if ($thisUser->hasRequiredEmailAddress()) {
 
@@ -40,7 +40,7 @@ else {
 
 	$thisUser->sendActivationEmail();
 
-	$headerString = "Location: " . $_SESSION["demo"]["site"]->webHome . "views/thankYou.php";
+	$headerString = "Location: " . $_SESSION["site"]->webHome . "views/thankYou.php";
 
 	header($headerString);
 }

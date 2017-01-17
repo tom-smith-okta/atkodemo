@@ -10,10 +10,10 @@ if (session_status() === PHP_SESSION_NONE) {
 setDemoEnv();
 
 if (array_key_exists("siteToLoad", $_GET)) {
-	$_SESSION["demo"]["site"] = new Site($_GET["siteToLoad"]);
+	$_SESSION["site"] = new Site($_GET["siteToLoad"]);
 }
-else if (empty($_SESSION["demo"]["site"])) {
+else if (empty($_SESSION["site"])) {
 	$siteName = $_SESSION["defaultSite"];
 
-	$_SESSION["demo"]["site"] = new Site($siteName);
+	$_SESSION["site"] = new Site($siteName);
 }

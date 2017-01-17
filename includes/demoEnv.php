@@ -2,22 +2,36 @@
 
 function setDemoEnv() {
 
-	setIncludePaths();
+	setPaths();
 
 	$_SESSION["webHome"] = getHomeDir();
 
-	$_SESSION["defaultSite"] = "atkodemoShared";
+	// Find which site should be loaded by default
 
-	unset($_SESSION["demo"]["sites"]);
+	$_SESSION["defaultSite"] = getDefaultSite();
 
-	getSites("../sites");
+	unset($_SESSION["allSites"]);
 
-	getSites("../mysites");
+	$_SESSION["allSites"] = 
+		array_merge(getSites($_SESSION["paths"]["sites"]), getSites($_SESSION["paths"]["mysites"]));
 
-	$_SESSION["defaultPath"] = "../sites/default/";
+}
 
-	$_SESSION["configFiles"] = ["main", "regFlows", "theme", "regFields"];
+function getDefaultSite() {
 
+	$filename = $_SESSION["paths"]["mysites"] . "/defaultSite.json";
+	if (file_exists($filename)) {
+		$json = file_get_contents($filename);
+		$arr = json_decode($json, TRUE);
+
+		if (!(empty($arr["defaultSite"]))) {
+			return $arr["defaultSite"];
+		}
+	}
+	$filename = $_SESSION["paths"]["sites"] . "/defaultSite.json";
+	$json = file_get_contents($filename);
+	$arr = json_decode($json, TRUE);
+	return $arr["defaultSite"];
 }
 
 // fixes the script's place in the filesystem
@@ -32,20 +46,26 @@ function getSites($sitesHome) {
 
 	foreach ($dirs as $dir) {
 
-		if ($dir === "." || $dir === "..") {}
+		if ($dir === "." || $dir === ".." || $dir === "default") {}
 		else {
 			$path = $sitesHome . "/" . $dir;
 
 			if (is_dir($path)) {
-				$_SESSION["demo"]["sites"][] = $dir;
+				$sites[] = $dir;
 			}
 		}
 	}
+
+	return $sites;
 }
 
-function setIncludePaths() {
+function setPaths() {
 	$includePath = dirName(getcwd()) . "/includes";
 
 	set_include_path(get_include_path() . PATH_SEPARATOR . $includePath);
-	set_include_path(get_include_path() . PATH_SEPARATOR . $includePath . "/config");
+
+	$_SESSION["paths"]["sites"] = "../sites";
+	$_SESSION["paths"]["mysites"] = "../mysites";
+	$_SESSION["paths"]["default"] = $_SESSION["paths"]["sites"] . "/default/";
+
 }

@@ -6,9 +6,9 @@ if (session_status() == PHP_SESSION_NONE) {
 
 function curlRequest($path, $postFields) {
 
-	$apiKey = $_SESSION["demo"]["site"]->apiKey;
+	$apiKey = $_SESSION["site"]->apiKey;
 
-	$apiHome = $_SESSION["demo"]["site"]->apiHome;
+	$apiHome = $_SESSION["site"]->apiHome;
 
 	$url = $apiHome . $path;
 

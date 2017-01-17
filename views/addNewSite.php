@@ -2,7 +2,7 @@
 
 include "../includes/loadDemo.php";
 
-$thisSite = $_SESSION["demo"]["site"];
+$thisSite = $_SESSION["site"];
 
 $bodyMain = file_get_contents("../html/addNewSite.html");
 

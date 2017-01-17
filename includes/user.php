@@ -43,8 +43,8 @@ class user {
 
 		$groupIDs = "";
 
-		if ($_SESSION["demo"]["site"]->regFlows[$regFlow]["groupIDs"]) {
-			$userData["groupIds"] = $_SESSION["demo"]["site"]->regFlows[$regFlow]["groupIDs"];
+		if ($_SESSION["site"]->regFlows[$regFlow]["groupIDs"]) {
+			$userData["groupIds"] = $_SESSION["site"]->regFlows[$regFlow]["groupIDs"];
 		}
 
 		$data = json_encode($userData);
@@ -53,7 +53,7 @@ class user {
 
 		// ************** ACTIVATE USER? *****************/
 
-		if ($_SESSION["demo"]["site"]->regFlows[$regFlow]["activate"]) {
+		if ($_SESSION["site"]->regFlows[$regFlow]["activate"]) {
 			$activate = "true";
 		}
 		else { $activate = "false"; }
@@ -88,7 +88,7 @@ class user {
 
 		$regFlow = $_SESSION["regFlow"];
 
-		$substr = $_SESSION["demo"]["site"]->regFlows[$regFlow]["adminSubstring"];
+		$substr = $_SESSION["site"]->regFlows[$regFlow]["adminSubstring"];
 
 		$len = strlen($substr);
 
@@ -100,7 +100,7 @@ class user {
 
 	function redirect($cookieToken) {
 
-		$url = $_SESSION["demo"]["site"]->oktaBaseURL . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $_SESSION["demo"]["site"]->redirectUri;
+		$url = $_SESSION["site"]->oktaBaseURL . "/login/sessionCookieRedirect?token=" . $cookieToken . "&redirectUrl=" . $_SESSION["site"]->redirectUri;
 
 		$headerString = "Location: " . $url; 
 
@@ -120,7 +120,7 @@ class user {
 
 		$path = "/users/" . $this->userID . "/roles";
 
-		$role = $_SESSION["demo"]["site"]->regFlows[$this->regFlow]["adminRole"];
+		$role = $_SESSION["site"]->regFlows[$this->regFlow]["adminRole"];
 
 		$postFields = '{ "type": "' . $role . '" }';
 

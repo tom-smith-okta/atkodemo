@@ -6,8 +6,6 @@ class Site {
 
 		$this->dirName = $dirName;
 
-		// $this->sitePath = "../sites/" . $dirName . "/";
-
 		$this->sitePath = $this->getSitePath();
 
 		if ($_SESSION["webHome"] === "/") { $this->webHome = "/"; }
@@ -68,7 +66,6 @@ class Site {
 				break;
 			}
 		}
-
 		return $sitePath . $this->dirName . "/";
 	}
 
@@ -238,8 +235,8 @@ class Site {
 
 			$regFlow = $_SESSION["regFlow"];
 
-			$thankYouMsg01 = $_SESSION["demo"]["site"]->regFlows[$regFlow]["thankYouMsg01"];
-			$thankYouMsg02 = $_SESSION["demo"]["site"]->regFlows[$regFlow]["thankYouMsg02"];
+			$thankYouMsg01 = $_SESSION["site"]->regFlows[$regFlow]["thankYouMsg01"];
+			$thankYouMsg02 = $_SESSION["site"]->regFlows[$regFlow]["thankYouMsg02"];
 
 			$email = $_SESSION["userProfile"]["email"];
 
