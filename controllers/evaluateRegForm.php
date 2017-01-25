@@ -40,7 +40,7 @@ else {
 
 	$thisUser->sendActivationEmail();
 
-	$headerString = "Location: " . $_SESSION["site"]->webHome . "views/thankYou.php";
+	$headerString = "Location: " . $_SESSION["site"]->webHome . "/views/thankYou.php";
 
 	header($headerString);
 }

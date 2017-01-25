@@ -12,8 +12,14 @@ function setDemoEnv() {
 
 	unset($_SESSION["allSites"]);
 
-	$_SESSION["allSites"] = 
-		array_merge(getSites($_SESSION["paths"]["sites"]), getSites($_SESSION["paths"]["mysites"]));
+	$stdSites = getSites($_SESSION["paths"]["sites"]);
+
+	if (file_exists($_SESSION["paths"]["mysites"])) {
+		$mysites = getSites($_SESSION["paths"]["mysites"]);
+	}
+
+	if (empty($mysites)) { $_SESSION["allSites"] = $stdSites; }
+	else { $_SESSION["allSites"] = array_merge($stdSites, $mysites); }
 
 }
 

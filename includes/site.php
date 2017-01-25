@@ -8,6 +8,8 @@ class Site {
 
 		$this->sitePath = $this->getSitePath();
 
+		$this->apiKey = "";
+
 		if ($_SESSION["webHome"] === "/") { $this->webHome = "/"; }
 		else { $this->webHome =  "/" . $_SESSION["webHome"]; }
 
@@ -24,8 +26,6 @@ class Site {
 				}
 			}
 		}
-
-		$this->apiKey = "";
 
 		$this->setRemotePaths();
 
@@ -410,7 +410,7 @@ class Site {
 		}
 		else {
 			if ($getDefault) {
-				$dir = $_SESSION["defaultPath"];
+				$dir = $_SESSION["paths"]["default"];
 			}
 		}
 

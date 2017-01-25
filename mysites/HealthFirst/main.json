@@ -1,0 +1,17 @@
+{
+	"siteName": "HealthFirst platform demo",
+	"oktaOrg": "tomco",
+	"clientId": "YYUAPHIAj3JPPO6yJans",
+	"apiKeyPath": "/usr/local/keys/oktaAPI.txt",
+	"appsBlacklist": [
+		{ "name": "Facebook media management",
+		"id": "auclb3c8tgEqckPeq1t6" }
+	],
+	"idps": [
+		{ "type": "FACEBOOK",
+		"id": "0oa1w1pmezuPUbhoE1t6"},
+		{ "type": "GOOGLE",
+		"id": "0oa1w8n4dlYlOLjPl1t6"}
+	],
+	"widgetVer": "1.7.0"
+}
