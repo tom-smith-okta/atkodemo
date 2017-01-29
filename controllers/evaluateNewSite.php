@@ -10,13 +10,13 @@ else {
 	file_put_contents($fileName, $siteCount);
 }
 
-$siteName = "site" . $siteCount;
+$dirName = "site" . $siteCount;
 
 $siteCount++;
 
 file_put_contents($fileName, $siteCount);
 
-$main["siteName"] = $siteName;
+$main["dirName"] = $dirName;
 
 $main["oktaOrg"] = $_POST["oktaOrg"];
 
@@ -32,9 +32,15 @@ if (array_key_exists("clientID", $_POST)) {
 	}
 }
 
+if (array_key_exists("siteName", $_POST)) {
+	if (($_POST["siteName"])) {
+		$main["siteName"] = $_POST["siteName"];
+	}
+}
+
 $main["widgetVer"] = "1.7.0";
 
-$path = "../mysites/" . $siteName;
+$path = "../mysites/" . $dirName;
 
 mkdir($path);
 

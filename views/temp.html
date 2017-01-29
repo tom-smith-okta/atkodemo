@@ -1,0 +1,407 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset='utf-8' />
+	<meta name='viewport' content='width=device-width, initial-scale=1' />
+
+	<!-- ******* TITLE OF PAGE ******** -->
+
+	<title>tomcospoke02: register</title>
+
+	<!-- ******* CSS *******************-->
+	
+	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.7.0/css/okta-sign-in.min.css'/>
+
+	<link rel = 'stylesheet' href = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.7.0/css/okta-theme.css'/>
+
+	<link rel = 'stylesheet' href = '../css/mainCSS.css'/>
+
+	<style media="screen" type="text/css">
+		#container {
+		    z-index: 101;
+		    position: absolute;
+		    top: 60px;
+		    left: 20px;
+	  	}
+		#myApps {
+			border-style: solid;
+			border-width: 1px;
+			padding: 10px;
+			display: none;
+			position: absolute;
+			top: 15;
+			z-index: 101;
+			background-color: white;
+			color: black;
+			opacity: 1;
+		}
+	</style>
+
+	<!-- ******* JAVASCRIPT *******************-->		
+	
+	<script src = '../javascript/jquery/jquery.min.js'></script>
+
+	<script src = 'https://use.fontawesome.com/dc4e4e9270.js'></script>
+
+	<script src = 'https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.7.0/js/okta-sign-in.min.js'></script>
+				
+	<!-- *** Initialize the Okta widget ***** -->
+
+	<script>
+
+/************************************/
+// Instantiate the Okta sign-in widget
+/************************************/
+
+var oktaSignIn = new OktaSignIn({
+	baseUrl: 'https://tomcospoke02.okta.com',
+	logo: 'http://oauth2.atkodemo.com/images/atkodemo/themes/default/logo.png',
+	features: {
+		multiOptionalFactorEnroll: true,
+		smsRecovery: true
+	},
+  
+	redirectUri: 'http://localhost/atkodemo/views/index.php'
+
+});
+
+</script>
+
+	<!-- *** Render the Okta widget ***** -->
+
+	<script>
+
+/**************************/
+// render the Okta widget
+/**************************/
+
+function renderWidget() {
+
+	oktaSignIn.renderEl(
+		{ el: '#oktaWidgetBasic'},
+//		{ el: '#oktaWidget'},
+
+		function (res) {
+
+			console.log("the res.status is: " + res.status);
+
+			if (res.status == "SUCCESS") {
+
+				res.session.setCookieAndRedirect('http://localhost/atkodemo/views/index.php');
+
+			}
+			else {
+				console.log("the user was not authenticated.");
+				console.log("the error is: " + res.status);
+			}
+		}
+	);
+}
+
+window.onload = function() {
+
+	var pageName = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
+
+	if (pageName == "login.php") {
+		renderWidget();
+	}
+}
+
+</script>
+		
+	<script>
+	console.log("checking session...");
+	/************************************/
+	// Check for an Okta session
+	// and update menu accordingly
+	/************************************/
+	oktaSignIn.session.exists(function (exists) {
+		if (exists) {
+			console.log("there is an active session.");
+			console.log("---------------------------");
+			// getting the fname from the server instead of local storage
+			// to accomodate the use-case where a new user registers and
+			// then gets redirected to this page. There's probably a better
+			// way.
+			oktaSignIn.session.get(function (res) {
+	  			$.ajax({
+		            type: "GET",
+		            dataType: 'json',
+		            url: "https://tomcospoke02.okta.com/api/v1/users/" + res.userId,
+		            xhrFields: {
+		                withCredentials: true
+		            },
+		            success: function (data) {
+		            	console.dir(data);
+		            	console.log("the given_name is: " + data.profile.firstName);
+		                localStorage.setItem("given_name", data.profile.firstName);
+		                setMenu("authenticated", data.id);
+		            },
+		            error: function (textStatus, errorThrown) {
+		                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+		                console.log(errorThrown);
+		            },
+		            async: true
+	        	});
+	  		});
+		}
+		else {
+			console.log("there is not an active session.");
+			console.log("-------------------------------");
+			setMenu("anon");
+		}
+	});
+	</script>
+
+	<script>
+	function signout() {
+		console.log("attempting to sign out...");
+	    $.ajax({
+	        type: "DELETE",
+	        dataType: 'json',
+	        url: "https://tomcospoke02.okta.com/api/v1/sessions/me",
+	        xhrFields: {
+	            withCredentials: true
+	        },
+	        success: function (data) {
+	            console.log('success deleting session');
+	            sessionStorage.removeItem('sessionToken');
+	        },
+	        error: function (textStatus, errorThrown) {
+	            console.log('error deleting session: ' + JSON.stringify(textStatus));
+	            console.log(errorThrown);
+	        },
+	        async: true
+	    });
+		setMenu("anon");
+	}
+	</script>
+
+	<script>
+	function setMenu(authState, userID) {
+		var menu = "";
+		if (authState == "authenticated") {
+			menu = "<li><a href = '#' onclick = 'signout()'>Log out</a></li>";
+			if (localStorage.getItem("given_name")) {
+				menu += "<li><a href='#'>Welcome, " + localStorage.getItem("given_name") + "!</a></li>";
+			}
+			console.log ("the user id is: " + userID);
+			menu += "<li id = 'showApps'><a href = '#' onclick = 'showApps(\"" + userID + "\")'>My Apps</a></li>";
+		}
+		else {
+			menu += "<li><a href = 'login.php'>Log in</a></li><li><a href = '#menu'>Registration options</a></li>";
+			
+		}
+		$("#authLinks").html(menu);
+	}
+	</script>
+
+	<script>
+	function showApps(userID) {
+		var appsList = "";
+		$.ajax({
+	  		type: "GET",
+            dataType: 'json',
+            url: "https://tomcospoke02.okta.com/api/v1/users/" + userID + "/appLinks",
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (data) {
+            	var blacklist = none;
+            	var apps = "<h3>My Apps</h3>";
+            	var onBlacklist;
+            	for (var i = 0, len = data.length; i < len; i++) {
+            		onBlacklist = false;
+            		label = data[i].label;
+            		console.log("found an app: " + label + " id: " + data[i].id);
+            		if (typeof blacklist === "object") {
+            			for (var j = 0, jlen = blacklist.length; j < jlen; j++) {
+            				if (blacklist[j].id === data[i].id) {
+            					onBlacklist = true;
+            					console.log(label + " is on the blacklist");
+            					break;
+            				}
+            			}
+            		}
+            		if (!(onBlacklist)) {
+            			apps += "<li><a href='" + data[i].linkUrl + "' target = '_blank'>" + label + "</a></li>";
+            		}
+				}
+				$("#myApps").html(apps);
+ 
+	        },
+            error: function (textStatus, errorThrown) {
+                console.log('error retrieving session: ' + JSON.stringify(textStatus));
+                console.log(errorThrown);
+            },
+            async: true
+    	});
+		$("#myApps").show();
+		$("#showApps").html('<a href="#" onclick="hideApps()">My Apps</a>');
+	}
+	function hideApps() {
+		$("#myApps").hide();
+		$("#showApps").html('<a href="#" onclick="showApps()">My Apps</a>');
+	}
+	</script>
+
+	<script src = '../javascript/ui/dates.js'></script>
+
+	<script src = '../javascript/ui/skel.min.js'></script>
+
+	<script src = '../javascript/ui/main.js'></script>
+
+	<script src = '../javascript/ui/util.js'></script>
+
+</head>
+
+<body>
+<!-- Wrapper -->
+<div id="wrapper">
+
+	<!-- Header -->
+
+	<header id="header">
+
+		<h1><a href="/atkodemo/views/">Atko Corp</a></h1>
+
+		<nav class="links">
+			<ul id = "authLinks"></ul>
+		</nav>
+
+		<nav class="main">
+			<ul>
+				<li class = "menu"><a class="fa-server" href="status.php">Site Status</a></li>
+				<li class = "menu"><a class="fa-info-circle" href="allSettings.php">Settings</a></li>
+				<li class = "menu"><a class="fa-bars" href = "#menu">Menu</a></li>
+			</ul>
+		</nav>
+
+ 	</header>
+
+	<!-- Menu -->
+	<section id="menu">
+
+		<!-- Links -->
+		<section>
+			<ul class="links">
+				<li>
+					<a href="index.php">
+						<h3>Home</h3>
+					</a>
+				</li>
+				<li>
+					<a href="login.php">
+						<h3>Log in: basic</h3>
+					</a>
+				</li>
+
+				<li><a href = 'register.php?regFlow=basic'><h3>Basic registration flow</h3></a></li>
+				<li><a href = 'register.php?regFlow=withEmail'><h3>Email verification user flow</h3><p>User must verify their email address</p></a></li>
+
+			</ul>
+		</section>
+
+	</section>
+
+
+	<!-- Main -->
+	<div id="main">
+
+		<div class = "links" id = "myApps"></div>
+
+	<!-- 		<div id = "container" style = "visibility: none">
+			<div id="oktaWidgetBasic"></div>
+		</div> -->
+
+		<div style="position:absolute;top:125;left:50px;width:200px">
+
+		<b>Basic registration flow</b>
+
+		<p>A basic user record will be created in the Okta universal directory. The user will be authenticated immediately.</p>
+
+		</div>
+
+<!-- 		<div id="okta-login-container" style="position:absolute;top:0px;left:275px">-->
+		<div id="okta-reg-container" style="position:absolute;top:0px;left:275px">
+
+<!-- 		<div id="x" style="position:absolute;top:0px;left:275px">
+ -->
+			<div class="auth-container main-container no-beacon" id="okta-sign-in">
+
+<!--  			<div class="auth-container main-container no-beacon" id="x">
+ -->
+				<div class="okta-sign-in-header auth-header">
+					<img class="auth-org-logo" src="http://oauth2.atkodemo.com/images/atkodemo/themes/default/logo.png">
+						<div class="beacon-container" data-type="beacon-container"></div>
+				</div>
+				<div class="auth-content">
+					<div class="auth-content-inner">
+						<div class="primary-auth">
+							<div class="social-auth">
+								<h2 class="okta-form-title o-form-head" data-se="o-form-head">Sign up</h2>
+							</div>
+							
+							<form method="POST" action="../controllers/evaluateRegForm.php" data-se="o-form" id="form16" class="primary-auth-form o-form o-form-edit-mode">
+								<div class="o-form-content o-form-theme clearfix" data-se="o-form-content">
+									<div data-se="o-form-error-container" class="o-form-error-container">
+									</div>
+
+														<div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top">
+						<div data-se="o-form-input-container" class="o-form-input">
+							<span data-se="o-form-input-username" class="okta-form-input-field input-fix o-form-control">
+								<span class="input-tooltip icon form-help-16" data-hasqtip="0"></span>
+								<span class="icon input-icon person-16-gray"></span>		
+								<input name = 'firstName' type = 'text' placeholder = 'First Name'>
+					 		</span>
+						</div>
+					</div>
+					<div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top">
+						<div data-se="o-form-input-container" class="o-form-input">
+							<span data-se="o-form-input-username" class="okta-form-input-field input-fix o-form-control">
+								<span class="input-tooltip icon form-help-16" data-hasqtip="0"></span>
+								<span class="icon input-icon person-16-gray"></span>		
+								<input name = 'lastName' type = 'text' placeholder = 'Last Name'>
+					 		</span>
+						</div>
+					</div>
+					<div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top">
+						<div data-se="o-form-input-container" class="o-form-input">
+							<span data-se="o-form-input-username" class="okta-form-input-field input-fix o-form-control">
+								<span class="input-tooltip icon form-help-16" data-hasqtip="0"></span>
+								<span class="icon input-icon person-16-gray"></span>		
+								<input name = 'email' type = 'text' placeholder = 'email'>
+					 		</span>
+						</div>
+					</div>
+					<div data-se="o-form-fieldset" class="o-form-fieldset o-form-label-top">
+						<div data-se="o-form-input-container" class="o-form-input">
+							<span data-se="o-form-input-username" class="okta-form-input-field input-fix o-form-control">
+								<span class="input-tooltip icon form-help-16" data-hasqtip="0"></span>
+								<span class="icon input-icon person-16-gray"></span>		
+								<input name = 'password' type = 'password' placeholder = 'password'>
+					 		</span>
+						</div>
+					</div>
+
+									
+									<input type="hidden" name = "regFlow" value="basic">
+
+									<div class="o-form-button-bar">
+							 			<input type="submit" class="button button-primary" value="Sign Up" data-type="save">
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+</body>
+</html>

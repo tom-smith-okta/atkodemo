@@ -38,7 +38,11 @@ else {
 		}
 	}
 
-	$thisUser->sendActivationEmail();
+	if ($_SESSION["regFlow"] == "provisional") {}
+	else {
+		$thisUser->sendActivationEmail();
+	}
+
 
 	$headerString = "Location: " . $_SESSION["site"]->webHome . "/views/thankYou.php";
 

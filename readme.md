@@ -44,9 +44,9 @@ You can exclude apps by adding their IDs to a blacklist
 
 All of these settings for the sites are stored in json files. When a site is created by the OPG, a directory is created for the site.
 
-/{{webRoot}}/atkodemo/sites/{{siteName}}/
+/{{webRoot}}/atkodemo/sites/{{dirName}}/
 
-At the moment {{siteName}} is not configurable; it just incrememts with every new site.
+At the moment {{dirName}} is not configurable; it just incrememts with every new site.
 
 There are four essential configuration files for each site. If OPG cannot find one of these files in the site’s directory, it will just load the default version of the file.
 

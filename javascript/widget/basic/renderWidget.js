@@ -8,25 +8,38 @@ function renderWidget() {
 
 	oktaSignIn.renderEl(
 		{ el: '#oktaWidgetBasic'},
-	  	function (res) {
+//		{ el: '#oktaWidget'},
 
-	  		console.log("the res.status is: " + res.status);
+		function (res) {
 
-	  		if (res.status == "SUCCESS") {
+			console.log("the res.status is: " + res.status);
 
-	  			res.session.setCookieAndRedirect('%--redirectUri--%');
+			if (res.status == "SUCCESS") {
 
-	  		}
-	  		else {
-	  			console.log("the user was not authenticated.");
-	  			console.log("the error is: " + res.status);
-	  		}
+				res.session.setCookieAndRedirect('%--redirectUri--%');
+
+			}
+			else {
+				console.log("the user was not authenticated.");
+				console.log("the error is: " + res.status);
+			}
 		}
 	);
 }
 
 window.onload = function() {
-	renderWidget();
+
+	var pageName = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
+
+	console.log("the page name is: " + pageName);
+
+	if (pageName == "login.php") {
+		renderWidget();
+	}
 }
+
+// window.onload = function() {
+// 	renderWidget();
+// }
 
 </script>
