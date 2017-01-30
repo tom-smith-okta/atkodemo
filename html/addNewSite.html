@@ -6,9 +6,17 @@
 
 <p>Okta tenant <input type = 'text' name = 'oktaOrg' placeholder="required. tenant name only, no .okta.com"></input></p>
 
-<p>API key <input type = 'text' name = 'apiKey' placeholder="optional, but needed for registration"></input></p>
+<p>Okta host
+<select name="oktaHost">
+  <option value="okta">okta</option>
+  <option value="oktapreview">oktapreview</option>
+  <option value="okta-emea">okta-emea</option>
+</select>
+</p>
 
-<p>Client ID <input type = 'text' name = 'clientID' placeholder="optional, but needed for OIDC authN"></p>
+<p>API key <input type = 'text' name = 'apiKey' placeholder="optional, but required for registration flows"></input></p>
+
+<p>Client ID <input type = 'text' name = 'clientID' placeholder="optional, but required for OIDC authentication"></p>
 
 <p><input type = "submit" name = "submit">
 

@@ -139,8 +139,6 @@ class Site {
 		}
 	}
 
-
-
 	public function getHTML($pageName) {
 
 		$html = "";
@@ -499,7 +497,13 @@ class Site {
 	}
 
 	private function setRemotePaths() {
-		$this->oktaBaseURL = "https://" . $this->oktaOrg . ".okta.com";
+		if (property_exists($this, "oktaHost")) {
+			if (empty($this->oktaHost)) { $this->oktaHost = "okta"; }
+		}
+		else { $this->oktaHost = "okta"; }
+
+		$this->oktaBaseURL = "https://" . $this->oktaOrg . "." . $this->oktaHost . ".com";
+
 		$this->apiHome = $this->oktaBaseURL . "/api/v1";
 	}
 

@@ -33,9 +33,16 @@ if (array_key_exists("clientID", $_POST)) {
 }
 
 if (array_key_exists("siteName", $_POST)) {
-	if (($_POST["siteName"])) {
+	if ($_POST["siteName"]) {
 		$main["siteName"] = $_POST["siteName"];
 	}
+}
+
+if (array_key_exists("oktaHost", $_POST)) {
+	if ($_POST["oktaHost"]) {
+		$main["oktaHost"] = $_POST["oktaHost"];
+	}
+	else { $main["oktaHost"] = "okta"; }
 }
 
 $main["widgetVer"] = "1.7.0";
