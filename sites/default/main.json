@@ -1,6 +1,7 @@
 {	
 	"siteName": "Okta platform demo",
 	"oktaOrg": "atkodemovm",
+	"oktaHost": "okta",
 	"clientId": "KySezizDE4ScxOlsNLsX",
 	"apiKey": "",
 	"apiKeyPath": "/usr/local/keys/atkodemovm.txt",

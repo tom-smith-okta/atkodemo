@@ -394,6 +394,18 @@ class Site {
 					$this->apiKey = $this->getAPIkey();
 				}
 			}
+			else {
+				$apiKeysFile = "../mysites/apiKeys.json";
+				if (file_exists($apiKeysFile)) {
+
+					$json = file_get_contents($apiKeysFile);
+					$arr = json_decode($json, TRUE);
+
+					if (array_key_exists($this->oktaOrg, $arr)) {
+						$this->apiKey = $arr[$this->oktaOrg];
+					}
+				}
+			}
 		}
 
 		if ($this->apiKey) {
