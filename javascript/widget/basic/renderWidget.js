@@ -8,7 +8,6 @@ function renderWidget() {
 
 	oktaSignIn.renderEl(
 		{ el: '#oktaWidgetBasic'},
-//		{ el: '#oktaWidget'},
 
 		function (res) {
 
@@ -29,17 +28,8 @@ function renderWidget() {
 
 window.onload = function() {
 
-	var pageName = location.pathname.substring(location.pathname.lastIndexOf("/") + 1);
+	renderWidget();
 
-	console.log("the page name is: " + pageName);
-
-	if (pageName == "login.php") {
-		renderWidget();
-	}
 }
-
-// window.onload = function() {
-// 	renderWidget();
-// }
 
 </script>

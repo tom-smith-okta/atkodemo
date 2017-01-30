@@ -71,7 +71,10 @@ class Site {
 
 	private function setMenus() {
 
-		$this->menu = "\t" . '<li class = "menu"><a class="fa-server" href="status.php">Site Status</a></li>' . "\n\t\t\t\t";
+		$this->menu = "\t" . '<li class = "menu"><a class="fa-refresh" href="resetSession.php?dirName=';
+		$this->menu .= $this->dirName . '">refresh site</a></li>' . "\n\t\t\t\t";
+
+		$this->menu .= "\t" . '<li class = "menu"><a class="fa-server" href="status.php">Site Status</a></li>' . "\n\t\t\t\t";
 
 		$this->menu .= '<li class = "menu"><a class="fa-info-circle" href="allSettings.php">Settings</a></li>' . "\n\t\t\t\t";
 
@@ -95,13 +98,17 @@ class Site {
 
 	}
 
-	private function setOktaWidget($pageName = "") {
+	private function setOktaWidget() {
+
+		$arr = explode("?", basename($_SERVER['REQUEST_URI']));
+
+		$pageName = $arr[0];
 
 		$this->redirectUri = $this->getRedirectURI();
 
 		$path = "../javascript/widget/";
 
-		if ($this->status["OIDC"]) {
+		if ($this->status["OIDC"] && $pageName != "login.php") {
 			$path .= "OIDC/";
 
 			if ($this->status["socialLogin"]) {
@@ -115,41 +122,24 @@ class Site {
 			$path .= "basic/";
 		}
 
-		$this->oktaSignIn = file_get_contents($path . "loadWidget.js");
+		if ($pageName == "register.php") {
+			$this->oktaSignIn = "";
+			$this->renderWidget = "";
+		}
 
-		$this->renderWidget = file_get_contents($path . "renderWidget.js");
+		else {
 
-		$this->oktaSignIn = $this->replaceElements($this->oktaSignIn);
+			$this->oktaSignIn = file_get_contents($path . "loadWidget.js");
 
-		$this->renderWidget = $this->replaceElements($this->renderWidget);
+			$this->renderWidget = file_get_contents($path . "renderWidget.js");
 
-	}
+			$this->oktaSignIn = $this->replaceElements($this->oktaSignIn);
 
-	private function setRegOptions() {
-
-		$this->regOptions = "";
-
-		if ($this->status["registration"] === TRUE) {
-
-			$retVal = "";
-
-			foreach ($this->regFlows as $key => $values) {
-
-				$retVal .= "<li>";
-				$retVal .= "<a href = 'register.php?regFlow=" . $key . "'>";
-
-				$retVal .= "<h3>" . $values["title"] . "</h3>";
-
-				if (array_key_exists("shortDesc", $values)) {
-					$retVal .= "<p>" . $values["shortDesc"] . "</p>";
-				}
-
-				$retVal .= "</a></li>\n\t\t\t\t";
-
-			}
-			$this->regOptions = trim($retVal);
+			$this->renderWidget = $this->replaceElements($this->renderWidget);
 		}
 	}
+
+
 
 	public function getHTML($pageName) {
 
@@ -294,6 +284,32 @@ class Site {
 		else {
 			if ($this->status[$param]) { return $greenCheck; }
 			else { return $redX; }
+		}
+	}
+
+	private function setRegOptions() {
+
+		$this->regOptions = "";
+
+		if ($this->status["registration"] === TRUE) {
+
+			$retVal = "";
+
+			foreach ($this->regFlows as $key => $values) {
+
+				$retVal .= "<li>";
+				$retVal .= "<a href = 'register.php?regFlow=" . $key . "'>";
+
+				$retVal .= "<h3>" . $values["title"] . "</h3>";
+
+				if (array_key_exists("shortDesc", $values)) {
+					$retVal .= "<p>" . $values["shortDesc"] . "</p>";
+				}
+
+				$retVal .= "</a></li>\n\t\t\t\t";
+
+			}
+			$this->regOptions = trim($retVal);
 		}
 	}
 
@@ -489,8 +505,8 @@ class Site {
 
 	private function isSecure() {
 		return
-		    (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-		    || $_SERVER['SERVER_PORT'] == 443;		
+			(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+			|| $_SERVER['SERVER_PORT'] == 443;
 	}
 
 	private function getRedirectURI() {
