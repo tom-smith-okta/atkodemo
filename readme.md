@@ -6,10 +6,13 @@ This demo is meant to show some of the capabilities of Okta's platform, specific
 
 The public version of this demo, which is very similar, is at: www.atkodemo.com
 
-Installing
-The demo is written in php. It uses a custom, internal HTML generation engine, so the only dependency from a server perspective is that you have a web server running php. The code is written in php7, but may run under earlier php releases. The code makes heavy use of json.
+Docker version
+The recommended way of using this application is through the docker image, which is available on dockerhub:
 
-A dockerized version is in the works.
+tomgsmith99/atkodemo
+
+Non-docker instrux
+The demo is written in php. It uses a custom, internal HTML generation engine, so the only dependency from a server perspective is that you have a web server running php. The code is written in php7, but may run under earlier php releases. The code makes heavy use of json.
 
 The site expects to run in the following location:
 
@@ -25,7 +28,7 @@ Click on the server icon in the upper right to see the status page.
 To add your own site
 On your machine, make sure that php has the ability to write to the following directory:
 
-/{{webRoot}}/atkodemo/sites
+/{{webRoot}}/atkodemo/mysites
 
 Just click on the “add new site” button to add your own sites. The only required field is your Okta tenant name. But, to enable registration you need to add an api key, and to enable OIDC authentication you need to add a client ID.
 
@@ -44,21 +47,17 @@ You can exclude apps by adding their IDs to a blacklist
 
 All of these settings for the sites are stored in json files. When a site is created by the OPG, a directory is created for the site.
 
-/{{webRoot}}/atkodemo/sites/{{dirName}}/
+/{{webRoot}}/atkodemo/mysites/{{dirName}}/
 
 At the moment {{dirName}} is not configurable; it just incrememts with every new site.
 
-There are four essential configuration files for each site. If OPG cannot find one of these files in the site’s directory, it will just load the default version of the file.
+There are four essential configuration files for each site, which are created with each new site.
 
 main.json: essential settings like orgname and api key 
 theme.json: images and text
 regFlows.json: defines registration flows (name of flow, which fields are included, groupIDs, etc.)
 regFields.json: simple data definitions for reg fields. Any field that is included in a regFlow needs to be defined here.
 
-So, if you want to change some of these settings for your site, copy the entire default file to the directory for your site, and change the local copy of the file.
-
-The default versions of the files are located at:
-
-/{{webRoot}}/atkodemo/sites/default/
+So, if you want to change some of these settings for your site, edit the json file directly with a text editor, and then return to the OPG UI and click the "refresh" icon. This will load the new settings into your site.
 
 You can also look at some of the more advanced settings in the other example sites included in the /sites/ directory.
