@@ -62,5 +62,9 @@ foreach ($_SESSION["allSites"] as $dirName) {
 }
 
 $bodyMain = str_replace("%--rows--%", $rows, $bodyMain);
+$bodyMain = str_replace("%--oktaOrg--%", $_SESSION["site"]->oktaOrg, $bodyMain);
+$bodyMain = str_replace("%--siteName--%", $_SESSION["site"]->siteName, $bodyMain);
+
+
 
 $thisSite->showPage("status", $bodyMain);

@@ -26,9 +26,9 @@ if (array_key_exists("apiKey", $_POST)) {
 	}
 }
 
-if (array_key_exists("clientID", $_POST)) {
-	if ($_POST["clientID"]) {
-		$main["clientID"] = $_POST["clientID"];
+if (array_key_exists("clientId", $_POST)) {
+	if ($_POST["clientId"]) {
+		$main["clientId"] = $_POST["clientId"];
 	}
 }
 
@@ -54,6 +54,10 @@ mkdir($path);
 $fullPath = $path . "/main.json"; 
 
 file_put_contents($fullPath, json_encode($main));
+
+copy("../sites/default/theme.json", $path . "/theme.json");
+copy("../sites/default/regFields.json", $path . "/regFields.json");
+copy("../sites/default/regFlows.json", $path . "/regFlows.json");
 
 $url = "../views/status.php";
 
