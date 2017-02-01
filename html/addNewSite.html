@@ -1,23 +1,39 @@
 <h1>Add new site</h1>
 
+
+<div style="max-width:40em">
+
 <form method = 'POST' action = "../controllers/evaluateNewSite.php">
 
-<p>Name of site <input type = 'text' name = 'siteName' placeholder="required"></input></p>
+<table border = '0'>
 
-<p>Okta tenant <input type = 'text' name = 'oktaOrg' placeholder="required. tenant name only, no .okta.com"></input></p>
+<tr><td>Name of site</td><td><input type = 'text' name = 'siteName' placeholder="required"></input></td></tr>
 
-<p>Okta host (okta || oktapreview || okta-emea)
-<select name="oktaHost">
-  <option value="okta">okta</option>
-  <option value="oktapreview">oktapreview</option>
-  <option value="okta-emea">okta-emea</option>
-</select>
-</p>
+<tr>
+	<td>Okta tenant</td>
+	<td><div style="height:50px">
+		<div style = 'float:left;'><input type = 'text' name = 'oktaOrg' placeholder="subdomain"></input></div>
 
-<p>API key <input type = 'text' name = 'apiKey' placeholder="optional, but required for registration flows"></input></p>
+		<div style = 'overflow: hidden;'>
+			<div>
+				<select name="oktaHost" size = '3'>
+					<option value="okta" selected="selected">.okta.com</option>
+					<option value="oktapreview">.oktapreview.com</option>
+					<option value="okta-emea">.okta-emea.com</option>
+				</select>
+			</div>
+		</div>
+	</td>
+</tr>
 
-<p>Client ID <input type = 'text' name = 'clientId' placeholder="optional, but required for OIDC authentication"></p>
+
+<tr><td>API key</td><td><input type = 'text' name = 'apiKey' placeholder="optional, but required for registration flows"></input></td></tr>
+<tr><td>Client ID</td><td><input type = 'text' name = 'clientId' placeholder="optional, but required for OIDC authentication"></td></tr>
+
+</table>
 
 <p><input type = "submit" name = "submit">
 
 </form>
+
+</div>
