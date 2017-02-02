@@ -514,7 +514,9 @@ class Site {
 		}
 		else { $this->oktaHost = "okta"; }
 
-		$this->oktaBaseURL = "https://" . $this->oktaOrg . "." . $this->oktaHost . ".com";
+		$this->oktaDomain = $this->oktaOrg . "." . $this->oktaHost . ".com";
+
+		$this->oktaBaseURL = "https://" . $this->oktaDomain;
 
 		$this->apiHome = $this->oktaBaseURL . "/api/v1";
 	}

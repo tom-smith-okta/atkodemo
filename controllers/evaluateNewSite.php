@@ -18,48 +18,57 @@ file_put_contents($fileName, $siteCount);
 
 $main["dirName"] = $dirName;
 
-$main["oktaOrg"] = $_POST["oktaOrg"];
+$params = ["apiKey", "clientId", "oktaHost", "oktaOrg", "siteName"];
 
-if (array_key_exists("apiKey", $_POST)) {
-	if ($_POST["apiKey"]) {
-		$main["apiKey"] = $_POST["apiKey"];
+foreach ($params as $param) {
+	if (array_key_exists($param, $_POST)) {
+		if ($_POST[$param]) {
+			$main[$param] = $_POST[$param];
+		}
 	}
 }
 
-if (array_key_exists("clientId", $_POST)) {
-	if ($_POST["clientId"]) {
-		$main["clientId"] = $_POST["clientId"];
+$main["widgetVer"] = "1.10.0";
+
+$destPath = "../mysites/" . $dirName;
+
+mkdir($destPath);
+
+$files = ["main", "regFields", "regFlows", "theme"];
+
+foreach ($files as $file) {
+
+	$fileName = $file . ".json";
+
+	$fullPath = $destPath . "/" . $fileName;
+
+	$paths[$fileName] = $fullPath;
+
+	if ($file == "main") {
+		file_put_contents($fullPath, json_encode($main));
+	}
+	else {
+		$src = "../sites/default/" . $fileName;
+		copy ($src, $fullPath);
 	}
 }
 
-if (array_key_exists("siteName", $_POST)) {
-	if ($_POST["siteName"]) {
-		$main["siteName"] = $_POST["siteName"];
-	}
+// make an index.html file
+
+$index = file_get_contents("../html/list.html");
+
+$links = "";
+
+foreach ($paths as $fileName => $url) {
+	$links .= "<li><a href = '" . $fileName . "' target = '_blank'>" . $fileName . "</a></li>\n";
 }
 
-if (array_key_exists("oktaHost", $_POST)) {
-	if ($_POST["oktaHost"]) {
-		$main["oktaHost"] = $_POST["oktaHost"];
-	}
-	else { $main["oktaHost"] = "okta"; }
-}
+$index = str_replace("%--links--%", $links, $index);
+$index = str_replace("%--siteName--%", $main["siteName"], $index);
 
-$main["widgetVer"] = "1.7.0";
+file_put_contents($destPath . "/index.html", $index);
 
-$path = "../mysites/" . $dirName;
-
-mkdir($path);
-
-$fullPath = $path . "/main.json"; 
-
-file_put_contents($fullPath, json_encode($main));
-
-copy("../sites/default/theme.json", $path . "/theme.json");
-copy("../sites/default/regFields.json", $path . "/regFields.json");
-copy("../sites/default/regFlows.json", $path . "/regFlows.json");
-
-$url = "../views/status.php";
+$url = "../views/status.php?siteToLoad=" . $dirName;
 
 header("Location: " . $url);
 
