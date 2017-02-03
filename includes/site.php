@@ -46,7 +46,7 @@ class Site {
 			$this->appsBlacklist = json_encode($this->appsBlacklist);
 		}
 		else {
-			$this->appsBlacklist = "none";
+			$this->appsBlacklist = "[]";
 		}
 	}
 
