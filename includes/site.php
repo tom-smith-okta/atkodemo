@@ -74,6 +74,8 @@ class Site {
 		$this->menu = "\t" . '<li class = "menu"><a class="fa-refresh" href="resetSession.php?dirName=';
 		$this->menu .= $this->dirName . '">refresh site</a></li>' . "\n\t\t\t\t";
 
+		$this->menu .= "\t" . '<li class = "menu"><a class="fa-file-text" href="docs.php">docs</a></li>' . "\n\t\t\t\t";
+
 		$this->menu .= "\t" . '<li class = "menu"><a class="fa-server" href="status.php">Site Status</a></li>' . "\n\t\t\t\t";
 
 		$this->menu .= '<li class = "menu"><a class="fa-info-circle" href="allSettings.php">Settings</a></li>' . "\n\t\t\t\t";

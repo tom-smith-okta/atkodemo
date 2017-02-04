@@ -50,6 +50,8 @@ function getSites($sitesHome) {
 
 	$dirs = scandir($sitesHome);
 
+	$sites = [];
+
 	foreach ($dirs as $dir) {
 
 		if ($dir === "." || $dir === ".." || $dir === "default") {}

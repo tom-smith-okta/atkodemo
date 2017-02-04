@@ -8,8 +8,6 @@ $bodyMain = file_get_contents("../html/status.html");
 
 $rows = "";
 
-$bottomRow = file_get_contents("../html/status/bottomRow.html");
-
 foreach ($_SESSION["allSites"] as $dirName) {
 
 	$site = new Site($dirName);

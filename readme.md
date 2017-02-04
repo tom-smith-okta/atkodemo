@@ -1,19 +1,46 @@
-# Okta Portal Generator #
+# Okta Portal Generator
 
 tom.smith@okta.com
 
 This demo is meant to show some of the capabilities of Okta's platform, specifically in terms of IDAAS for external users. This particular demo has a B2C slant, but it can be modified for other external use cases as well (B2B etc.).
 
-The public version of this demo, which is very similar, is at: www.atkodemo.com
+## Sites
 
-Docker version
-The recommended way of using this application is through the docker image, which is available on dockerhub:
+- Docker
+```sh
+docker pull atkodemo
+```
+- github: https://github.com/tom-smith-okta/atkodemo
+- public version: http://www.atkodemo.com
 
-tomgsmith99/atkodemo
+## Architecture
+The OPG is built as a custom PHP app. It uses a custom, internal HTML generation engine, so the only dependency from a server perspective is that you have a web server running php. The code is written in php7, but may run under earlier php releases. The code makes heavy use of json.
 
-Non-docker instrux
-The demo is written in php. It uses a custom, internal HTML generation engine, so the only dependency from a server perspective is that you have a web server running php. The code is written in php7, but may run under earlier php releases. The code makes heavy use of json.
+The recommended way to deploy the site is through the docker image, which is built on the PHP7 Docker image.
 
+## How-to: Docker
+
+Install Docker.
+
+On a Mac, create the following directory:
+
+- /Users/{{userName}}/atkodemo/mysites
+
+(this site/process has not been tested on Windows yet.)
+
+Run the following command from a terminal (make sure Docker is running first):
+
+```sh
+docker run -d -p 55:80 -v /Users/{{userName}}/atkodemo/mysites:/var/www/html/atkodemo/mysites atkodemo
+```
+
+it may take a few minutes to download the atkodemo image from dockerhub.
+
+Once the download is complete, open a web browser and go to
+
+http://localhost:55/atkodemo
+
+## How-to: Github
 The site expects to run in the following location:
 
 /{{webRoot}}/atkodemo/
@@ -61,3 +88,10 @@ regFields.json: simple data definitions for reg fields. Any field that is includ
 So, if you want to change some of these settings for your site, edit the json file directly with a text editor, and then return to the OPG UI and click the "refresh" icon. This will load the new settings into your site.
 
 You can also look at some of the more advanced settings in the other example sites included in the /sites/ directory.
+
+## Version History
+
+### 2017-02-03
+- Changed docker image name from "tomgsmith99/atkodemo" to "atkodemo" to simplify launch
+- Added readme to top menu
+
