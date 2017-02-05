@@ -10,9 +10,6 @@ class Site {
 
 		$this->apiKey = "";
 
-		if ($_SESSION["webHome"] === "/") { $this->webHome = "/"; }
-		else { $this->webHome =  "/" . $_SESSION["webHome"]; }
-
 		$this->capabilities = ["authentication", "apiKey", "registration", "OIDC", "socialLogin", "appsBlacklist"];
 
 		$this->configFiles = ["main" => TRUE, "theme" => TRUE, "regFlows" => FALSE, "regFields" => FALSE];
@@ -339,7 +336,12 @@ class Site {
 			if ($this->clientId) { $this->status["OIDC"] = TRUE; }
 		}
 
-		if ($this->status["OIDC"] && $this->idps) { $this->status["socialLogin"] = TRUE; }
+		if ($this->status["OIDC"])
+			if (property_exists($this, "idps")) {
+				if ($this->idps) {
+					$this->status["socialLogin"] = TRUE;
+				}
+			}
 
 		if (!empty($this->appsBlacklist)) { $this->status["appsBlacklist"] = TRUE; }
 
@@ -504,7 +506,13 @@ class Site {
 
 				$name = $nameArr[1];
 
-				$thisString = str_replace($target, $this->$name, $thisString);
+				if (property_exists($this, $name)) {
+					$thisString = str_replace($target, $this->$name, $thisString);
+				}
+				else {
+					$thisString = str_replace($target, "", $thisString);
+				}
+
 			}
 		}
 		return $thisString;
@@ -543,7 +551,7 @@ class Site {
 			else { $redirectURI .= ":" . $_SERVER["SERVER_PORT"]; }
 		}
 
-		$redirectURI .= $this->webHome . "/views/index.php";
+		$redirectURI .= "/views/index.php";
 
 		return $redirectURI;
 	}

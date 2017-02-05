@@ -4,8 +4,6 @@ function setDemoEnv() {
 
 	setPaths();
 
-	$_SESSION["webHome"] = getHomeDir();
-
 	// Find which site should be loaded by default
 
 	$_SESSION["defaultSite"] = getDefaultSite();
@@ -38,12 +36,6 @@ function getDefaultSite() {
 	$json = file_get_contents($filename);
 	$arr = json_decode($json, TRUE);
 	return $arr["defaultSite"];
-}
-
-// fixes the script's place in the filesystem
-function getHomeDir() {
-	$dirPathArr = explode("/", dirname(getcwd()));
-	return end($dirPathArr);
 }
 
 function getSites($sitesHome) {

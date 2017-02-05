@@ -44,7 +44,7 @@ else {
 	}
 
 
-	$headerString = "Location: " . $_SESSION["site"]->webHome . "/views/thankYou.php";
+	$headerString = "Location: " . "/views/thankYou.php";
 
 	header($headerString);
 }
