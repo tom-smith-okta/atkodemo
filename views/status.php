@@ -13,25 +13,30 @@ foreach ($_SESSION["allSites"] as $dirName) {
 	$site = new Site($dirName);
 
 	if ($site->dirName === $thisSite->dirName) {
-		$rows .= "<tr style = 'background-color: LightGoldenRodYellow; border-bottom: 1px solid'>";
 		$siteToLoad = $site->siteName;
+		$backgroundColor = "LightGoldenRodYellow";
 	}
 	else {
-		$rows .= "<tr style = 'border-bottom: 1px solid; vertical-align: middle'>";
 		$siteToLoad = "<a href = 'status.php?siteToLoad=" . $dirName . "' class = 'button big'>" . $site->siteName . "</a>";
+		$backgroundColor = "";
 	}
 
-	$rows .= "<td style = 'border-left: 2px solid; border-right: 2px solid;'><a href = '" . $site->sitePath . "' target = '_blank'>" . $site->dirName . "</td>";
-	$rows .= "<td>" . $siteToLoad . "</a></td>";
+	$row = file_get_contents("../html/status/statusRow.html");
 
-	$rows .= "<td><a href = '" . $site->oktaBaseURL . "'>" . $site->oktaDomain . "</a></td>";
-	$rows .= "<td align = 'center'>" . $site->getIcon("authentication") . "</td>";
-	$rows .= "<td align = 'center'>" . $site->getIcon("apiKey") . "</td>";
-	$rows .= "<td align = 'center'>" . $site->getIcon("OIDC") . "</td>";
-	$rows .= "<td align = 'center'>" . $site->getIcon("socialLogin") . "</td>";
-	$rows .= "<td align = 'center' style = 'border-right: 1px solid'>" . $site->getIcon("appsBlacklist") . "</td>";
+	$row = str_replace("%--backgroundColor--%", $backgroundColor, $row);
+	$row = str_replace("%--siteToLoad--%", $siteToLoad, $row);
+	$row = str_replace("%--dirName--%", $dirName, $row);
+	$row = str_replace("%--oktaBaseURL--%", $site->oktaBaseURL, $row);
+	$row = str_replace("%--sitePath--%", $site->sitePath, $row);
+	$row = str_replace("%--oktaDomain--%", $site->oktaDomain, $row);
 
-	$rows .= "</tr>\n";
+	$vals = ["authentication", "apiKey", "OIDC", "socialLogin", "appsBlacklist"];
+
+	foreach ($vals as $val) {
+		$row = str_replace("%--$val--%", $site->getIcon($val), $row);
+	}
+
+	$rows .= $row;
 }
 
 $bodyMain = str_replace("%--rows--%", $rows, $bodyMain);
