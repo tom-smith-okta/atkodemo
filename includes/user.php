@@ -41,8 +41,6 @@ class user {
 
 		/**************** ANY GROUPS? ********************/
 
-		$groupIDs = "";
-
 		if ($_SESSION["site"]->regFlows[$regFlow]["groupIDs"]) {
 			$userData["groupIds"] = $_SESSION["site"]->regFlows[$regFlow]["groupIDs"];
 		}

@@ -24,14 +24,14 @@ Install Docker.
 
 On a Mac, create the following directory:
 
-- /Users/{{userName}}/atkodemo/mysites
+- /Users/{{userName}}/atkodemo/
 
 (this site/process has not been tested on Windows yet.)
 
 Run the following command from a terminal (make sure Docker is running first):
 
 ```sh
-docker run -d -p 55:80 -v /Users/{{userName}}/atkodemo/mysites:/var/www/html/atkodemo/mysites atkodemo
+docker run -d -p 55:80 -v /Users/{{userName}}/atkodemo:/var/www/html/atkodemo/mysites tomgsmith99/atkodemo
 ```
 
 it may take a few minutes to download the atkodemo image from dockerhub.
@@ -40,22 +40,18 @@ Once the download is complete, open a web browser and go to
 
 http://localhost:55/atkodemo
 
-## How-to: Github
-The site expects to run in the following location:
-
-/{{webRoot}}/atkodemo/
-
-So, if you start in your web root dir and clone this repo you should be good to go. You *should* be able to run it from any context you want with a few tweaks, but this has not been fully tested yet.
+## How-to: Github repo
+The site expects to run at DocumentRoot. Use your favorite method to set up a local or web address that points to the repo as the documentRoot.
 
 Running
-After you have cloned the repo, load http://localhost/atkodemo in a browser. The default atkodemo site will load.
+After you have cloned the repo, load http://localhost/ (or whatever server you set up) in a browser. The default atkodemo site will load.
 
 Click on the server icon in the upper right to see the status page.
 
 To add your own site
 On your machine, make sure that php has the ability to write to the following directory:
 
-/{{webRoot}}/atkodemo/mysites
+/{{webRoot}}/mysites
 
 Just click on the “add new site” button to add your own sites. The only required field is your Okta tenant name. But, to enable registration you need to add an api key, and to enable OIDC authentication you need to add a client ID.
 
@@ -74,7 +70,7 @@ You can exclude apps by adding their IDs to a blacklist
 
 All of these settings for the sites are stored in json files. When a site is created by the OPG, a directory is created for the site.
 
-/{{webRoot}}/atkodemo/mysites/{{dirName}}/
+/{{webRoot}}/mysites/{{dirName}}/
 
 At the moment {{dirName}} is not configurable; it just incrememts with every new site.
 
@@ -92,6 +88,6 @@ You can also look at some of the more advanced settings in the other example sit
 ## Version History
 
 ### 2017-02-03
-- Changed docker image name from "tomgsmith99/atkodemo" to "atkodemo" to simplify launch
+- Changed root to /{{DocumentRoot}} instead of /{{DocumentRoot}}/atkodemo
 - Added readme to top menu
 
