@@ -6,6 +6,8 @@ if (file_exists($fileName)) {
 	$siteCount = file_get_contents($fileName);
 }
 else {
+	$handle = fopen($fileName, 'w') or die('Cannot open file:  '. $fileName); //implicitly creates file
+
 	$siteCount = 1;
 	file_put_contents($fileName, $siteCount);
 }

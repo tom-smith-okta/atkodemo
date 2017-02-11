@@ -31,14 +31,14 @@ On a Mac, create the following directory:
 Run the following command from a terminal (make sure Docker is running first):
 
 ```sh
-docker run -d -p 55:80 -v /Users/{{userName}}/atkodemo:/var/www/html/atkodemo/mysites tomgsmith99/atkodemo
+docker run -d -p 55:80 -v /Users/{{userName}}/atkodemo:/var/www/html/mysites --name myatkodemo tomgsmith99/atkodemo
 ```
 
 it may take a few minutes to download the atkodemo image from dockerhub.
 
 Once the download is complete, open a web browser and go to
 
-http://localhost:55/atkodemo
+http://localhost:55/
 
 ## How-to: Github repo
 The site expects to run at DocumentRoot. Use your favorite method to set up a local or web address that points to the repo as the documentRoot.
