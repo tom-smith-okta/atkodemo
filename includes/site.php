@@ -551,7 +551,7 @@ class Site {
 			else { $redirectURI .= ":" . $_SERVER["SERVER_PORT"]; }
 		}
 
-		$redirectURI .= "/views/index.php";
+		// $redirectURI .= "";
 
 		return $redirectURI;
 	}
