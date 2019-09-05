@@ -8,6 +8,8 @@ function setDemoEnv() {
 
 	$_SESSION["defaultSite"] = getDefaultSite();
 
+	// echo "the default site is: " . $_SESSION["defaultSite"];
+
 	unset($_SESSION["allSites"]);
 
 	$stdSites = getSites($_SESSION["paths"]["sites"]);
@@ -23,15 +25,15 @@ function setDemoEnv() {
 
 function getDefaultSite() {
 
-	$filename = $_SESSION["paths"]["mysites"] . "/defaultSite.json";
-	if (file_exists($filename)) {
-		$json = file_get_contents($filename);
-		$arr = json_decode($json, TRUE);
+	// $filename = $_SESSION["paths"]["mysites"] . "/defaultSite.json";
+	// if (file_exists($filename)) {
+	// 	$json = file_get_contents($filename);
+	// 	$arr = json_decode($json, TRUE);
 
-		if (!(empty($arr["defaultSite"]))) {
-			return $arr["defaultSite"];
-		}
-	}
+	// 	if (!(empty($arr["defaultSite"]))) {
+	// 		return $arr["defaultSite"];
+	// 	}
+	// }
 	$filename = $_SESSION["paths"]["sites"] . "/defaultSite.json";
 	$json = file_get_contents($filename);
 	$arr = json_decode($json, TRUE);
