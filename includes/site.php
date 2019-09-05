@@ -10,6 +10,12 @@ class Site {
 
 		$this->apiKey = "";
 
+		$this->apiKey = file_get_contents("../apiKey.txt");
+
+// echo "the api key is: " . $this->apiKey;
+
+// exit;
+
 		$this->capabilities = ["authentication", "apiKey", "registration", "OIDC", "socialLogin", "appsBlacklist"];
 
 		$this->configFiles = ["main" => TRUE, "theme" => TRUE, "regFlows" => FALSE, "regFields" => FALSE];
@@ -414,6 +420,9 @@ class Site {
 
 		if ($this->apiKey) {
 			$this->apiKeyIsValid = $this->apiKeyIsValid();
+
+			// echo "the api key is valid: " . $this->apiKeyIsValid;
+			// exit;
 		}
 	}
 
@@ -539,19 +548,21 @@ class Site {
 
 	private function getRedirectURI() {
 
-		// http or https
-		if ($this->isSecure()) { $protocol = "https"; }
-		else { $protocol = "http"; }
+		$redirectURI = file_get_contents("../redirectURI.txt");
 
-		$redirectURI = $protocol . "://" . $_SERVER["SERVER_NAME"];
+		// // http or https
+		// if ($this->isSecure()) { $protocol = "https"; }
+		// else { $protocol = "http"; }
 
-		// add the port to the hostname if appropriate
-		if (array_key_exists("SERVER_PORT", $_SERVER)) {
-			if ($_SERVER["SERVER_PORT"] == "80") {}
-			else { $redirectURI .= ":" . $_SERVER["SERVER_PORT"]; }
-		}
+		// $redirectURI = $protocol . "://" . $_SERVER["SERVER_NAME"];
 
-		// $redirectURI .= "";
+		// // add the port to the hostname if appropriate
+		// if (array_key_exists("SERVER_PORT", $_SERVER)) {
+		// 	if ($_SERVER["SERVER_PORT"] == "80") {}
+		// 	else { $redirectURI .= ":" . $_SERVER["SERVER_PORT"]; }
+		// }
+
+		// // $redirectURI .= "";
 
 		return $redirectURI;
 	}
