@@ -10,7 +10,7 @@ class Site {
 
 		$this->apiKey = "";
 
-		$this->apiKey = file_get_contents("../apiKey.txt");
+		$this->apiKey = trim(file_get_contents("../apiKey.txt"));
 
 // echo "the api key is: " . $this->apiKey;
 
