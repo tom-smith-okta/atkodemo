@@ -548,7 +548,7 @@ class Site {
 
 	private function getRedirectURI() {
 
-		$redirectURI = file_get_contents("../redirectURI.txt");
+		$redirectURI = trim(file_get_contents("../redirectURI.txt"));
 
 		// // http or https
 		// if ($this->isSecure()) { $protocol = "https"; }
