@@ -74,6 +74,8 @@ class Site {
 
 	private function setMenus() {
 
+		$this->menu = "";
+
 		// $this->menu = "\t" . '<li class = "menu"><a class="fa-refresh" href="resetSession.php?dirName=';
 		// $this->menu .= $this->dirName . '">refresh site</a></li>' . "\n\t\t\t\t";
 
