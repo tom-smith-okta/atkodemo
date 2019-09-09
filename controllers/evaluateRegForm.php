@@ -10,9 +10,24 @@ $regFlow = $_POST["regFlow"];
 
 $_SESSION["regFlow"] = $regFlow;
 
+echo "the reg flow is: " . $regFlow;
+
 $thisUser = new user();
 
+echo "<br>";
+
+echo json_encode($thisUser);
+
+exit;
+
+
 $_SESSION["user"] = $thisUser;
+
+// $cookieToken = $thisUser->authenticate();
+
+// $thisUser->redirect($cookieToken);
+
+// exit;
 
 if ($_SESSION["site"]->regFlows[$regFlow]["activate"]) {
 

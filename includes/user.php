@@ -60,7 +60,11 @@ class user {
 
 		$path = "/users?activate=" . $activate;
 
+		// $path = "/users?activate=true";
+
 		$result = curlRequest($path, $data);
+
+		// echo "<br>the result of registration is: " . json_encode($result);
 
 		$this->userID = $result["id"];
 		$this->email = $_POST["email"];
@@ -77,7 +81,13 @@ class user {
 			"password": "' . $this->password . '"
 		}';
 
+		// echo "the userData is: " . $userData;
+
+		// exit;
+
 		$result = curlRequest($path, $userData);
+
+		// echo "the userData is: " . $userData;
 
 		return $result["cookieToken"];
 	}

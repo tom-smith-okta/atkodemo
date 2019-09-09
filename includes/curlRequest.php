@@ -14,6 +14,12 @@ function curlRequest($path, $postFields) {
 
 	$curl = curl_init();
 
+	echo "<br>the path is: " . $url;
+
+	echo "<br>the postFields are: " . $postFields;
+
+	echo "<br>the api key is: " . $apiKey;
+
 	curl_setopt_array($curl, array(
 		CURLOPT_HTTPHEADER => array("Authorization: SSWS $apiKey ", "Accept: application/json", "Content-Type: application/json"),
 		CURLOPT_POST => TRUE,
@@ -23,6 +29,8 @@ function curlRequest($path, $postFields) {
 	));
 
 	$jsonResult = curl_exec($curl);
+
+	echo "<br>json result: " . $jsonResult;
 
 	if (curl_error($curl)) {
 		echo curl_error($curl);

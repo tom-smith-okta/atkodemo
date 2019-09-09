@@ -6,14 +6,6 @@
 		"fields": ["firstName", "lastName", "email", "password"],
 		"activate": true
 	},
-	"appProvisioning": {
-		"title": "Registration with Salesforce provisioning",
-		"desc": "A user record will be created in the Okta universal directory, and the user will be provisioned to Salesforce Chatter. User will be authenticated immediately.",
-		"shortDesc": "Provision a Salesforce Chatter user",
-		"groupIDs": ["00g1yq9e5JOWsxFdu1t6"],
-		"fields": ["firstName", "lastName", "email", "password"],
-		"activate": true
-	},
 	"withMFA": {
 		"title": "MFA Registration flow",
 		"desc": "A user record will be created in the Okta universal directory. An activation email will be sent to the user. The user must use a 2nd factor when they authenticate.",
@@ -33,28 +25,5 @@
 		"activate": false,
 		"thankYouMsg01": "Thank you for registering with us!",
 		"thankYouMsg02": "Please check your inbox for an activation email to complete your registration."
-	},
-	"provisional": {
-		"title": "Provisional registration",
-		"desc": "A user will be created in an inactive state in the Okta universal directory. An admin must review the user record and manually activate (invite) the user.",
-		"shortDesc": "User must be approved by admin",
-		"groupIDs": ["00guad15t26RsGWPK1t6"],
-		"fields": ["firstName", "lastName", "email"],
-		"activate": false,
-		"thankYouMsg01": "Thank you for registering with us!",
-		"thankYouMsg02": "You will receive an activation email after your registration has been reviewed."
-	},
-	"oktaAdmin": {
-		"title": "Okta admin self-reg",
-		"desc": "Anyone with an @okta.com email address can register as a read-only admin.",
-		"shortDesc": "User must have an @okta.com email address",
-		"groupIDs": ["00gnv0lbm756RjxT61t6"],
-		"fields": ["firstName", "lastName", "email"],
-		"activate": false,
-		"thankYouMsg01": "Thank you for registering with us!",
-		"thankYouMsg02": "Please check your inbox for an activation email to complete your registration.",
-		"ALLOW_ADMIN_REG": true,
-		"adminSubstring": "@okta.com",
-		"adminRole": "READ_ONLY_ADMIN"
 	}
 }
