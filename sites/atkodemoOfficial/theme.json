@@ -1,14 +1,14 @@
 {
 	"name": "Atko Corp",
 	"slogan": "Here to take you there",
-	"logo": "http://oauth2.atkodemo.com/images/atkodemo/themes/default/logo.png",
-	"mainImage": "http://oauth2.atkodemo.com/images/atkodemo/themes/default/picnic.jpeg",
+	"logo": "https://tom-smith-okta-images.s3.amazonaws.com/atkodemo/logo.png",
+	"mainImage": "https://tom-smith-okta-images.s3.amazonaws.com/atkodemo/picnic.jpeg",
 	"mainMessage": "Register now to chat with fellow travelers",
 	"subMessage": "NYC TOUR ON SALE THROUGH THURSDAY!",
 	"mainMessageBottom": "Yes, it's that time of year again! Get ready for some great food and fun on the waterfront!",
-	"topLeftImage": "http://oauth2.atkodemo.com/images/atkodemo/themes/default/yosemite.jpeg",
+	"topLeftImage": "https://tom-smith-okta-images.s3.amazonaws.com/atkodemo/yosemite.jpeg",
 	"topLeftHeadline": "New trip to Yosemite",
-	"bottomLeftImage": "http://oauth2.atkodemo.com/images/atkodemo/themes/default/yellowstone.jpeg",
-	"bottomLeftHeadline": "YELLOWSTONE MOST POPULAR SO FAR IN 2016",
+	"bottomLeftImage": "https://tom-smith-okta-images.s3.amazonaws.com/atkodemo/yellowstone.jpeg",
+	"bottomLeftHeadline": "YELLOWSTONE MOST POPULAR SO FAR IN 2019",
 	"about": "We put great products together for great people."
 }
